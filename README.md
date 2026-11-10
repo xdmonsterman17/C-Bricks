@@ -126,7 +126,7 @@ Every brick can carry a **note** (Properties): it shows on the brick and becomes
 - NetBSD: x86_64
 - an Android ARM64 command-line program, and WASI
 
-**Toolchains:** the exported editor is one file: it carries zig, DJGPP and DOSBox-X inside itself and unpacks them (600 MB, with a progress window) into its user folder the first time you build; a `toolchains/` folder beside it is used instead if there is one; the bundled tools are used first (`thirdparty/TOOLCHAINS.md`: licences and source); DOSBox-X brings its own libraries. Emscripten (the Web target) isn't bundled.
+**Toolchains:** the exported editor is one slim file (about 100 MB). Open the Toolchains window (⚙): its first tab lists zig, DJGPP, DOSBox-X, Emscripten and CMake as installed here / found on this computer / not installed, with Install and Remove buttons and a progress bar (each download is checked against its sha256, then unpacked into the editor's own folder, `user://toolchains/installed`); the second tab is each target's compile command. Tools already on your computer are used as they are. `./export.sh --with-toolchains` makes the old 308 MB single file with zig, DJGPP and DOSBox-X inside (unpacked on first build); a `toolchains/` folder beside the editor is used first. Licences and sources: `thirdparty/TOOLCHAINS.md`; the download list: `toolchains_manifest.json` (`tools/make_toolchain_release.py` writes it).
 
 **MS-DOS** (text programs, 2D graphics, the UI, sound, music and 3D by a software renderer; pick the backend in Project Settings ▸ Graphics) uses DJGPP (`~/.local/opt/djgpp`, built from source once). Run opens the program in DOSBox-X; the `.exe` carries CWSDPMI, so it also runs on plain DOS. A brick the chosen target can't do (a window on MS-DOS, say) shows up in Problems by name. **Networking** works there too (UDP through Watt-32 and a packet driver, `thirdparty/watt32` / `thirdparty/pktdrvr`; Run in DOSBox-X wires up an emulated NE2000: the host is 10.0.2.2).
 
@@ -166,7 +166,8 @@ thirdparty/dmxopl/              DMXOPL's GENMIDI.op2 (MIT; credit: sneakernets):
 thirdparty/watt32/              Watt-32 (BSD sockets for DJGPP: MS-DOS networking), built here; its licence and how
 thirdparty/pktdrvr/             Crynwr's NE2000 packet driver (GPL) that DOS networking needs
 thirdparty/cwsdpmi/             CWSDPMI's loader stub (the DOS programs' DPMI host; source: see its README)
-scripts/toolchains.gd           targets, compiler lookup, builds, the exported C project
+scripts/toolchain_manager.gd    the Toolchains window's downloads: manifest, download, sha256, unpack, remove
+scripts/toolchains.gd           targets
 scripts/editor/editor_panel.gd  the window: toolbar, project manager, tabs, undo, build / run / trace
 scripts/editor/project_dock.gd  the project folder as a tree
 scripts/editor/canvas.gd        the wire canvas (GraphEdit)
@@ -179,3 +180,8 @@ tests/                          run_tests.gd, suites/ (make_suites.py), cases/ (
 ```
 
 The working notes for Claude sessions are `CLAUDE.md`, `PROGRESS.md`, `DECISIONS.md`, `BUGS.md` and `DEBUG.md`. The startup shell is `./SetupClaude.sh` (`--check` only checks).
+
+## License
+
+C-Bricks is source-available, not open source (`LICENSE`): you can read the code and run the editor for any purpose, and **everything you make with the editor (your projects, the generated C, the programs, including the runtime code inside them) is yours to use, ship and sell**; you may not copy, modify or redistribute the source or the editor itself. Bundled and downloaded components keep their own licenses: `NOTICE.md`.
+# C-Bricks
