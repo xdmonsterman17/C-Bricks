@@ -1,0 +1,77 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 4,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Ticker",
+				"extends": "Node",
+				"fields": [
+					[
+						"ticks",
+						"int"
+					]
+				],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "every_frame",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "ticks"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

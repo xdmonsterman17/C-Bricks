@@ -1,0 +1,1429 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 147,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					126,
+					127,
+					146
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "800"
+				},
+				"height": {
+					"type": "int",
+					"value": "450"
+				},
+				"title": {
+					"type": "string",
+					"value": "3D test"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "pyramid",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 1.5, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "1, 0, 1"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-1, 0, 1"
+				},
+				"color": {
+					"type": "string",
+					"value": "ORANGE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 1.5, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "1, 0, -1"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "1, 0, 1"
+				},
+				"color": {
+					"type": "string",
+					"value": "ORANGE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 1.5, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-1, 0, -1"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "1, 0, -1"
+				},
+				"color": {
+					"type": "string",
+					"value": "ORANGE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 1.5, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-1, 0, 1"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-1, 0, -1"
+				},
+				"color": {
+					"type": "string",
+					"value": "ORANGE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Quad"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "-1, 0, 1"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-1, 0, -1"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "1, 0, -1"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "1, 0, 1"
+				},
+				"color": {
+					"type": "string",
+					"value": "BROWN"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Sphere"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 1.8, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.6"
+				},
+				"color": {
+					"type": "string",
+					"value": "GOLD"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Flat",
+				"sides": "One side"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pyramid"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "ground",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "-4"
+				},
+				"to": {
+					"type": "int",
+					"value": "4"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "gx",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					113
+				]
+			}
+		},
+		{
+			"id": 113,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "-4"
+				},
+				"to": {
+					"type": "int",
+					"value": "4"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "gz",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					114
+				]
+			}
+		},
+		{
+			"id": 114,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Quad"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "gx, 0, gz"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "gx + 1, 0, gz"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "gx + 1, 0, gz + 1"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "gx, 0, gz + 1"
+				},
+				"color": {
+					"type": "string",
+					"value": "#4caf50"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Smooth",
+				"sides": "Both sides"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ground"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "mesh_vertices",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				}
+			},
+			"outs": {
+				"points": {
+					"var": "pts",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "pts"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "npts",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "npts"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "vector3"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "bent",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "for_each",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"list": {
+					"var": "pts"
+				}
+			},
+			"outs": {
+				"item": {
+					"var": "p",
+					"use": false
+				},
+				"index": {
+					"var": "",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					122,
+					123,
+					124,
+					125
+				]
+			}
+		},
+		{
+			"id": 122,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split"
+			},
+			"args": {
+				"a": {
+					"var": "p"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "px",
+					"use": false
+				},
+				"y": {
+					"var": "py",
+					"use": false
+				},
+				"z": {
+					"var": "pz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "sin(px) * 0.4 + cos(pz * 0.8) * 0.3",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "h",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"var": "px"
+				},
+				"y": {
+					"var": "h"
+				},
+				"z": {
+					"var": "pz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "np",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "bent"
+				},
+				"value": {
+					"var": "np"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "mesh_vertices",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				},
+				"value": {
+					"var": "bent"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "camera3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"projection": "Perspective"
+			},
+			"args": {
+				"position": {
+					"type": "vector3",
+					"value": "6, 6, 8"
+				},
+				"target": {
+					"type": "vector3",
+					"value": "0, 0.5, 0"
+				},
+				"fov": {
+					"type": "float",
+					"value": "50"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "clear",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "SKYBLUE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "draw3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"draw": [
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					137,
+					138,
+					139
+				]
+			}
+		},
+		{
+			"id": 131,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Mesh"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Mesh"
+			},
+			"args": {
+				"mesh": {
+					"var": "pyramid"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0.3, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "20"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Box"
+			},
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "2.5, 0.8, 1"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "RED"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sphere"
+			},
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "-2.5, 1, 1"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLUE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Cylinder"
+			},
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "2.5, 1, -2"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.8, 2, 0.8"
+				},
+				"turn": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "PURPLE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Plane"
+			},
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "-2.5, 0.6, -2"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1.5, 1, 1.5"
+				},
+				"turn": {
+					"type": "float",
+					"value": "45"
+				},
+				"color": {
+					"type": "string",
+					"value": "YELLOW"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Wire box"
+			},
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "2.5, 0.8, 1"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1.2"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLACK"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Line"
+			},
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"to": {
+					"type": "vector3",
+					"value": "0, 4, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLACK"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Grid"
+			},
+			"args": {
+				"lines": {
+					"type": "int",
+					"value": "10"
+				},
+				"spacing": {
+					"type": "float",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "3D test"
+				},
+				"x": {
+					"type": "int",
+					"value": "10"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"size": {
+					"type": "int",
+					"value": "20"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLACK"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "20"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					143,
+					144,
+					145
+				]
+			}
+		},
+		{
+			"id": 143,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"shot3d.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "drawn"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					128,
+					129,
+					130,
+					140,
+					141,
+					142
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,1478 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 55,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "160"
+				},
+				"height": {
+					"type": "int",
+					"value": "120"
+				},
+				"title": {
+					"type": "string",
+					"value": "time effects"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Ticker",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "tick",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					8
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "shake_camera",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"strength": {
+					"type": "float",
+					"value": "0.1"
+				},
+				"duration": {
+					"type": "float",
+					"value": "20"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					7
+				],
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "cb_shake_remaining()",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "left",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "sa"
+			},
+			"args": {
+				"value": {
+					"var": "left"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					9
+				],
+				"next": [
+					20
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "cb_shake_remaining()",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "left",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "sb"
+			},
+			"args": {
+				"value": {
+					"var": "left"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "r15",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "sb == sa && sa > 19",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "still",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[shake] paused: the shake's time stands still: {}"
+			},
+			"args": {
+				"first": {
+					"var": "still"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line17",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line17"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "15"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					13
+				],
+				"next": [
+					30
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "cb_shake_remaining()",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "left",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "sc"
+			},
+			"args": {
+				"value": {
+					"var": "left"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "r25",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(sb - sc) / (r25 - r15)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "rate1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "rate1 > 0.7 && rate1 < 1.3",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "full",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[shake] time scale 1: it drains at the real rate: {}"
+			},
+			"args": {
+				"first": {
+					"var": "full"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line25",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					27
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line25"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					28
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "0.5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "real0",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "25"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					21
+				],
+				"next": [
+					54
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "cb_shake_remaining()",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "left",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "sd"
+			},
+			"args": {
+				"value": {
+					"var": "left"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "real1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					34
+				]
+			}
+		},
+		{
+			"id": 34,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(sc - sd) / (real1 - real0)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "rate2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					35
+				]
+			}
+		},
+		{
+			"id": 35,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "rate2 > 0.4 && rate2 < 0.6",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "half",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					36
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[shake] time scale 0.5: it drains at half the real rate: {}"
+			},
+			"args": {
+				"first": {
+					"var": "half"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line35",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line35"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 38,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "w0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					39
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "0.2"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					40
+				]
+			}
+		},
+		{
+			"id": 40,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "w1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(w1 - w0) > 0.3 && (w1 - w0) < 0.6",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "slow_wait",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[wait] time scale 0.5: Wait 0.2 takes about 0.4 real seconds: {}"
+			},
+			"args": {
+				"first": {
+					"var": "slow_wait"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line41",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					43
+				]
+			}
+		},
+		{
+			"id": 43,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line41"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					44
+				]
+			}
+		},
+		{
+			"id": 44,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					45
+				]
+			}
+		},
+		{
+			"id": 45,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					46
+				]
+			}
+		},
+		{
+			"id": 46,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					47
+				]
+			}
+		},
+		{
+			"id": 47,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "0.05"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					48
+				]
+			}
+		},
+		{
+			"id": 48,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					49
+				]
+			}
+		},
+		{
+			"id": 49,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "still_p",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					50
+				]
+			}
+		},
+		{
+			"id": 50,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(p1 - p0) > 0.35 && !still_p",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "held",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					51
+				]
+			}
+		},
+		{
+			"id": 51,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[wait] paused: Wait lasts until Resume, and Time (the real clock) kept going: {}"
+			},
+			"args": {
+				"first": {
+					"var": "held"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line50",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					52
+				]
+			}
+		},
+		{
+			"id": 52,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line50"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					53
+				]
+			}
+		},
+		{
+			"id": 53,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 54,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "85"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					31
+				]
+			}
+		}
+	]
+}

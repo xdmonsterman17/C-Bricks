@@ -1,0 +1,1077 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 30,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"note": "Each player gets a Fighter (scenes/fighter.cbscene): theirs, so its Input script runs on their machine",
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player_joined"
+		},
+		{
+			"args": {
+				"parent": {
+					"type": "object",
+					"value": ""
+				}
+			},
+			"fields": {
+				"do": "Instance",
+				"scene": "scenes/fighter.cbscene"
+			},
+			"id": 2,
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"outs": {
+				"root": {
+					"use": false,
+					"var": "f"
+				}
+			},
+			"pos": [
+				224.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "scene"
+		},
+		{
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					4
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "pname"
+				}
+			},
+			"pos": [
+				432.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"name": {
+					"var": "pname"
+				},
+				"object": {
+					"var": "f"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Set name"
+			},
+			"id": 4,
+			"links": {
+				"next": [
+					5
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "result"
+				}
+			},
+			"pos": [
+				672.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"object": {
+					"var": "f"
+				},
+				"player": {
+					"var": "player"
+				}
+			},
+			"fields": {
+				"do": "Give to"
+			},
+			"id": 5,
+			"links": {
+				"next": [
+					6
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "owner"
+				}
+			},
+			"pos": [
+				880.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "ownership"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "spawned % 3",
+				"type": "int"
+			},
+			"id": 6,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"note": "Three places to start from, in turn",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "slot"
+				}
+			},
+			"pos": [
+				1088.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "1.5 * slot"
+				},
+				"y": {
+					"type": "float",
+					"value": "0.9"
+				},
+				"z": {
+					"type": "float",
+					"value": "8.0 + 2.5 * slot"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 7,
+			"links": {
+				"next": [
+					15
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "spot"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				1312.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"list": {
+					"var": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"of": "string",
+				"op": "Make"
+			},
+			"id": 8,
+			"links": {
+				"next": [
+					9
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "colors"
+				}
+			},
+			"pos": [
+				2048.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#1e88e5"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 9,
+			"links": {
+				"next": [
+					10
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "items"
+				}
+			},
+			"pos": [
+				2272.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#43a047"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 10,
+			"links": {
+				"next": [
+					11
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "items_2"
+				}
+			},
+			"pos": [
+				2480.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#fdd835"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 11,
+			"links": {
+				"next": [
+					12
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "items_3"
+				}
+			},
+			"pos": [
+				2688.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#8e24aa"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 12,
+			"links": {
+				"next": [
+					13
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "items_4"
+				}
+			},
+			"pos": [
+				2896.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#fb8c00"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 13,
+			"links": {
+				"next": [
+					14
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "items_5"
+				}
+			},
+			"pos": [
+				3104.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "(player - 1) % 5"
+				},
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Get"
+			},
+			"id": 14,
+			"links": {
+				"next": [
+					17
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "color"
+				}
+			},
+			"pos": [
+				3312.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "list"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "spot"
+				}
+			},
+			"fields": {
+				"field": "home",
+				"mode": "Set"
+			},
+			"id": 15,
+			"links": {
+				"next": [
+					16
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				1632.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "spot"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 16,
+			"links": {
+				"next": [
+					8
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_2"
+				}
+			},
+			"pos": [
+				1840.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "color"
+				}
+			},
+			"fields": {
+				"field": "color",
+				"mode": "Set"
+			},
+			"id": 17,
+			"links": {
+				"next": [
+					18
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_3"
+				}
+			},
+			"pos": [
+				3584.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "spawned"
+			},
+			"id": 18,
+			"links": {
+				"next": [
+					19
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				3792.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "pname"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "[server] {} joined",
+				"op": "Format"
+			},
+			"id": 19,
+			"links": {
+				"next": [
+					20
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line_19"
+				}
+			},
+			"pos": [
+				4000.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "line_19"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 20,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				4320.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 21,
+			"links": {
+				"out": [
+					22
+				]
+			},
+			"note": "What they own goes with them",
+			"outs": {},
+			"pos": [
+				0.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player_left"
+		},
+		{
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 22,
+			"links": {
+				"next": [
+					23
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "pname"
+				}
+			},
+			"pos": [
+				224.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"object": {
+					"var": ""
+				},
+				"player": {
+					"var": "player"
+				}
+			},
+			"fields": {
+				"do": "Owned by"
+			},
+			"id": 23,
+			"links": {
+				"next": [
+					24
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "theirs"
+				}
+			},
+			"pos": [
+				464.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "ownership"
+		},
+		{
+			"args": {
+				"list": {
+					"var": "theirs"
+				}
+			},
+			"fields": {},
+			"id": 24,
+			"links": {
+				"done": [
+					26
+				],
+				"loop": [
+					25
+				]
+			},
+			"outs": {
+				"index": {
+					"use": false,
+					"var": ""
+				},
+				"item": {
+					"use": false,
+					"var": "thing"
+				}
+			},
+			"pos": [
+				672.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "for_each"
+		},
+		{
+			"args": {
+				"object": {
+					"var": "thing"
+				}
+			},
+			"fields": {},
+			"id": 25,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				880.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "destroy"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "pname"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "[server] {} left",
+				"op": "Format"
+			},
+			"id": 26,
+			"links": {
+				"next": [
+					27
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line_26"
+				}
+			},
+			"pos": [
+				880.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "line_26"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 27,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				1184.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 28,
+			"links": {
+				"out": [
+					29
+				]
+			},
+			"note": "(a Script object: where the rules run)",
+			"outs": {},
+			"pos": [
+				0.0,
+				624.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "spawned",
+				"scope": "Shared"
+			},
+			"id": 29,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				224.0,
+				624.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		}
+	],
+	"side": "Server",
+	"version": 4
+}

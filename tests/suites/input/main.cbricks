@@ -1,0 +1,1257 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 148,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					110,
+					147
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "160"
+				},
+				"height": {
+					"type": "int",
+					"value": "90"
+				},
+				"title": {
+					"type": "string",
+					"value": "User Input suite"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Hidden"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Visible"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[mouse_mode] Captured, Hidden, Visible"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "player_key",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Pressed",
+				"key": "SPACE"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					107
+				]
+			}
+		},
+		{
+			"id": 107,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[player_key.Pressed] never: nobody pressed"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "player_key",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Released",
+				"key": "SPACE"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[player_key.Released] never"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_down",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_pressed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key released",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_released",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse down",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_down",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse pressed",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_pressed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse over UI",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_over_ui",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Position"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "mx",
+					"use": false
+				},
+				"y": {
+					"var": "my",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Movement"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "dx",
+					"use": false
+				},
+				"y": {
+					"var": "dy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Wheel"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "wheel",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "key_direction",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"left": "A",
+				"right": "D",
+				"forward": "W",
+				"back": "S"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "keys",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "player_input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Holds",
+				"key": "SPACE"
+			},
+			"args": {
+				"player": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "holds",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "player_input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Direction"
+			},
+			"args": {
+				"player": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pdir",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					125,
+					127,
+					129,
+					131,
+					133,
+					135,
+					137,
+					139,
+					141,
+					143,
+					144,
+					146
+				]
+			}
+		},
+		{
+			"id": 125,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Key down] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_key_down"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_125",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					126
+				]
+			}
+		},
+		{
+			"id": 126,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_125"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Key pressed] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_key_pressed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_127",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					128
+				]
+			}
+		},
+		{
+			"id": 128,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_127"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Key released] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_key_released"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_129",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					130
+				]
+			}
+		},
+		{
+			"id": 130,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_129"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Mouse down] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_mouse_down"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_131",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					132
+				]
+			}
+		},
+		{
+			"id": 132,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_131"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Mouse pressed] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_mouse_pressed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_133",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					134
+				]
+			}
+		},
+		{
+			"id": 134,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_133"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[mouse.Wheel] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wheel"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_135",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					136
+				]
+			}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_135"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[key_direction] {}"
+			},
+			"args": {
+				"first": {
+					"var": "keys"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_137",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					138
+				]
+			}
+		},
+		{
+			"id": 138,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_137"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player_input.Holds] {}"
+			},
+			"args": {
+				"first": {
+					"var": "holds"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_139",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					140
+				]
+			}
+		},
+		{
+			"id": 140,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_139"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player_input.Direction] {}"
+			},
+			"args": {
+				"first": {
+					"var": "pdir"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_141",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					142
+				]
+			}
+		},
+		{
+			"id": 142,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_141"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">="
+			},
+			"args": {
+				"a": {
+					"var": "mx"
+				},
+				"b": {
+					"type": "int",
+					"value": "-100000"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pos_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[mouse.Position Movement] {}"
+			},
+			"args": {
+				"first": {
+					"var": "pos_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_144",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					145
+				]
+			}
+		},
+		{
+			"id": 145,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_144"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					111,
+					112,
+					113,
+					114,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					122,
+					123,
+					124
+				]
+			}
+		}
+	]
+}

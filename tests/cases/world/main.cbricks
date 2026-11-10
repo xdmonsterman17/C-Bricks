@@ -1,0 +1,836 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 300,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					100,
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					113,
+					114,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					122,
+					123,
+					124,
+					125
+				]
+			}
+		},
+		{
+			"id": 100,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "800"
+				},
+				"height": {
+					"type": "int",
+					"value": "450"
+				},
+				"title": {
+					"type": "string",
+					"value": "World test"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 101,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Camera",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "cam",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "cam"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 5, 9"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "target"
+			},
+			"args": {
+				"record": {
+					"var": "cam"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 0.5, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Light",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "sun",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Part",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "floor",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "size"
+			},
+			"args": {
+				"record": {
+					"var": "floor"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "10, 0.2, 10"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "floor"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, -0.1, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "color"
+			},
+			"args": {
+				"record": {
+					"var": "floor"
+				},
+				"value": {
+					"type": "string",
+					"value": "#5aa846"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Model",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "group",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "group"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "2, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "rotation"
+			},
+			"args": {
+				"record": {
+					"var": "group"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 45, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Spinner",
+				"world": false
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "sp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set parent"
+			},
+			"args": {
+				"object": {
+					"var": "sp"
+				},
+				"parent": {
+					"var": "group"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "sp"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Ball",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "ball",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "ball"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "-3, 1, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "velocity"
+			},
+			"args": {
+				"record": {
+					"var": "ball"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "3, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Label",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "lbl",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "text"
+			},
+			"args": {
+				"record": {
+					"var": "lbl"
+				},
+				"value": {
+					"type": "string",
+					"value": "World test: a ball rolls into a spinner"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "World"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "w",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Children"
+			},
+			"args": {
+				"object": {
+					"var": "w"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "top",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "top"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ntop",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ntop"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					200,
+					201
+				]
+			}
+		},
+		{
+			"id": 200,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 201,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "150"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					202,
+					203,
+					204
+				]
+			}
+		},
+		{
+			"id": 202,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"world.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 203,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ball"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 204,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

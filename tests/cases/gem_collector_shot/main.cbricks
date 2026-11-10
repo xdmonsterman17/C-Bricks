@@ -1,0 +1,3620 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 124,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "constant",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "ROUND_TIME",
+				"type": "float"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {},
+			"note": "Seconds per round"
+		},
+		{
+			"id": 2,
+			"type": "constant",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "SPEED",
+				"type": "float"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "6"
+				}
+			},
+			"outs": {},
+			"links": {},
+			"note": "Units per second"
+		},
+		{
+			"id": 3,
+			"type": "constant",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "GEM_COUNT",
+				"type": "int"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "8"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "height",
+				"returns": "float",
+				"params": [
+					[
+						"x",
+						"float"
+					],
+					[
+						"z",
+						"float"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					5,
+					6
+				]
+			},
+			"note": "The rolling hills: used for the ground mesh, the player and the gems"
+		},
+		{
+			"id": 5,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "sin(x * 0.45) * 0.6 + cos(z * 0.35) * 0.5",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "hy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"var": "hy"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "new_gem",
+				"returns": "vector3",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					8,
+					9,
+					10,
+					11,
+					12
+				]
+			},
+			"note": "A gem somewhere in the arena, floating above the ground"
+		},
+		{
+			"id": 8,
+			"type": "random",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"min": {
+					"type": "int",
+					"value": "-9"
+				},
+				"max": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "rx",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "random",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"min": {
+					"type": "int",
+					"value": "-9"
+				},
+				"max": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "rz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "height"
+			},
+			"args": {
+				"x": {
+					"var": "rx"
+				},
+				"z": {
+					"var": "rz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "gy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"var": "rx"
+				},
+				"y": {
+					"type": "float",
+					"value": "gy + 0.9"
+				},
+				"z": {
+					"var": "rz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "spot",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"var": "spot"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "960"
+				},
+				"height": {
+					"type": "int",
+					"value": "540"
+				},
+				"title": {
+					"type": "string",
+					"value": "Gem Collector"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "ground",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "The arena floor: a flat grid first"
+		},
+		{
+			"id": 15,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "-10"
+				},
+				"to": {
+					"type": "int",
+					"value": "10"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "gx",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "-10"
+				},
+				"to": {
+					"type": "int",
+					"value": "10"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "gz",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Quad"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "gx, 0, gz"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "gx + 1, 0, gz"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "gx + 1, 0, gz + 1"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "gx, 0, gz + 1"
+				},
+				"color": {
+					"type": "string",
+					"value": "#5aa846"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Smooth",
+				"sides": "One side"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 19,
+			"type": "mesh_vertices",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				}
+			},
+			"outs": {
+				"points": {
+					"var": "flat_points",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "Then every point is lifted to height(x, z)"
+		},
+		{
+			"id": 20,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "vector3"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "hills",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "for_each",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"list": {
+					"var": "flat_points"
+				}
+			},
+			"outs": {
+				"item": {
+					"var": "p",
+					"use": false
+				},
+				"index": {
+					"var": "",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					22,
+					23,
+					24,
+					25
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split"
+			},
+			"args": {
+				"a": {
+					"var": "p"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "px",
+					"use": false
+				},
+				"y": {
+					"var": "",
+					"use": false
+				},
+				"z": {
+					"var": "pz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 23,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "height"
+			},
+			"args": {
+				"x": {
+					"var": "px"
+				},
+				"z": {
+					"var": "pz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "lift",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 24,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"var": "px"
+				},
+				"y": {
+					"var": "lift"
+				},
+				"z": {
+					"var": "pz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 25,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "hills"
+				},
+				"value": {
+					"var": "hp"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 26,
+			"type": "mesh_vertices",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				},
+				"value": {
+					"var": "hills"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 27,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "walls",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 28,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Box"
+			},
+			"args": {
+				"mesh": {
+					"var": "walls"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0.6, -10.3"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "21.2, 1.6, 0.6"
+				},
+				"color": {
+					"type": "string",
+					"value": "#a1887f"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 29,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Box"
+			},
+			"args": {
+				"mesh": {
+					"var": "walls"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0.6, 10.3"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "21.2, 1.6, 0.6"
+				},
+				"color": {
+					"type": "string",
+					"value": "#a1887f"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Box"
+			},
+			"args": {
+				"mesh": {
+					"var": "walls"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "-10.3, 0.6, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.6, 1.6, 20"
+				},
+				"color": {
+					"type": "string",
+					"value": "#a1887f"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 31,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Box"
+			},
+			"args": {
+				"mesh": {
+					"var": "walls"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "10.3, 0.6, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.6, 1.6, 20"
+				},
+				"color": {
+					"type": "string",
+					"value": "#a1887f"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 32,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Flat",
+				"sides": "One side"
+			},
+			"args": {
+				"mesh": {
+					"var": "walls"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 33,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "hero",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "The player: shapes in one mesh"
+		},
+		{
+			"id": 34,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Cylinder"
+			},
+			"args": {
+				"mesh": {
+					"var": "hero"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0.5, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.7, 1, 0.7"
+				},
+				"color": {
+					"type": "string",
+					"value": "#1e88e5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 35,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Sphere"
+			},
+			"args": {
+				"mesh": {
+					"var": "hero"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 1.3, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.6"
+				},
+				"color": {
+					"type": "string",
+					"value": "#ffcc80"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 36,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Shape",
+				"shape": "Box"
+			},
+			"args": {
+				"mesh": {
+					"var": "hero"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 1.3, 0.32"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.14, 0.14, 0.2"
+				},
+				"color": {
+					"type": "string",
+					"value": "#e53935"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 37,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Flat",
+				"sides": "One side"
+			},
+			"args": {
+				"mesh": {
+					"var": "hero"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 38,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "gem",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "A gem: 8 triangles, faceted"
+		},
+		{
+			"id": 39,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 40,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 41,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 42,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 43,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 44,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 45,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 46,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 47,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Flat",
+				"sides": "One side"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 48,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "vector3"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gems",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 49,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "0"
+				},
+				"to": {
+					"var": "GEM_COUNT"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					50,
+					51
+				]
+			}
+		},
+		{
+			"id": 50,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "new_gem"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ng0",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 51,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "gems"
+				},
+				"value": {
+					"var": "ng0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 52,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "height"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "h0",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 53,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "pos"
+			},
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0, h0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 54,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "facing"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 55,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "score"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 56,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "best"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 57,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "time_left"
+			},
+			"args": {
+				"value": {
+					"var": "ROUND_TIME"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 58,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "over"
+			},
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 59,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 60,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Frame time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "dt",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 61,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "t",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 62,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is false"
+			},
+			"args": {
+				"a": {
+					"var": "over"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					63,
+					64,
+					65,
+					66,
+					67,
+					68,
+					69,
+					70,
+					71,
+					72,
+					73,
+					74,
+					76,
+					77,
+					78,
+					79,
+					80,
+					81,
+					87
+				],
+				"false": [
+					95,
+					91
+				]
+			}
+		},
+		{
+			"id": 63,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "time_left"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-dt"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 64,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "W"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kw",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 65,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "S"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ks",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 66,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "A"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ka",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 67,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "D"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kd",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 68,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(kd ? 1.0 : 0.0) - (ka ? 1.0 : 0.0)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "dx",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 69,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(ks ? 1.0 : 0.0) - (kw ? 1.0 : 0.0)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "dz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 70,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"var": "dx"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"var": "dz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dir",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "WASD: a direction on the ground"
+		},
+		{
+			"id": 71,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Normalize"
+			},
+			"args": {
+				"a": {
+					"var": "dir"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dir",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 72,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Scale"
+			},
+			"args": {
+				"a": {
+					"var": "dir"
+				},
+				"factor": {
+					"type": "float",
+					"value": "SPEED * dt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "step",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 73,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "pos"
+			},
+			"args": {
+				"value": {
+					"var": "step"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 74,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "dx != 0 || dz != 0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					75
+				]
+			}
+		},
+		{
+			"id": 75,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "atan2(dx, dz) * 180.0 / 3.14159265",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "facing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 76,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split"
+			},
+			"args": {
+				"a": {
+					"var": "pos"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "px",
+					"use": false
+				},
+				"y": {
+					"var": "",
+					"use": false
+				},
+				"z": {
+					"var": "pz",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "Stay inside the walls, on the ground"
+		},
+		{
+			"id": 77,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "fmax(-9.4, fmin(9.4, px))",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "px",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 78,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "fmax(-9.4, fmin(9.4, pz))",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "pz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 79,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "height"
+			},
+			"args": {
+				"x": {
+					"var": "px"
+				},
+				"z": {
+					"var": "pz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "py",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 80,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"var": "px"
+				},
+				"y": {
+					"var": "py"
+				},
+				"z": {
+					"var": "pz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pos",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 81,
+			"type": "for_each",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"list": {
+					"var": "gems"
+				}
+			},
+			"outs": {
+				"item": {
+					"var": "g",
+					"use": false
+				},
+				"index": {
+					"var": "gi",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					82,
+					83
+				]
+			},
+			"note": "Touching a gem: a point, and it jumps somewhere else"
+		},
+		{
+			"id": 82,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Distance"
+			},
+			"args": {
+				"a": {
+					"var": "pos"
+				},
+				"b": {
+					"var": "g"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dist",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 83,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "<"
+			},
+			"args": {
+				"a": {
+					"var": "dist"
+				},
+				"b": {
+					"type": "float",
+					"value": "1.4"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					84,
+					85,
+					86
+				]
+			}
+		},
+		{
+			"id": 84,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "score"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 85,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "new_gem"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ng",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 86,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"list": {
+					"var": "gems"
+				},
+				"index": {
+					"var": "gi"
+				},
+				"value": {
+					"var": "ng"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 87,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "<="
+			},
+			"args": {
+				"a": {
+					"var": "time_left"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					90,
+					88
+				]
+			}
+		},
+		{
+			"id": 88,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": ">"
+			},
+			"args": {
+				"a": {
+					"var": "score"
+				},
+				"b": {
+					"var": "best"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					89
+				]
+			}
+		},
+		{
+			"id": 89,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "best"
+			},
+			"args": {
+				"value": {
+					"var": "score"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 90,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "over"
+			},
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 91,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "kr"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					92,
+					93,
+					94
+				]
+			}
+		},
+		{
+			"id": 92,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "score"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 93,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "time_left"
+			},
+			"args": {
+				"value": {
+					"var": "ROUND_TIME"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 94,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "over"
+			},
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 95,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "R"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kr",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 96,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"a": {
+					"var": "pos"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 7, 9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "eye",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 97,
+			"type": "camera3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"projection": "Perspective"
+			},
+			"args": {
+				"position": {
+					"var": "eye"
+				},
+				"target": {
+					"var": "pos"
+				},
+				"fov": {
+					"type": "float",
+					"value": "55"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 98,
+			"type": "clear",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "#87ceeb"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 99,
+			"type": "draw3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"draw": [
+					100,
+					101,
+					102,
+					103
+				]
+			}
+		},
+		{
+			"id": 100,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Mesh"
+			},
+			"args": {
+				"mesh": {
+					"var": "ground"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 101,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Mesh"
+			},
+			"args": {
+				"mesh": {
+					"var": "walls"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Mesh"
+			},
+			"args": {
+				"mesh": {
+					"var": "hero"
+				},
+				"at": {
+					"var": "pos"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"var": "facing"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "for_each",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"list": {
+					"var": "gems"
+				}
+			},
+			"outs": {
+				"item": {
+					"var": "shown",
+					"use": false
+				},
+				"index": {
+					"var": "",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					104,
+					105
+				]
+			}
+		},
+		{
+			"id": 104,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"a": {
+					"var": "shown"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, sin(t * 3.0 + shown.x) * 0.15, 0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "bob",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "shape3d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Mesh"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"at": {
+					"var": "bob"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1"
+				},
+				"turn": {
+					"type": "float",
+					"value": "t * 120.0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "time_left > 0 ? (int)ceil(time_left) : 0",
+				"type": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "secs",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Gems: {}     Time: {}     Best: {}"
+			},
+			"args": {
+				"first": {
+					"var": "score"
+				},
+				"second": {
+					"var": "secs"
+				},
+				"third": {
+					"var": "best"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hud",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"var": "hud"
+				},
+				"x": {
+					"type": "int",
+					"value": "18"
+				},
+				"y": {
+					"type": "int",
+					"value": "14"
+				},
+				"size": {
+					"type": "int",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "#1b1b1b"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "WASD to move. Collect the gems before the time runs out!"
+				},
+				"x": {
+					"type": "int",
+					"value": "18"
+				},
+				"y": {
+					"type": "int",
+					"value": "52"
+				},
+				"size": {
+					"type": "int",
+					"value": "18"
+				},
+				"color": {
+					"type": "string",
+					"value": "#37474f"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "over"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					111,
+					112,
+					113,
+					114
+				]
+			}
+		},
+		{
+			"id": 111,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Rectangle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "0"
+				},
+				"y": {
+					"type": "int",
+					"value": "190"
+				},
+				"width": {
+					"type": "int",
+					"value": "960"
+				},
+				"height": {
+					"type": "int",
+					"value": "150"
+				},
+				"color": {
+					"type": "string",
+					"value": "#000000aa"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Time's up! Gems collected: {}"
+			},
+			"args": {
+				"first": {
+					"var": "score"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "msg",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"var": "msg"
+				},
+				"x": {
+					"type": "int",
+					"value": "270"
+				},
+				"y": {
+					"type": "int",
+					"value": "220"
+				},
+				"size": {
+					"type": "int",
+					"value": "36"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "Press R to play again"
+				},
+				"x": {
+					"type": "int",
+					"value": "355"
+				},
+				"y": {
+					"type": "int",
+					"value": "280"
+				},
+				"size": {
+					"type": "int",
+					"value": "26"
+				},
+				"color": {
+					"type": "string",
+					"value": "GOLD"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "40"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					117,
+					118,
+					119,
+					120,
+					121
+				]
+			}
+		},
+		{
+			"id": 117,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"gems.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "hud"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pos"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "facing"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					60,
+					61,
+					62,
+					96,
+					97,
+					98,
+					99,
+					106,
+					107,
+					108,
+					109,
+					110,
+					115,
+					116
+				]
+			}
+		},
+		{
+			"id": 123,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					13,
+					14,
+					15,
+					18,
+					19,
+					20,
+					21,
+					26,
+					27,
+					28,
+					29,
+					30,
+					31,
+					32,
+					33,
+					34,
+					35,
+					36,
+					37,
+					38,
+					39,
+					40,
+					41,
+					42,
+					43,
+					44,
+					45,
+					46,
+					47,
+					48,
+					49,
+					52,
+					53,
+					54,
+					55,
+					56,
+					57,
+					58,
+					59,
+					122
+				]
+			}
+		}
+	]
+}

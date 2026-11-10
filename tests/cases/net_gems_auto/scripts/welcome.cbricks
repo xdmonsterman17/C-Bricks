@@ -1,0 +1,111 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 5,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"note": "In the Hero scene: runs on the machine of the player it's given to"
+		},
+		{
+			"id": 2,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "me",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"note": "Blank Player: the owner of the Runner it's in"
+		},
+		{
+			"id": 3,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Welcome, {}! WASD to run, collect 3 gems to win."
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_3",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"side": "Client"
+}

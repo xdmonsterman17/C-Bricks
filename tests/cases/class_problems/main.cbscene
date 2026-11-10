@@ -1,0 +1,24 @@
+{
+	"format": "c-bricks-scene",
+	"version": 1,
+	"next_id": 4,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Unicorn",
+			"name": "U",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Base",
+			"name": "B",
+			"parent": 9,
+			"fields": {
+				"wings": "2",
+				"hp": "5"
+			}
+		}
+	]
+}

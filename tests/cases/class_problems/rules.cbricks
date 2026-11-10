@@ -1,0 +1,28 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 100,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "spawn_wave",
+				"returns": "void",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"side": "Server"
+}

@@ -1,0 +1,399 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 100,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"name": "factorial",
+				"params": [
+					[
+						"n",
+						"int"
+					]
+				],
+				"returns": "int"
+			},
+			"id": 1,
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "function"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "n"
+				},
+				"b": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"operator": "<="
+			},
+			"id": 2,
+			"links": {
+				"false": [
+					4,
+					5,
+					6
+				],
+				"next": [],
+				"true": [
+					3
+				]
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"gives": "A value"
+			},
+			"id": 3,
+			"links": {},
+			"outs": {},
+			"pos": [
+				448.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "return"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "n"
+				},
+				"b": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"op": "Subtract"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "m"
+				}
+			},
+			"pos": [
+				448.0,
+				160.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "math"
+		},
+		{
+			"args": {
+				"n": {
+					"var": "m"
+				}
+			},
+			"fields": {
+				"function": "factorial"
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "sub"
+				}
+			},
+			"pos": [
+				448.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "call"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "n"
+				},
+				"b": {
+					"var": "sub"
+				}
+			},
+			"fields": {
+				"op": "Multiply"
+			},
+			"id": 6,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "res"
+				}
+			},
+			"pos": [
+				448.0,
+				448.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "math"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "res"
+				}
+			},
+			"fields": {
+				"gives": "A value"
+			},
+			"id": 7,
+			"links": {},
+			"outs": {},
+			"pos": [
+				656.0,
+				448.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "return"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 10,
+			"links": {
+				"out": [
+					11
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				640.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "1"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				},
+				"to": {
+					"type": "int",
+					"value": "13"
+				}
+			},
+			"fields": {},
+			"id": 11,
+			"links": {
+				"done": [],
+				"loop": [
+					12,
+					18,
+					13
+				]
+			},
+			"outs": {
+				"index": {
+					"use": false,
+					"var": "i"
+				}
+			},
+			"pos": [
+				240.0,
+				640.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "for"
+		},
+		{
+			"args": {
+				"n": {
+					"var": "i"
+				}
+			},
+			"fields": {
+				"function": "factorial"
+			},
+			"id": 12,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "f"
+				}
+			},
+			"pos": [
+				448.0,
+				640.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "call"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "factorial = "
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 18,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				800.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "f"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				928.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 20,
+			"links": {
+				"out": [
+					21
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				1088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "exit"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "(When program ends ran)"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 21,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				1088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		}
+	],
+	"target": "native",
+	"version": 3
+}

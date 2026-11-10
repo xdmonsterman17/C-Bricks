@@ -1,0 +1,1264 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 45,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "dos input"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "A",
+				"button": "A"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "SPACE",
+				"button": "SPACE"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key released",
+				"key": "SPACE",
+				"button": "SPACE"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					7
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "UP",
+				"button": "UP"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k3",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "ENTER",
+				"button": "ENTER"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k4",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "LEFT_SHIFT",
+				"button": "LEFT_SHIFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k5",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "F5",
+				"button": "F5"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k6",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "LEFT_CONTROL",
+				"button": "LEFT_CONTROL"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k7",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse down",
+				"key": "LEFT",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k8",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse pressed",
+				"key": "LEFT",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k9",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse down",
+				"key": "RIGHT",
+				"button": "RIGHT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "k10",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Position"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "mx",
+					"use": false
+				},
+				"y": {
+					"var": "my",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Wheel"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "wheel",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "Q"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "quit",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[in]"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					20
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					21
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t2"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t3",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					27
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k4"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t4",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					28
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t4"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t5",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					30
+				]
+			}
+		},
+		{
+			"id": 30,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					31
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k6"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t6",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t6"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k7"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t7",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					34
+				]
+			}
+		},
+		{
+			"id": 34,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t7"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					35
+				]
+			}
+		},
+		{
+			"id": 35,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k8"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t8",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					36
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t8"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t9",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 38,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t9"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					39
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {}"
+			},
+			"args": {
+				"first": {
+					"var": "k10"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t10",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					40
+				]
+			}
+		},
+		{
+			"id": 40,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "t10"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": " {} {} {}"
+			},
+			"args": {
+				"first": {
+					"var": "mx"
+				},
+				"second": {
+					"var": "my"
+				},
+				"third": {
+					"var": "wheel"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "tm",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "tm"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					43
+				]
+			}
+		},
+		{
+			"id": 43,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "quit"
+				},
+				"b": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					44
+				]
+			}
+		},
+		{
+			"id": 44,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

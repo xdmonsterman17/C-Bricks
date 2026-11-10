@@ -1,0 +1,63 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 3,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "picked",
+				"direction": "To clients",
+				"values": [
+					[
+						"who",
+						"int"
+					],
+					[
+						"score",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "A gem was picked up: by whom, their score now"
+		},
+		{
+			"id": 2,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "winner",
+				"direction": "To clients",
+				"values": [
+					[
+						"who",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "Someone reached 3 gems: the scores start again"
+		}
+	]
+}

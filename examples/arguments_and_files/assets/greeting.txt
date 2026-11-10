@@ -1,0 +1,1 @@
+Welcome! This line comes from assets/greeting.txt.

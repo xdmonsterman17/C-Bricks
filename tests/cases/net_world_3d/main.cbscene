@@ -1,0 +1,32 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 4,
+	"objects": [
+		{
+			"id": 3,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Camera3D",
+			"name": "Camera3D",
+			"parent": 3,
+			"fields": {
+				"position": "0, 4, 8"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Mover",
+			"name": "Mover",
+			"parent": 3,
+			"fields": {
+				"color": "RED"
+			}
+		}
+	]
+}

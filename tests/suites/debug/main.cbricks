@@ -1,0 +1,104 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 104,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "assert",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"type": "int",
+					"value": "2"
+				},
+				"b": {
+					"type": "int",
+					"value": "2"
+				},
+				"message": {
+					"type": "string",
+					"value": "2 is 2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[assert] passed (a failing one is the case assert_fails)"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "debug_log",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "only with -v"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

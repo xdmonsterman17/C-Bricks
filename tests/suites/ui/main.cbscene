@@ -1,0 +1,50 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 5,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Node",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "PlayButton",
+			"name": "Play",
+			"parent": 1,
+			"fields": {
+				"anchor": "center",
+				"size": "120, 40",
+				"text": "Play"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Button",
+			"name": "Quit",
+			"parent": 1,
+			"fields": {
+				"anchor": "top_left",
+				"offset": "4, 4",
+				"size": "80, 30",
+				"text": "Quit"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Button",
+			"name": "Off",
+			"parent": 1,
+			"fields": {
+				"anchor": "top_right",
+				"offset": "-4, 4",
+				"size": "80, 30",
+				"text": "Off",
+				"disabled": "true"
+			}
+		}
+	]
+}

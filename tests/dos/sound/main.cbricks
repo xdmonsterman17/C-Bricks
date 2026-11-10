@@ -1,0 +1,1271 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 46,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "160"
+				},
+				"height": {
+					"type": "int",
+					"value": "120"
+				},
+				"title": {
+					"type": "string",
+					"value": "dos sound"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Load",
+				"loop": false
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/tone.wav"
+				}
+			},
+			"outs": {
+				"music": {
+					"var": "song",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "sound",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Load"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/blip.wav"
+				}
+			},
+			"outs": {
+				"sound": {
+					"var": "blip",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Load",
+				"loop": false
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/missing.wav"
+				}
+			},
+			"outs": {
+				"music": {
+					"var": "nope",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "sound",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Load"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/noise.ogg"
+				}
+			},
+			"outs": {
+				"sound": {
+					"var": "noise",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					7
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Load",
+				"loop": false
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/pudinha.mp3"
+				}
+			},
+			"outs": {
+				"music": {
+					"var": "tune",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[load] "
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": ", "
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "blip"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": ", missing: "
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nope"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Play"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "sound",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Play"
+			},
+			"args": {
+				"sound": {
+					"var": "blip"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 19,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					11
+				],
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[convert] "
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					21
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "noise"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": ", "
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "tune"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "sound",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Play"
+			},
+			"args": {
+				"sound": {
+					"var": "noise"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Play"
+			},
+			"args": {
+				"music": {
+					"var": "tune"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 26,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					20
+				],
+				"next": [
+					30
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "p1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					28
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music] playing 0.15 s in: {}"
+			},
+			"args": {
+				"first": {
+					"var": "p1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line27",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line27"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					27
+				],
+				"next": [
+					35
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "p2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music] paused: playing? {}"
+			},
+			"args": {
+				"first": {
+					"var": "p2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line32",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					34
+				]
+			}
+		},
+		{
+			"id": 34,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line32"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 35,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "20"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					31
+				],
+				"next": [
+					40
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "p3",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 38,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music] resumed: playing? {}"
+			},
+			"args": {
+				"first": {
+					"var": "p3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line37",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					39
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line37"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 40,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "30"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					36
+				],
+				"next": [
+					45
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "p4",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music] after its 0.5 s ran out: playing? {}"
+			},
+			"args": {
+				"first": {
+					"var": "p4"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line41",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					43
+				]
+			}
+		},
+		{
+			"id": 43,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line41"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					44
+				]
+			}
+		},
+		{
+			"id": 44,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 45,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "90"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					41
+				]
+			}
+		}
+	]
+}

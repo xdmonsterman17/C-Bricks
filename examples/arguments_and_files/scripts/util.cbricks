@@ -1,0 +1,142 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 100,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"name": "count_lines",
+				"params": [
+					[
+						"path",
+						"string"
+					]
+				],
+				"returns": "int"
+			},
+			"id": 1,
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "function"
+		},
+		{
+			"args": {
+				"path": {
+					"var": "path"
+				}
+			},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"text": {
+					"use": false,
+					"var": "text"
+				}
+			},
+			"pos": [
+				288.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "read_file"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "count",
+				"scope": "Local"
+			},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				288.0,
+				144.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {
+				"code": "for (const char *p = text; *p; p++) {\n    if (*p == '\\n') count++;\n}"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				288.0,
+				272.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "raw_c"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "count"
+				}
+			},
+			"fields": {
+				"gives": "A value"
+			},
+			"id": 5,
+			"links": {},
+			"outs": {},
+			"pos": [
+				288.0,
+				448.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "return"
+		}
+	],
+	"target": "native",
+	"version": 3
+}

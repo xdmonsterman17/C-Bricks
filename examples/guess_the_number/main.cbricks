@@ -1,0 +1,410 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 100,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					11,
+					6
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Guess my number (1-100)!"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 2,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"max": {
+					"type": "int",
+					"value": "100"
+				},
+				"min": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "secret"
+				}
+			},
+			"pos": [
+				240.0,
+				160.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "random"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "guess",
+				"scope": "Local"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				240.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "tries",
+				"scope": "Local"
+			},
+			"id": 11,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				240.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "guess"
+				},
+				"b": {
+					"var": "secret"
+				}
+			},
+			"fields": {
+				"operator": "!="
+			},
+			"id": 6,
+			"links": {
+				"done": [],
+				"loop": [
+					7,
+					12,
+					9
+				]
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				544.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "while"
+		},
+		{
+			"args": {},
+			"fields": {
+				"as": "int",
+				"prompt": "Your guess: "
+			},
+			"id": 7,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": true,
+					"var": "guess"
+				}
+			},
+			"pos": [
+				448.0,
+				544.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "read"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "tries",
+				"scope": "Local"
+			},
+			"id": 12,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				448.0,
+				704.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "guess"
+				},
+				"b": {
+					"var": "secret"
+				}
+			},
+			"fields": {
+				"operator": "<"
+			},
+			"id": 9,
+			"links": {
+				"false": [
+					14
+				],
+				"next": [],
+				"true": [
+					13
+				]
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				832.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Too low!"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				656.0,
+				832.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "guess"
+				},
+				"b": {
+					"var": "secret"
+				}
+			},
+			"fields": {
+				"operator": ">"
+			},
+			"id": 14,
+			"links": {
+				"false": [
+					16,
+					17
+				],
+				"next": [],
+				"true": [
+					15
+				]
+			},
+			"outs": {},
+			"pos": [
+				656.0,
+				960.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Too high!"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 15,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				960.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "You got it in "
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 16,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				1088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "tries"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 17,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				1216.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		}
+	],
+	"target": "native",
+	"version": 3
+}

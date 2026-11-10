@@ -1,0 +1,5 @@
+[project]
+
+name="Scenes"
+version="1.0"
+main_scene="main.cbscene"

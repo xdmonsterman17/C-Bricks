@@ -1,0 +1,2794 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 202,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					109,
+					110,
+					112,
+					113,
+					115,
+					116,
+					117,
+					119,
+					121,
+					122,
+					124,
+					125,
+					127,
+					128,
+					129,
+					131,
+					132,
+					134,
+					135,
+					137,
+					138,
+					140,
+					141,
+					143,
+					144,
+					145,
+					147,
+					148,
+					160,
+					161,
+					162,
+					163,
+					174,
+					175,
+					177,
+					179,
+					180,
+					182,
+					183,
+					185,
+					186,
+					187,
+					189,
+					190,
+					191,
+					192,
+					194,
+					195,
+					196,
+					198,
+					199,
+					200
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "player_joined",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					102
+				]
+			}
+		},
+		{
+			"id": 102,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "joined_name",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					103
+				]
+			}
+		},
+		{
+			"id": 103,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player_joined] {} #{}"
+			},
+			"args": {
+				"first": {
+					"var": "joined_name"
+				},
+				"second": {
+					"var": "player"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "jline",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					104
+				]
+			}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "jline"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "player_left",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					106
+				]
+			}
+		},
+		{
+			"id": 106,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "left_name",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					107
+				]
+			}
+		},
+		{
+			"id": 107,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player_left] {}"
+			},
+			"args": {
+				"first": {
+					"var": "left_name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_107",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					108
+				]
+			}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_107"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[network.Role] {}"
+			},
+			"args": {
+				"first": {
+					"var": "role"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_110",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					111
+				]
+			}
+		},
+		{
+			"id": 111,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_110"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is server"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "rules",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[network.Is server] {}"
+			},
+			"args": {
+				"first": {
+					"var": "rules"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_113",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					114
+				]
+			}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_113"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Me"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "me",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "me_name",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.Me Name] {}"
+			},
+			"args": {
+				"first": {
+					"var": "me_name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_117",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					118
+				]
+			}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_117"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.Me (a number)] {}"
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_119",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					120
+				]
+			}
+		},
+		{
+			"id": 120,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_119"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "blank_name",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.Name (blank: me)] {}"
+			},
+			"args": {
+				"first": {
+					"var": "blank_name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_122",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					123
+				]
+			}
+		},
+		{
+			"id": 123,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_122"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Is me"
+			},
+			"args": {
+				"player": {
+					"var": "me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "is_me",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.Is me] {}"
+			},
+			"args": {
+				"first": {
+					"var": "is_me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_125",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					126
+				]
+			}
+		},
+		{
+			"id": 126,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_125"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Players"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "everyone",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "everyone"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "count",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.Players] {}"
+			},
+			"args": {
+				"first": {
+					"var": "count"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_129",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					130
+				]
+			}
+		},
+		{
+			"id": 130,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_129"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "In game"
+			},
+			"args": {
+				"player": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "in1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.In game 1] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_132",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					133
+				]
+			}
+		},
+		{
+			"id": 133,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_132"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "In game"
+			},
+			"args": {
+				"player": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "in9",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[player.In game 9] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_135",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					136
+				]
+			}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_135"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Host"
+			},
+			"args": {
+				"port": {
+					"type": "int",
+					"value": "47390"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hosted",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[network.Host] {}"
+			},
+			"args": {
+				"first": {
+					"var": "hosted"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_138",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					139
+				]
+			}
+		},
+		{
+			"id": 139,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_138"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[network.Host role] {}"
+			},
+			"args": {
+				"first": {
+					"var": "role2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_141",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					142
+				]
+			}
+		},
+		{
+			"id": 142,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_141"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Leave"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role3",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[network.Leave] {}"
+			},
+			"args": {
+				"first": {
+					"var": "role3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_145",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					146
+				]
+			}
+		},
+		{
+			"id": 146,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_145"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Join"
+			},
+			"args": {
+				"address": {
+					"type": "string",
+					"value": "127.0.0.1"
+				},
+				"port": {
+					"type": "int",
+					"value": "47391"
+				},
+				"timeout": {
+					"type": "float",
+					"value": "0.3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "joined",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 148,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[network.Join (nobody there)] {}"
+			},
+			"args": {
+				"first": {
+					"var": "joined"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_148",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					149
+				]
+			}
+		},
+		{
+			"id": 149,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_148"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 150,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "buy",
+				"direction": "To server",
+				"values": [
+					[
+						"item",
+						"string"
+					],
+					[
+						"amount",
+						"int"
+					],
+					[
+						"where",
+						"vector3"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 151,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "news",
+				"direction": "To clients",
+				"values": [
+					[
+						"text",
+						"string"
+					],
+					[
+						"who",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 152,
+			"type": "on_client_fired",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "buy"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					153
+				]
+			}
+		},
+		{
+			"id": 153,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "sender"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "buyer",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					154
+				]
+			}
+		},
+		{
+			"id": 154,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[on_client_fired] {} x{} from {} at {}"
+			},
+			"args": {
+				"first": {
+					"var": "item"
+				},
+				"second": {
+					"var": "amount"
+				},
+				"third": {
+					"var": "buyer"
+				},
+				"fourth": {
+					"var": "where"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "buy_line",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					155
+				]
+			}
+		},
+		{
+			"id": 155,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "buy_line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 156,
+			"type": "on_server_fired",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "news"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					157
+				]
+			}
+		},
+		{
+			"id": 157,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "who"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "who_name",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					158
+				]
+			}
+		},
+		{
+			"id": 158,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[on_server_fired] {}, {}"
+			},
+			"args": {
+				"first": {
+					"var": "text"
+				},
+				"second": {
+					"var": "who_name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "news_line",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					159
+				]
+			}
+		},
+		{
+			"id": 159,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "news_line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 160,
+			"type": "fire_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "buy"
+			},
+			"args": {
+				"item": {
+					"type": "string",
+					"value": "apple"
+				},
+				"amount": {
+					"type": "int",
+					"value": "3"
+				},
+				"where": {
+					"type": "vector3",
+					"value": "1, 2, 3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 161,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Me"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "me2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 162,
+			"type": "fire_clients",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "news",
+				"to": "All"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"who": {
+					"var": "me2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 163,
+			"type": "fire_clients",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "news",
+				"to": "One player"
+			},
+			"args": {
+				"player": {
+					"var": "me2"
+				},
+				"text": {
+					"type": "string",
+					"value": "just you"
+				},
+				"who": {
+					"var": "me2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 164,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "price",
+				"direction": "Ask server",
+				"values": [
+					[
+						"item",
+						"string"
+					],
+					[
+						"count",
+						"int"
+					]
+				],
+				"answer": "int"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 165,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "silent",
+				"direction": "Ask server",
+				"values": [],
+				"answer": "string"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 166,
+			"type": "on_client_invoked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "price"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					167,
+					168,
+					169,
+					170,
+					171,
+					172
+				]
+			}
+		},
+		{
+			"id": 167,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "sender"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "asker",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 168,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[on_client_invoked] {} x{} asked by {}"
+			},
+			"args": {
+				"first": {
+					"var": "item"
+				},
+				"second": {
+					"var": "count"
+				},
+				"third": {
+					"var": "asker"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ask_line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 169,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ask_line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 170,
+			"type": "math",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "*"
+			},
+			"args": {
+				"a": {
+					"var": "count"
+				},
+				"b": {
+					"type": "int",
+					"value": "7"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "cost",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 171,
+			"type": "answer",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"value": {
+					"var": "cost"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 172,
+			"type": "answer",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "-1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 173,
+			"type": "on_client_invoked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "silent"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 174,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "price"
+			},
+			"args": {
+				"item": {
+					"type": "string",
+					"value": "pear"
+				},
+				"count": {
+					"type": "int",
+					"value": "6"
+				},
+				"timeout": {
+					"type": "float",
+					"value": "2"
+				}
+			},
+			"outs": {
+				"answer": {
+					"var": "paid",
+					"use": false
+				},
+				"answered": {
+					"var": "got",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 175,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[invoke_server.Answer] {}"
+			},
+			"args": {
+				"first": {
+					"var": "paid"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_175",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					176
+				]
+			}
+		},
+		{
+			"id": 176,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_175"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 177,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[invoke_server.Answered] {}"
+			},
+			"args": {
+				"first": {
+					"var": "got"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_177",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					178
+				]
+			}
+		},
+		{
+			"id": 178,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_177"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 179,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "silent"
+			},
+			"args": {
+				"timeout": {
+					"type": "float",
+					"value": "2"
+				}
+			},
+			"outs": {
+				"answer": {
+					"var": "quiet",
+					"use": false
+				},
+				"answered": {
+					"var": "got2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 180,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[invoke_server.no Answer] {}"
+			},
+			"args": {
+				"first": {
+					"var": "got2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_180",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					181
+				]
+			}
+		},
+		{
+			"id": 181,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_180"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 182,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"var": "quiet"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "quiet_len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 183,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[answer.empty] {}"
+			},
+			"args": {
+				"first": {
+					"var": "quiet_len"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_183",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					184
+				]
+			}
+		},
+		{
+			"id": 184,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_183"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 185,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Node",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "thing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 186,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is mine"
+			},
+			"args": {
+				"object": {
+					"var": "thing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "mine0",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 187,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[ownership.Is mine (no one's, offline)] {}"
+			},
+			"args": {
+				"first": {
+					"var": "mine0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_187",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					188
+				]
+			}
+		},
+		{
+			"id": 188,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_187"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 189,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Give to"
+			},
+			"args": {
+				"object": {
+					"var": "thing"
+				},
+				"player": {
+					"var": "me2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 190,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Owner"
+			},
+			"args": {
+				"object": {
+					"var": "thing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "own",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 191,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "own"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "own_name",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 192,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[ownership.Give to Owner] {}"
+			},
+			"args": {
+				"first": {
+					"var": "own_name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_192",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					193
+				]
+			}
+		},
+		{
+			"id": 193,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_192"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 194,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Owned by"
+			},
+			"args": {
+				"player": {
+					"var": "me2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "mine_list",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 195,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "mine_list"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "n_mine",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 196,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[ownership.Owned by] {}"
+			},
+			"args": {
+				"first": {
+					"var": "n_mine"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_196",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					197
+				]
+			}
+		},
+		{
+			"id": 197,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_196"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 198,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Give to"
+			},
+			"args": {
+				"object": {
+					"var": "thing"
+				},
+				"player": {
+					"var": ""
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 199,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Owner"
+			},
+			"args": {
+				"object": {
+					"var": "thing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "own2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 200,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[ownership.Give to no one] {}"
+			},
+			"args": {
+				"first": {
+					"var": "own2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_200",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					201
+				]
+			}
+		},
+		{
+			"id": 201,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_200"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

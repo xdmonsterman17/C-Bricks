@@ -1,0 +1,146 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 7,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "reset_plain_n",
+				"returns": "void",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "plain_n",
+				"scope": "Shared"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "frame_start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "plain_n"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "get_plain_n",
+				"returns": "int",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"var": "plain_n"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

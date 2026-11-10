@@ -1,0 +1,1764 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 46,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"hp",
+						"int"
+					],
+					[
+						"speed",
+						"float"
+					],
+					[
+						"bite",
+						"float"
+					],
+					[
+						"bar",
+						"Shape3D"
+					]
+				],
+				"name": "Enemy",
+				"synced": "hp"
+			},
+			"id": 1,
+			"links": {},
+			"note": "A block that chases the nearest Fighter, its health in a bar over its head",
+			"outs": {},
+			"pos": [
+				0.0,
+				1152.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "class"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"out": [
+					4
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "created"
+		},
+		{
+			"args": {},
+			"fields": {
+				"of": "Shape3D",
+				"world": false
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					9
+				]
+			},
+			"note": "A visor: shows where it faces",
+			"outs": {
+				"object": {
+					"use": false,
+					"var": "visor"
+				}
+			},
+			"pos": [
+				1248.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "new_object"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "#d32f2f"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "color"
+			},
+			"id": 4,
+			"links": {
+				"next": [
+					5
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				208.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "1, 1.8, 1"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "size"
+			},
+			"id": 5,
+			"links": {
+				"next": [
+					6
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				416.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "solid"
+			},
+			"id": 6,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				624.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "100"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "hp"
+			},
+			"id": 7,
+			"links": {
+				"next": [
+					8
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_4"
+				}
+			},
+			"pos": [
+				832.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "2.2"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "speed"
+			},
+			"id": 8,
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_5"
+				}
+			},
+			"pos": [
+				1040.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "visor"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 0.5, -0.5"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 9,
+			"links": {
+				"next": [
+					10
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				1472.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "visor"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0.7, 0.22, 0.1"
+				}
+			},
+			"fields": {
+				"field": "size",
+				"mode": "Set"
+			},
+			"id": 10,
+			"links": {
+				"next": [
+					11
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_2"
+				}
+			},
+			"pos": [
+				1728.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "visor"
+				},
+				"value": {
+					"type": "string",
+					"value": "#ffeb3b"
+				}
+			},
+			"fields": {
+				"field": "color",
+				"mode": "Set"
+			},
+			"id": 11,
+			"links": {
+				"next": [
+					12
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_3"
+				}
+			},
+			"pos": [
+				1968.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "visor"
+				},
+				"parent": {
+					"var": "self"
+				}
+			},
+			"fields": {
+				"op": "Set parent"
+			},
+			"id": 12,
+			"links": {
+				"next": [
+					13
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "result"
+				}
+			},
+			"pos": [
+				2192.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {},
+			"fields": {
+				"of": "Shape3D",
+				"world": false
+			},
+			"id": 13,
+			"links": {
+				"next": [
+					14
+				]
+			},
+			"note": "Its health bar (a thin 3D bar over its head)",
+			"outs": {
+				"object": {
+					"use": false,
+					"var": "bar"
+				}
+			},
+			"pos": [
+				2400.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "new_object"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "bar"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 1.2, 0"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 14,
+			"links": {
+				"next": [
+					15
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_4"
+				}
+			},
+			"pos": [
+				2624.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "bar"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "1, 0.12, 0.12"
+				}
+			},
+			"fields": {
+				"field": "size",
+				"mode": "Set"
+			},
+			"id": 15,
+			"links": {
+				"next": [
+					16
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_5"
+				}
+			},
+			"pos": [
+				2848.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "bar"
+				},
+				"value": {
+					"type": "string",
+					"value": "#ff5252"
+				}
+			},
+			"fields": {
+				"field": "color",
+				"mode": "Set"
+			},
+			"id": 16,
+			"links": {
+				"next": [
+					17
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_6"
+				}
+			},
+			"pos": [
+				3072.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "bar"
+				},
+				"parent": {
+					"var": "self"
+				}
+			},
+			"fields": {
+				"op": "Set parent"
+			},
+			"id": 17,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "result_2"
+				}
+			},
+			"pos": [
+				3280.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 18,
+			"links": {
+				"out": [
+					19
+				]
+			},
+			"note": "On the server (players' machines get its copy)",
+			"outs": {},
+			"pos": [
+				0.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "every_frame"
+		},
+		{
+			"args": {
+				"except": {
+					"type": "object",
+					"value": ""
+				},
+				"from": {
+					"var": "position"
+				},
+				"range": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"of": "Fighter"
+			},
+			"id": 19,
+			"links": {
+				"next": [
+					20
+				]
+			},
+			"note": "The nearest player",
+			"outs": {
+				"distance": {
+					"use": false,
+					"var": ""
+				},
+				"result": {
+					"use": false,
+					"var": "prey"
+				}
+			},
+			"pos": [
+				224.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "nearest"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "prey"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Exists"
+			},
+			"id": 20,
+			"links": {
+				"next": [
+					21
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "has_prey"
+				}
+			},
+			"pos": [
+				448.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "has_prey"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 21,
+			"links": {
+				"false": [],
+				"next": [
+					36
+				],
+				"true": [
+					22
+				]
+			},
+			"outs": {},
+			"pos": [
+				672.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "prey"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Get"
+			},
+			"id": 22,
+			"links": {
+				"next": [
+					23
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "goal"
+				}
+			},
+			"pos": [
+				880.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "prey"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "health",
+				"mode": "Get"
+			},
+			"id": 23,
+			"links": {
+				"next": [
+					24
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "their_health"
+				}
+			},
+			"pos": [
+				1088.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "goal"
+				},
+				"b": {
+					"var": "position"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Subtract"
+			},
+			"id": 24,
+			"links": {
+				"next": [
+					25
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "to"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				1344.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "to.x"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "to.z"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 25,
+			"links": {
+				"next": [
+					26
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "flat"
+				},
+				"x": {
+					"use": false,
+					"var": "x_2"
+				},
+				"y": {
+					"use": false,
+					"var": "y_2"
+				},
+				"z": {
+					"use": false,
+					"var": "z_2"
+				}
+			},
+			"pos": [
+				1552.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "flat"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Length"
+			},
+			"id": 26,
+			"links": {
+				"next": [
+					27
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "dist"
+				},
+				"x": {
+					"use": false,
+					"var": "x_3"
+				},
+				"y": {
+					"use": false,
+					"var": "y_3"
+				},
+				"z": {
+					"use": false,
+					"var": "z_3"
+				}
+			},
+			"pos": [
+				1760.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "atan2(-flat.x, -flat.z) * 57.29578"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 27,
+			"links": {
+				"next": [
+					28
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "rotation"
+				},
+				"x": {
+					"use": false,
+					"var": "x_4"
+				},
+				"y": {
+					"use": false,
+					"var": "y_4"
+				},
+				"z": {
+					"use": false,
+					"var": "z_4"
+				}
+			},
+			"pos": [
+				1968.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "dist"
+				},
+				"b": {
+					"type": "float",
+					"value": "1.3"
+				}
+			},
+			"fields": {
+				"operator": ">"
+			},
+			"id": 28,
+			"links": {
+				"false": [],
+				"next": [
+					32
+				],
+				"true": [
+					29
+				]
+			},
+			"outs": {},
+			"pos": [
+				2368.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "flat"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Normalize"
+			},
+			"id": 29,
+			"links": {
+				"next": [
+					30
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "dir"
+				},
+				"x": {
+					"use": false,
+					"var": "x_5"
+				},
+				"y": {
+					"use": false,
+					"var": "y_5"
+				},
+				"z": {
+					"use": false,
+					"var": "z_5"
+				}
+			},
+			"pos": [
+				2576.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "dir"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "speed * dt"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Scale"
+			},
+			"id": 30,
+			"links": {
+				"next": [
+					31
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "step"
+				},
+				"x": {
+					"use": false,
+					"var": "x_6"
+				},
+				"y": {
+					"use": false,
+					"var": "y_6"
+				},
+				"z": {
+					"use": false,
+					"var": "z_6"
+				}
+			},
+			"pos": [
+				2784.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"motion": {
+					"var": "step"
+				},
+				"part": {
+					"var": "self"
+				}
+			},
+			"fields": {},
+			"id": 31,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"blocked": {
+					"use": false,
+					"var": ""
+				}
+			},
+			"pos": [
+				3008.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "move_collide"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-dt"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "bite"
+			},
+			"id": 32,
+			"links": {
+				"next": [
+					33
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_6"
+				}
+			},
+			"pos": [
+				2576.0,
+				736.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "dist < 1.6 && bite <= 0 && their_health > 0"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 33,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					34
+				]
+			},
+			"outs": {},
+			"pos": [
+				2784.0,
+				736.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"amount": {
+					"type": "int",
+					"value": "10"
+				},
+				"object": {
+					"var": "prey"
+				}
+			},
+			"fields": {
+				"class": "Fighter",
+				"method": "hurt"
+			},
+			"id": 34,
+			"links": {
+				"next": [
+					35
+				]
+			},
+			"outs": {},
+			"pos": [
+				3200.0,
+				736.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "call_method"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "bite"
+			},
+			"id": 35,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_7"
+				}
+			},
+			"pos": [
+				3408.0,
+				736.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "fmax(0.05, hp / 100.0)"
+				},
+				"y": {
+					"type": "float",
+					"value": "0.12"
+				},
+				"z": {
+					"type": "float",
+					"value": "0.12"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 36,
+			"links": {
+				"next": [
+					37
+				]
+			},
+			"note": "The bar shows its health",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "bar_size"
+				},
+				"x": {
+					"use": false,
+					"var": "x_7"
+				},
+				"y": {
+					"use": false,
+					"var": "y_7"
+				},
+				"z": {
+					"use": false,
+					"var": "z_7"
+				}
+			},
+			"pos": [
+				880.0,
+				944.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "bar"
+				},
+				"value": {
+					"var": "bar_size"
+				}
+			},
+			"fields": {
+				"field": "size",
+				"mode": "Set"
+			},
+			"id": 37,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_7"
+				}
+			},
+			"pos": [
+				1264.0,
+				944.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"name": "damage",
+				"params": [
+					[
+						"amount",
+						"int"
+					]
+				],
+				"returns": "bool"
+			},
+			"id": 38,
+			"links": {
+				"out": [
+					39
+				]
+			},
+			"note": "Shot: true when it went down (it comes back at the far wall)",
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "function"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "int",
+					"value": "hp - amount"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "<="
+			},
+			"id": 39,
+			"links": {
+				"false": [],
+				"next": [
+					44
+				],
+				"true": [
+					40
+				]
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "100"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "hp"
+			},
+			"id": 40,
+			"links": {
+				"next": [
+					41
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_8"
+				}
+			},
+			"pos": [
+				448.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"max": {
+					"type": "int",
+					"value": "12"
+				},
+				"min": {
+					"type": "int",
+					"value": "-12"
+				}
+			},
+			"fields": {},
+			"id": 41,
+			"links": {
+				"next": [
+					42
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "rx"
+				}
+			},
+			"pos": [
+				656.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "random"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"var": "rx"
+				},
+				"y": {
+					"type": "float",
+					"value": "0.9"
+				},
+				"z": {
+					"type": "float",
+					"value": "-13"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 42,
+			"links": {
+				"next": [
+					43
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "position"
+				},
+				"x": {
+					"use": false,
+					"var": "x_8"
+				},
+				"y": {
+					"use": false,
+					"var": "y_8"
+				},
+				"z": {
+					"use": false,
+					"var": "z_8"
+				}
+			},
+			"pos": [
+				864.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"fields": {
+				"gives": "A value"
+			},
+			"id": 43,
+			"links": {},
+			"outs": {},
+			"pos": [
+				1088.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "return"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "-amount"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "hp"
+			},
+			"id": 44,
+			"links": {
+				"next": [
+					45
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_9"
+				}
+			},
+			"pos": [
+				448.0,
+				160.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"fields": {
+				"gives": "A value"
+			},
+			"id": 45,
+			"links": {},
+			"outs": {},
+			"pos": [
+				656.0,
+				160.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "return"
+		}
+	],
+	"version": 4
+}

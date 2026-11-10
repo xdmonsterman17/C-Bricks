@@ -1,0 +1,12 @@
+[project]
+
+name="Gem Hunt"
+version="1.0"
+
+[run]
+
+args=""
+
+[build]
+
+target="native"

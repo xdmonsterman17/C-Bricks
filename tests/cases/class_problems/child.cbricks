@@ -1,0 +1,53 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 100,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Child",
+				"extends": "Base",
+				"fields": [
+					[
+						"hp",
+						"float"
+					]
+				],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "go",
+				"returns": "int",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

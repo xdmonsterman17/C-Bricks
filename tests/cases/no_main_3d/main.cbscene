@@ -1,0 +1,40 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 5,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "ModuleScript",
+			"name": "Hello",
+			"parent": 1,
+			"script": "scripts/hello.cbricks",
+			"fields": {}
+		},
+		{
+			"id": 3,
+			"class": "Shape3D",
+			"name": "Box",
+			"parent": 1,
+			"fields": {
+				"color": "ORANGE"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 1,
+			"fields": {
+				"position": "2, 2, 3"
+			}
+		}
+	]
+}

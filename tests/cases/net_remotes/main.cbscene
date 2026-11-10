@@ -1,0 +1,14 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 2,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Board",
+			"name": "Board",
+			"parent": 0,
+			"fields": {}
+		}
+	]
+}

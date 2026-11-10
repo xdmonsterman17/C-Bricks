@@ -1,0 +1,238 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 200,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Enemy",
+				"extends": "Character",
+				"fields": [
+					[
+						"power",
+						"int"
+					]
+				],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "power"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "describe",
+				"returns": "void",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					11,
+					12
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "an enemy with power {} and {} hp"
+			},
+			"args": {
+				"first": {
+					"var": "power"
+				},
+				"second": {
+					"var": "hp"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "attack",
+				"returns": "int",
+				"params": [
+					[
+						"target",
+						"Character"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					21,
+					22
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "call_method",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"class": "Character",
+				"method": "hit"
+			},
+			"args": {
+				"object": {
+					"var": "target"
+				},
+				"dmg": {
+					"var": "power"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "left",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"var": "left"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

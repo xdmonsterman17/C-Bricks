@@ -1,0 +1,94 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 100,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3,
+					4
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Base"
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "b",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "call_method",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"class": "Base",
+				"method": "jump"
+			},
+			"args": {
+				"object": {
+					"var": "b"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "spawn_wave"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"side": "Client"
+}

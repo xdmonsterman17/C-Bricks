@@ -1,0 +1,54 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 100,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "helper",
+				"returns": "void",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Boss"
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "bb",
+					"use": false
+				}
+			},
+			"links": {}
+		}
+	]
+}

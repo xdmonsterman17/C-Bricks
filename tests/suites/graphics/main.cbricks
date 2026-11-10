@@ -1,0 +1,3025 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 209,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					113,
+					115,
+					116,
+					117,
+					118,
+					120,
+					121,
+					122,
+					124,
+					125,
+					126,
+					128,
+					129,
+					130,
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					138,
+					139,
+					140,
+					142,
+					143,
+					144,
+					146,
+					147,
+					206
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "Graphics suite"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "load_texture",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/dot.png"
+				}
+			},
+			"outs": {
+				"texture": {
+					"var": "dot",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[load_texture] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "dot"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "sound",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Load"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/beep.wav"
+				}
+			},
+			"outs": {
+				"sound": {
+					"var": "beep",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "sound",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Play"
+			},
+			"args": {
+				"sound": {
+					"var": "beep"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[sound] loaded and played"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Load",
+				"loop": true
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/beep.wav"
+				}
+			},
+			"outs": {
+				"music": {
+					"var": "song",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[music.Load] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Play"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "playing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.Playing] {}"
+			},
+			"args": {
+				"first": {
+					"var": "playing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_113",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					114
+				]
+			}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_113"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Volume"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				},
+				"volume": {
+					"type": "float",
+					"value": "0.5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "paused_playing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.Pause] {}"
+			},
+			"args": {
+				"first": {
+					"var": "paused_playing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_118",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					119
+				]
+			}
+		},
+		{
+			"id": 119,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_118"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "resumed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.Resume] {}"
+			},
+			"args": {
+				"first": {
+					"var": "resumed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_122",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					123
+				]
+			}
+		},
+		{
+			"id": 123,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_122"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Stop"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "stopped",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.Stop] {}"
+			},
+			"args": {
+				"first": {
+					"var": "stopped"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_126",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					127
+				]
+			}
+		},
+		{
+			"id": 127,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_126"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Play"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[music.Volume] set to 0.5; playing again during the frames"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Hidden"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Visible"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[mouse_mode] Captured, Hidden, Visible"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause.Pause] {}"
+			},
+			"args": {
+				"first": {
+					"var": "p1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_136",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					137
+				]
+			}
+		},
+		{
+			"id": 137,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_136"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause.Resume] {}"
+			},
+			"args": {
+				"first": {
+					"var": "p2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_140",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					141
+				]
+			}
+		},
+		{
+			"id": 141,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_140"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "0.5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Time scale"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ts",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause.Time scale] {}"
+			},
+			"args": {
+				"first": {
+					"var": "ts"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_144",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					145
+				]
+			}
+		},
+		{
+			"id": 145,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_144"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 148,
+			"type": "clear",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "RAYWHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 149,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Rectangle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "10"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"width": {
+					"type": "int",
+					"value": "20"
+				},
+				"height": {
+					"type": "int",
+					"value": "10"
+				},
+				"color": {
+					"type": "string",
+					"value": "RED"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 150,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Outline"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "40"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"width": {
+					"type": "int",
+					"value": "20"
+				},
+				"height": {
+					"type": "int",
+					"value": "10"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLUE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 151,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Circle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "80"
+				},
+				"y": {
+					"type": "int",
+					"value": "15"
+				},
+				"radius": {
+					"type": "float",
+					"value": "6"
+				},
+				"color": {
+					"type": "string",
+					"value": "GREEN"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 152,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Line"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "100"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"x2": {
+					"type": "int",
+					"value": "130"
+				},
+				"y2": {
+					"type": "int",
+					"value": "20"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLACK"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 153,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hi"
+				},
+				"x": {
+					"type": "int",
+					"value": "140"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"size": {
+					"type": "int",
+					"value": "10"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLACK"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 154,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Texture"
+			},
+			"args": {
+				"texture": {
+					"var": "dot"
+				},
+				"x": {
+					"type": "int",
+					"value": "170"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 155,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sprite"
+			},
+			"args": {
+				"texture": {
+					"var": "dot"
+				},
+				"x": {
+					"type": "int",
+					"value": "190"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"frame": {
+					"type": "int",
+					"value": "3"
+				},
+				"columns": {
+					"type": "int",
+					"value": "2"
+				},
+				"rows": {
+					"type": "int",
+					"value": "2"
+				},
+				"scale": {
+					"type": "float",
+					"value": "4"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 156,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Rectangle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "10"
+				},
+				"y": {
+					"type": "int",
+					"value": "40"
+				},
+				"width": {
+					"type": "int",
+					"value": "20"
+				},
+				"height": {
+					"type": "int",
+					"value": "10"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "PURPLE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 157,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "turned"
+				},
+				"x": {
+					"type": "int",
+					"value": "40"
+				},
+				"y": {
+					"type": "int",
+					"value": "40"
+				},
+				"size": {
+					"type": "int",
+					"value": "10"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "PURPLE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 158,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Texture"
+			},
+			"args": {
+				"texture": {
+					"var": "dot"
+				},
+				"x": {
+					"type": "int",
+					"value": "100"
+				},
+				"y": {
+					"type": "int",
+					"value": "40"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "PURPLE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 159,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sprite"
+			},
+			"args": {
+				"texture": {
+					"var": "dot"
+				},
+				"x": {
+					"type": "int",
+					"value": "120"
+				},
+				"y": {
+					"type": "int",
+					"value": "40"
+				},
+				"frame": {
+					"type": "int",
+					"value": "1"
+				},
+				"columns": {
+					"type": "int",
+					"value": "2"
+				},
+				"rows": {
+					"type": "int",
+					"value": "2"
+				},
+				"scale": {
+					"type": "float",
+					"value": "4"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "PURPLE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 160,
+			"type": "view2d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"center": {
+					"type": "vector2",
+					"value": "50, 20"
+				},
+				"zoom": {
+					"type": "float",
+					"value": "2"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {
+				"draw": [
+					161
+				]
+			}
+		},
+		{
+			"id": 161,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Circle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "50"
+				},
+				"y": {
+					"type": "int",
+					"value": "20"
+				},
+				"radius": {
+					"type": "float",
+					"value": "5"
+				},
+				"color": {
+					"type": "string",
+					"value": "ORANGE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 162,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_down",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 163,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_pressed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 164,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key released",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_released",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 165,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse down",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_down",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 166,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse pressed",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_pressed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 167,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Position"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "mx",
+					"use": false
+				},
+				"y": {
+					"var": "my",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 168,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Movement"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "dx",
+					"use": false
+				},
+				"y": {
+					"var": "dy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 169,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Wheel"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "wheel",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 170,
+			"type": "key_direction",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"left": "A",
+				"right": "D",
+				"forward": "W",
+				"back": "S"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "keys",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 171,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Frame time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_frame_time",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 172,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_time",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 173,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Width"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_width",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 174,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Height"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_height",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 175,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "FPS"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_fps",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 176,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 177,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					178,
+					180,
+					182,
+					184,
+					186,
+					188,
+					190,
+					191,
+					193,
+					194,
+					196,
+					197,
+					199,
+					200,
+					201,
+					202,
+					204,
+					205
+				]
+			}
+		},
+		{
+			"id": 178,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Width] {}"
+			},
+			"args": {
+				"first": {
+					"var": "gi_width"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_178",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					179
+				]
+			}
+		},
+		{
+			"id": 179,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_178"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 180,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Height] {}"
+			},
+			"args": {
+				"first": {
+					"var": "gi_height"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_180",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					181
+				]
+			}
+		},
+		{
+			"id": 181,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_180"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 182,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Key down] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_key_down"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_182",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					183
+				]
+			}
+		},
+		{
+			"id": 183,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_182"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 184,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Mouse pressed] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_mouse_pressed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_184",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					185
+				]
+			}
+		},
+		{
+			"id": 185,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_184"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 186,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[mouse.Wheel] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wheel"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_186",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					187
+				]
+			}
+		},
+		{
+			"id": 187,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_186"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 188,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[key_direction] {}"
+			},
+			"args": {
+				"first": {
+					"var": "keys"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_188",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					189
+				]
+			}
+		},
+		{
+			"id": 189,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_188"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 190,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "gi_time"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 191,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_191",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					192
+				]
+			}
+		},
+		{
+			"id": 192,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_191"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 193,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">="
+			},
+			"args": {
+				"a": {
+					"var": "gi_frame_time"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ft_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 194,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Frame time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "ft_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_194",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					195
+				]
+			}
+		},
+		{
+			"id": 195,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_194"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 196,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">="
+			},
+			"args": {
+				"a": {
+					"var": "gi_fps"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "fps_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 197,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.FPS] {}"
+			},
+			"args": {
+				"first": {
+					"var": "fps_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_197",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					198
+				]
+			}
+		},
+		{
+			"id": 198,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_197"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 199,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[game_loop] 3 frames drawn"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 200,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[draw] every shape, turned ones, a sprite's frame, a 2D view"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 201,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "still",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 202,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.frames] {}"
+			},
+			"args": {
+				"first": {
+					"var": "still"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_202",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					203
+				]
+			}
+		},
+		{
+			"id": 203,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_202"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 204,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 205,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[close_window] asked; the frame goes on"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 206,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					148,
+					149,
+					150,
+					151,
+					152,
+					153,
+					154,
+					155,
+					156,
+					157,
+					158,
+					159,
+					160,
+					162,
+					163,
+					164,
+					165,
+					166,
+					167,
+					168,
+					169,
+					170,
+					171,
+					172,
+					173,
+					174,
+					175,
+					176,
+					177
+				],
+				"done": [
+					207
+				]
+			}
+		},
+		{
+			"id": 207,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[close_window.Done] {}"
+			},
+			"args": {
+				"first": {
+					"var": "frames"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_207",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					208
+				]
+			}
+		},
+		{
+			"id": 208,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_207"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

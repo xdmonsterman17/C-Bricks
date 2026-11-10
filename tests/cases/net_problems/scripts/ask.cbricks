@@ -1,0 +1,215 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 11,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "q",
+				"direction": "Ask server",
+				"values": [],
+				"answer": "int"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "badq",
+				"direction": "Ask server",
+				"values": [],
+				"answer": "int list"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "q"
+			},
+			"args": {},
+			"outs": {
+				"answer": {
+					"var": "a",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "answer",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "on_client_fired",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "q"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "on_client_invoked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "down"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "on_client_invoked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "q"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "answer",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "text"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "button_clicked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"button": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"side": "Server"
+}

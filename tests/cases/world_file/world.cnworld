@@ -1,0 +1,81 @@
+{
+	"format": "c-bricks-world",
+	"version": 1,
+	"next_id": 8,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Camera",
+			"name": "Camera",
+			"parent": 0,
+			"fields": {
+				"position": "0, 5, 9",
+				"target": "0, 0.5, 0",
+				"sky": "#9fd3ff"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light",
+			"name": "Sun",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 3,
+			"class": "Part",
+			"name": "Floor",
+			"parent": 0,
+			"fields": {
+				"size": "10, 0.2, 10",
+				"position": "0, -0.1, 0",
+				"color": "#5aa846"
+			},
+			"groups": [
+				"ground"
+			],
+			"meta": {
+				"kind": "grass"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Model",
+			"name": "Group",
+			"parent": 0,
+			"fields": {
+				"position": "2, 0, 0",
+				"rotation": "0, 45, 0"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Spinner",
+			"name": "Spinner",
+			"parent": 4,
+			"fields": {
+				"position": "0, 1, 0",
+				"color": "PURPLE"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Ball",
+			"name": "Ball",
+			"parent": 0,
+			"fields": {
+				"position": "-3, 1, 0"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Label",
+			"name": "Title",
+			"parent": 0,
+			"fields": {
+				"text": "World file test",
+				"size": "24"
+			}
+		}
+	]
+}

@@ -1,0 +1,151 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 15,
+	"objects": [
+		{
+			"id": 14,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 14,
+			"fields": {
+				"sky": "#203040"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 14,
+			"fields": {
+				"rotation": "-55, 34, 0"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 14,
+			"fields": {
+				"position": "1, 4, 9",
+				"target": "1, 0, 0",
+				"fov": "50"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Shape3D",
+			"name": "Floor",
+			"parent": 14,
+			"fields": {
+				"size": "12, 0.2, 6",
+				"position": "0, -0.6, 0",
+				"color": "#5aa846"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Spatial3D",
+			"name": "Rig",
+			"parent": 14,
+			"fields": {
+				"scale": "2, 2, 2"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Shape3D",
+			"name": "Cube",
+			"parent": 5,
+			"fields": {
+				"position": "1, 0, 0",
+				"color": "ORANGE"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Shape3D",
+			"name": "Marker",
+			"parent": 14,
+			"fields": {
+				"position": "-2, 0, 0",
+				"size": "0.5, 0.5, 0.5",
+				"shape": "Sphere",
+				"color": "RED"
+			}
+		},
+		{
+			"id": 8,
+			"class": "Spatial2D",
+			"name": "Group",
+			"parent": 14,
+			"fields": {
+				"position": "90, 120",
+				"rotation": "30",
+				"scale": "1.5, 1.5"
+			}
+		},
+		{
+			"id": 9,
+			"class": "Shape2D",
+			"name": "Box",
+			"parent": 8,
+			"fields": {
+				"position": "30, 0",
+				"size": "30, 16",
+				"color": "RED"
+			}
+		},
+		{
+			"id": 10,
+			"class": "Shape2D",
+			"name": "Dot",
+			"parent": 8,
+			"fields": {
+				"position": "-30, 0",
+				"size": "20, 20",
+				"shape": "Circle",
+				"color": "YELLOW"
+			}
+		},
+		{
+			"id": 11,
+			"class": "Text2D",
+			"name": "Title",
+			"parent": 14,
+			"fields": {
+				"position": "10, 8",
+				"text": "2D on 3D",
+				"size": "20",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 12,
+			"class": "Sprite2D",
+			"name": "Icon",
+			"parent": 14,
+			"fields": {
+				"position": "280, 160",
+				"texture": "icon.png"
+			}
+		},
+		{
+			"id": 13,
+			"class": "Camera2D",
+			"name": "View",
+			"parent": 14,
+			"fields": {
+				"position": "160, 100",
+				"zoom": "1"
+			}
+		}
+	]
+}

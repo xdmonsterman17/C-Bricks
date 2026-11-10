@@ -1,0 +1,21 @@
+{
+	"format": "c-bricks-scene",
+	"version": 1,
+	"next_id": 100,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Model",
+			"name": "Hill",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Model",
+			"name": "Tree",
+			"parent": 0,
+			"fields": {}
+		}
+	]
+}

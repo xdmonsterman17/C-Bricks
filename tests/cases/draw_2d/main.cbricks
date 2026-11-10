@@ -1,0 +1,834 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 25,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "draw 2d"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "load_texture",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "sheet.png"
+				}
+			},
+			"outs": {
+				"texture": {
+					"var": "sheet",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					18
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sprite"
+			},
+			"args": {
+				"texture": {
+					"var": "sheet"
+				},
+				"x": {
+					"type": "int",
+					"value": "10"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"frame": {
+					"type": "int",
+					"value": "0"
+				},
+				"columns": {
+					"type": "int",
+					"value": "2"
+				},
+				"rows": {
+					"type": "int",
+					"value": "2"
+				},
+				"scale": {
+					"type": "float",
+					"value": "2"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sprite"
+			},
+			"args": {
+				"texture": {
+					"var": "sheet"
+				},
+				"x": {
+					"type": "int",
+					"value": "50"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"frame": {
+					"type": "int",
+					"value": "1"
+				},
+				"columns": {
+					"type": "int",
+					"value": "2"
+				},
+				"rows": {
+					"type": "int",
+					"value": "2"
+				},
+				"scale": {
+					"type": "float",
+					"value": "2"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sprite"
+			},
+			"args": {
+				"texture": {
+					"var": "sheet"
+				},
+				"x": {
+					"type": "int",
+					"value": "90"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"frame": {
+					"type": "int",
+					"value": "2"
+				},
+				"columns": {
+					"type": "int",
+					"value": "2"
+				},
+				"rows": {
+					"type": "int",
+					"value": "2"
+				},
+				"scale": {
+					"type": "float",
+					"value": "2"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Sprite"
+			},
+			"args": {
+				"texture": {
+					"var": "sheet"
+				},
+				"x": {
+					"type": "int",
+					"value": "130"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"frame": {
+					"type": "int",
+					"value": "3"
+				},
+				"columns": {
+					"type": "int",
+					"value": "2"
+				},
+				"rows": {
+					"type": "int",
+					"value": "2"
+				},
+				"scale": {
+					"type": "float",
+					"value": "2"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Rectangle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "20"
+				},
+				"y": {
+					"type": "int",
+					"value": "70"
+				},
+				"width": {
+					"type": "int",
+					"value": "60"
+				},
+				"height": {
+					"type": "int",
+					"value": "20"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "45"
+				},
+				"color": {
+					"type": "string",
+					"value": "MAROON"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Outline"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "20"
+				},
+				"y": {
+					"type": "int",
+					"value": "70"
+				},
+				"width": {
+					"type": "int",
+					"value": "60"
+				},
+				"height": {
+					"type": "int",
+					"value": "20"
+				},
+				"color": {
+					"type": "string",
+					"value": "BLACK"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "turned"
+				},
+				"x": {
+					"type": "int",
+					"value": "100"
+				},
+				"y": {
+					"type": "int",
+					"value": "70"
+				},
+				"size": {
+					"type": "int",
+					"value": "20"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "-20"
+				},
+				"color": {
+					"type": "string",
+					"value": "DARKBLUE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Texture"
+			},
+			"args": {
+				"texture": {
+					"var": "sheet"
+				},
+				"x": {
+					"type": "int",
+					"value": "190"
+				},
+				"y": {
+					"type": "int",
+					"value": "60"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "30"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "view2d",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"center": {
+					"type": "vector2",
+					"value": "0, 0"
+				},
+				"zoom": {
+					"type": "float",
+					"value": "3"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"draw": [
+					16,
+					17
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Rectangle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "-5"
+				},
+				"y": {
+					"type": "int",
+					"value": "-5"
+				},
+				"width": {
+					"type": "int",
+					"value": "10"
+				},
+				"height": {
+					"type": "int",
+					"value": "10"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"color": {
+					"type": "string",
+					"value": "ORANGE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 17,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Circle"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "12"
+				},
+				"y": {
+					"type": "int",
+					"value": "0"
+				},
+				"radius": {
+					"type": "float",
+					"value": "3"
+				},
+				"color": {
+					"type": "string",
+					"value": "DARKGREEN"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					19,
+					20,
+					21,
+					22,
+					23,
+					24
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"draw_2d.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Sprite2D"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Sheet"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "spr",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "frame"
+			},
+			"args": {
+				"record": {
+					"var": "spr"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "sframe",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[draw_2d] sprite frame {}"
+			},
+			"args": {
+				"first": {
+					"var": "sframe"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 23,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 24,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

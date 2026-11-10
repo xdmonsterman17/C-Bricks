@@ -1,0 +1,12 @@
+[project]
+
+name="Guess The Number"
+version="1.0"
+
+[run]
+
+args=""
+
+[build]
+
+target="native"

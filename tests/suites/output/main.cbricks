@@ -1,0 +1,423 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 116,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					106,
+					107,
+					109,
+					110,
+					112,
+					113,
+					114
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[print] no new line, "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "then the rest"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "read",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"as": "line",
+				"prompt": ""
+			},
+			"args": {},
+			"outs": {
+				"value": {
+					"var": "line_in",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[read.line] {}"
+			},
+			"args": {
+				"first": {
+					"var": "line_in"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_104",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					105
+				]
+			}
+		},
+		{
+			"id": 105,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_104"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "read",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"as": "int",
+				"prompt": ""
+			},
+			"args": {},
+			"outs": {
+				"value": {
+					"var": "int_in",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[read.int] {}"
+			},
+			"args": {
+				"first": {
+					"var": "int_in"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_107",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					108
+				]
+			}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_107"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "read",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"as": "float",
+				"prompt": ""
+			},
+			"args": {},
+			"outs": {
+				"value": {
+					"var": "float_in",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[read.float] {}"
+			},
+			"args": {
+				"first": {
+					"var": "float_in"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_110",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					111
+				]
+			}
+		},
+		{
+			"id": 111,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_110"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "time",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"seconds": {
+					"var": "now",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "now"
+				},
+				"b": {
+					"type": "int",
+					"value": "1700000000"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "recent",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "recent"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_114",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					115
+				]
+			}
+		},
+		{
+			"id": 115,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_114"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

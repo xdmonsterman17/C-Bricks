@@ -1,0 +1,1267 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 46,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "160"
+				},
+				"height": {
+					"type": "int",
+					"value": "120"
+				},
+				"title": {
+					"type": "string",
+					"value": "pause"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Ticker",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "tick",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Spinner",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "spin",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "world_t"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					7
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Frame time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "dt",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "world_t"
+			},
+			"args": {
+				"value": {
+					"var": "dt"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "tick"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "t_a",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "spin"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "s_a",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_plain_n"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p_a",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_steady_n"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "q_a",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 16,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					11
+				],
+				"next": [
+					27
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "tick"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "t_b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "spin"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "s_b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_plain_n"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p_b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					20
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_steady_n"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "q_b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					21
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "t_b == t_a && p_b == p_a",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "stopped",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "s_b > s_a + 5 && q_b > q_a + 5",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "went_on",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "is_p",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause] stopped (Every frame, When frame starts): {}; Runs while paused went on: {}; Paused? {}; frame time {}"
+			},
+			"args": {
+				"first": {
+					"var": "stopped"
+				},
+				"second": {
+					"var": "went_on"
+				},
+				"third": {
+					"var": "is_p"
+				},
+				"fourth": {
+					"var": "dt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line23",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line23"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 27,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "15"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					17
+				],
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "tick"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "t_c",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "spin"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "s_c",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					30
+				]
+			}
+		},
+		{
+			"id": 30,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_plain_n"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p_c",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					31
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_steady_n"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "q_c",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "t_c > t_b + 5 && p_c > p_b + 5",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "moving",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause] resumed: the world moves again: {}"
+			},
+			"args": {
+				"first": {
+					"var": "moving"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line32",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					34
+				]
+			}
+		},
+		{
+			"id": 34,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line32"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					35
+				]
+			}
+		},
+		{
+			"id": 35,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "0.5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					36
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "real0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "world0"
+			},
+			"args": {
+				"value": {
+					"var": "world_t"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 38,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "25"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					28
+				],
+				"next": [
+					45
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "real1",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					40
+				]
+			}
+		},
+		{
+			"id": 40,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(world_t - world0) / (real1 - real0)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ratio",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "ratio > 0.4 && ratio < 0.6",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "half",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[scale] time scale 0.5: the world's time runs at half speed: {}"
+			},
+			"args": {
+				"first": {
+					"var": "half"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line41",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					43
+				]
+			}
+		},
+		{
+			"id": 43,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line41"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					44
+				]
+			}
+		},
+		{
+			"id": 44,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 45,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "85"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					39
+				]
+			}
+		}
+	]
+}

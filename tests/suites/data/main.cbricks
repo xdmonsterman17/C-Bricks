@@ -1,0 +1,1845 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 169,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					110,
+					111,
+					112,
+					113,
+					114,
+					115,
+					117,
+					118,
+					120,
+					121,
+					123,
+					124,
+					125,
+					126,
+					127,
+					128,
+					129,
+					130,
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					137,
+					138,
+					139,
+					141,
+					142,
+					144,
+					145,
+					147,
+					148,
+					149,
+					151,
+					152,
+					153,
+					154,
+					155,
+					156,
+					157,
+					158,
+					159,
+					162,
+					163,
+					164,
+					165,
+					167,
+					168
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "nums",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Insert"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "2"
+				},
+				"index": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[list.Make Add Insert] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"index": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "first",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[list.Get] {}"
+			},
+			"args": {
+				"first": {
+					"var": "first"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_108",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_108"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"index": {
+					"type": "int",
+					"value": "2"
+				},
+				"value": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Remove"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"index": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[list.Set Remove] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[list.Length] {}"
+			},
+			"args": {
+				"first": {
+					"var": "len"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_115",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					116
+				]
+			}
+		},
+		{
+			"id": 116,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_115"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "where",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[list.Find] {}"
+			},
+			"args": {
+				"first": {
+					"var": "where"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_118",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					119
+				]
+			}
+		},
+		{
+			"id": 119,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_118"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Contains"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has3",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[list.Contains] {}"
+			},
+			"args": {
+				"first": {
+					"var": "has3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_121",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					122
+				]
+			}
+		},
+		{
+			"id": 122,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_121"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Sort"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[list.Sort] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Reverse"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[list.Reverse] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Clear"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[list.Clear] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ages",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				},
+				"value": {
+					"type": "int",
+					"value": "36"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "bob"
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[map.Make Set] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ages"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "bob"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "bob",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[map.Get] {}"
+			},
+			"args": {
+				"first": {
+					"var": "bob"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_139",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					140
+				]
+			}
+		},
+		{
+			"id": 140,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_139"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get or"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "zed"
+				},
+				"default": {
+					"type": "int",
+					"value": "-1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "zed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[map.Get or] {}"
+			},
+			"args": {
+				"first": {
+					"var": "zed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_142",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					143
+				]
+			}
+		},
+		{
+			"id": 143,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_142"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Has"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has_ada",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[map.Has] {}"
+			},
+			"args": {
+				"first": {
+					"var": "has_ada"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_145",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					146
+				]
+			}
+		},
+		{
+			"id": 146,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_145"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Remove"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 148,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Count"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "count",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 149,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[map.Remove Count] {}"
+			},
+			"args": {
+				"first": {
+					"var": "count"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_149",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					150
+				]
+			}
+		},
+		{
+			"id": 150,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_149"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 151,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Keys"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "keys",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 152,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[map.Keys] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 153,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "keys"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 154,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Values"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "values",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 155,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[map.Values] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 156,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "values"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 157,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Clear"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 158,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Count"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "count2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 159,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[map.Clear] {}"
+			},
+			"args": {
+				"first": {
+					"var": "count2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_159",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					160
+				]
+			}
+		},
+		{
+			"id": 160,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_159"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 161,
+			"type": "record",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Point",
+				"fields": [
+					[
+						"x",
+						"int"
+					],
+					[
+						"y",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 162,
+			"type": "make_record",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Point"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "pt",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 163,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "x"
+			},
+			"args": {
+				"record": {
+					"var": "pt"
+				},
+				"value": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 164,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "x"
+			},
+			"args": {
+				"record": {
+					"var": "pt"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "px",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 165,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[field.Get Set] {}"
+			},
+			"args": {
+				"first": {
+					"var": "px"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_165",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					166
+				]
+			}
+		},
+		{
+			"id": 166,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_165"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 167,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[make_record] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 168,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pt"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

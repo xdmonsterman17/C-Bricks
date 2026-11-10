@@ -1,0 +1,51 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 100,
+	"side": "Shared",
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "main runs after the Script objects"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

@@ -1,0 +1,2119 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 77,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"esc_closes": false
+			},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "960"
+				},
+				"height": {
+					"type": "int",
+					"value": "540"
+				},
+				"title": {
+					"type": "string",
+					"value": "Arena"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"note": "Escape opens the menu (not closes the window)"
+		},
+		{
+			"id": 3,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Option"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "quit-after"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "qa_text",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			},
+			"note": "--quit-after N: stop after N seconds (tests)"
+		},
+		{
+			"id": 4,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To float"
+			},
+			"args": {
+				"text": {
+					"var": "qa_text"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "quit_after",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is server"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "rules",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "rules"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					7
+				],
+				"next": [
+					13
+				]
+			},
+			"note": "Where the rules run: the enemies"
+		},
+		{
+			"id": 7,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "0"
+				},
+				"to": {
+					"type": "int",
+					"value": "5"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					8
+				]
+			},
+			"note": "Five enemies along the far side"
+		},
+		{
+			"id": 8,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Enemy",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "foe",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "random",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"min": {
+					"type": "int",
+					"value": "-12"
+				},
+				"max": {
+					"type": "int",
+					"value": "12"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "rx",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "random",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"min": {
+					"type": "int",
+					"value": "-13"
+				},
+				"max": {
+					"type": "int",
+					"value": "-6"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "rz",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"dims": "3D"
+			},
+			"args": {
+				"x": {
+					"var": "rx"
+				},
+				"y": {
+					"type": "float",
+					"value": "0.9"
+				},
+				"z": {
+					"var": "rz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "spot",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "foe"
+				},
+				"value": {
+					"var": "spot"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "!="
+			},
+			"args": {
+				"a": {
+					"var": "role0"
+				},
+				"b": {
+					"type": "string",
+					"value": "offline"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					16
+				],
+				"next": [
+					20
+				]
+			},
+			"note": "Started in a network game (--join, --host): no menu"
+		},
+		{
+			"id": 16,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Panel"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Title"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t0",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "t0"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					21
+				]
+			},
+			"note": "The world runs itself; the Fighters' scripts and the Enemies do the rest"
+		},
+		{
+			"id": 21,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "ESCAPE"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "esc",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Panel"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Title"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "title",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "esc"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					26
+				],
+				"next": [
+					34
+				]
+			},
+			"note": "Escape: the menu (and the mouse back), or the game again"
+		},
+		{
+			"id": 26,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "title"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "menu_up",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					27
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "menu_up"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					28
+				],
+				"false": [
+					31
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "title"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					30
+				]
+			}
+		},
+		{
+			"id": 30,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 31,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "title"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Visible"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "Offline the world stops behind the menu; in a network game it runs on"
+		},
+		{
+			"id": 34,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "!="
+			},
+			"args": {
+				"a": {
+					"var": "role"
+				},
+				"b": {
+					"type": "string",
+					"value": "offline"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "online",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					35
+				]
+			}
+		},
+		{
+			"id": 35,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Button"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Host"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "host_b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Button"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Join"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "join_b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "disabled"
+			},
+			"args": {
+				"record": {
+					"var": "host_b"
+				},
+				"value": {
+					"var": "online"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					36
+				]
+			}
+		},
+		{
+			"id": 38,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "disabled"
+			},
+			"args": {
+				"record": {
+					"var": "join_b"
+				},
+				"value": {
+					"var": "online"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					64
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "button_clicked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"button": "Play"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					40
+				]
+			},
+			"note": "The menu's buttons (When button clicked: no class needed)"
+		},
+		{
+			"id": 40,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Panel"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Title"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "t2"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					43
+				]
+			}
+		},
+		{
+			"id": 43,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					44
+				]
+			}
+		},
+		{
+			"id": 44,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Playing single-player"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "line_44",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					45
+				]
+			}
+		},
+		{
+			"id": 45,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_44"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 46,
+			"type": "button_clicked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"button": "Host"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					47
+				]
+			}
+		},
+		{
+			"id": 47,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Host"
+			},
+			"args": {
+				"port": {
+					"type": "int",
+					"value": "7000"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hosted",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					48
+				]
+			}
+		},
+		{
+			"id": 48,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Panel"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Title"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					49
+				]
+			}
+		},
+		{
+			"id": 49,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "t2"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					50
+				]
+			}
+		},
+		{
+			"id": 50,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					51
+				]
+			}
+		},
+		{
+			"id": 51,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					52
+				]
+			}
+		},
+		{
+			"id": 52,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Hosting on port 7000"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "line_52",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					53
+				]
+			}
+		},
+		{
+			"id": 53,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_52"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 54,
+			"type": "button_clicked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"button": "Join"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					55
+				]
+			}
+		},
+		{
+			"id": 55,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Join"
+			},
+			"args": {
+				"address": {
+					"type": "string",
+					"value": "127.0.0.1"
+				},
+				"port": {
+					"type": "int",
+					"value": "7000"
+				},
+				"timeout": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "joined",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					56
+				]
+			}
+		},
+		{
+			"id": 56,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Panel"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Title"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					57
+				]
+			}
+		},
+		{
+			"id": 57,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "visible"
+			},
+			"args": {
+				"record": {
+					"var": "t2"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					58
+				]
+			}
+		},
+		{
+			"id": 58,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					59
+				]
+			}
+		},
+		{
+			"id": 59,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					60
+				]
+			}
+		},
+		{
+			"id": 60,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Joined 127.0.0.1:7000"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "line_60",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					61
+				]
+			}
+		},
+		{
+			"id": 61,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 62,
+			"type": "button_clicked",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"button": "Quit"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					63
+				]
+			}
+		},
+		{
+			"id": 63,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 64,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Me"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "me",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					65
+				]
+			}
+		},
+		{
+			"id": 65,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "mname",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					66
+				]
+			}
+		},
+		{
+			"id": 66,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "t",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					67
+				]
+			}
+		},
+		{
+			"id": 67,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "quit_after > 0 ? t > quit_after : frames == 40",
+				"type": "bool"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "done",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					68
+				]
+			}
+		},
+		{
+			"id": 68,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "done"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					69
+				]
+			}
+		},
+		{
+			"id": 69,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Fighter"
+			},
+			"args": {
+				"name": {
+					"var": "mname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pl",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					70
+				]
+			}
+		},
+		{
+			"id": 70,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "pl"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has_pl",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					71
+				]
+			}
+		},
+		{
+			"id": 71,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "has_pl"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					72
+				],
+				"next": [
+					73
+				]
+			}
+		},
+		{
+			"id": 72,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "score"
+			},
+			"args": {
+				"record": {
+					"var": "pl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "final",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 73,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"arena.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					74
+				]
+			}
+		},
+		{
+			"id": 74,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "score {}"
+			},
+			"args": {
+				"first": {
+					"var": "final"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_74",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					75
+				]
+			}
+		},
+		{
+			"id": 75,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_74"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					76
+				]
+			}
+		},
+		{
+			"id": 76,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

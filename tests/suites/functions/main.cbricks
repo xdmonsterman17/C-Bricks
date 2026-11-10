@@ -1,0 +1,319 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 112,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					107,
+					108,
+					110,
+					111
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "add",
+				"returns": "int",
+				"params": [
+					[
+						"a",
+						"int"
+					],
+					[
+						"b",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					102
+				]
+			}
+		},
+		{
+			"id": 102,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "a + b"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "early",
+				"returns": "void",
+				"params": [
+					[
+						"n",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					104,
+					106
+				]
+			}
+		},
+		{
+			"id": 104,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": ">"
+			},
+			"args": {
+				"a": {
+					"var": "n"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					105
+				]
+			}
+		},
+		{
+			"id": 105,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "Nothing"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[return.Nothing] not reached"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "add"
+			},
+			"args": {
+				"a": {
+					"type": "int",
+					"value": "2"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "sum",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[call] {}"
+			},
+			"args": {
+				"first": {
+					"var": "sum"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_108",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_108"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "early"
+			},
+			"args": {
+				"n": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[return.Nothing] left the function early"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

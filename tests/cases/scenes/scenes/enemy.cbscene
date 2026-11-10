@@ -1,0 +1,31 @@
+{
+	"format": "c-bricks-scene",
+	"version": 1,
+	"next_id": 100,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Model",
+			"name": "Enemy",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Part",
+			"name": "Sword",
+			"parent": 1,
+			"fields": {
+				"size": "0.1, 1, 0.1"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Script",
+			"name": "AI",
+			"parent": 1,
+			"fields": {},
+			"script": "scripts/enemy_ai.cbricks"
+		}
+	]
+}

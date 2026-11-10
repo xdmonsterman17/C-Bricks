@@ -1,0 +1,349 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 1000,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Thing",
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"hits",
+						"int"
+					],
+					[
+						"frames",
+						"int"
+					],
+					[
+						"drawn",
+						"int"
+					]
+				],
+				"synced": "hits"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[created] a Thing is made"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "poke",
+				"returns": "int",
+				"params": [
+					[
+						"n",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					11,
+					12
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "hits"
+			},
+			"args": {
+				"value": {
+					"var": "n"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"var": "hits"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "every_frame",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					21
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "touched",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					31,
+					32
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Class name"
+			},
+			"args": {
+				"object": {
+					"var": "other"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "what",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 32,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[touched] by a {}"
+			},
+			"args": {
+				"first": {
+					"var": "what"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 40,
+			"type": "drawn",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "drawn"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

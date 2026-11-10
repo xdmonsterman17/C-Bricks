@@ -1,0 +1,757 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 200,
+	"side": "Shared",
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					16,
+					17,
+					18,
+					19,
+					20,
+					21,
+					22,
+					23,
+					24,
+					25,
+					26,
+					27,
+					28,
+					29,
+					30,
+					31,
+					32,
+					33,
+					34,
+					35,
+					36
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "main starts"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Model"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Boss"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "boss",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Get"
+			},
+			"args": {
+				"object": {
+					"var": "boss"
+				},
+				"key": {
+					"type": "string",
+					"value": "hp"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "boss hp {}"
+			},
+			"args": {
+				"first": {
+					"var": "hp"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l13",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l13"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Objects in",
+				"group": "bosses"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "bs",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 16,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "bs"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "nb",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 17,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "bosses {}"
+			},
+			"args": {
+				"first": {
+					"var": "nb"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l17",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l17"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 19,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Model"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "E2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "e2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Parent"
+			},
+			"args": {
+				"object": {
+					"var": "e2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "e2p",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "e2p"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "e2pn",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "E2 is under {}"
+			},
+			"args": {
+				"first": {
+					"var": "e2pn"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l22",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 23,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l22"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 24,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Instance",
+				"scene": "scenes/enemy.cbscene"
+			},
+			"args": {
+				"parent": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"root": {
+					"var": "spawned",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 25,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Class name"
+			},
+			"args": {
+				"object": {
+					"var": "spawned"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "scn",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 26,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "spawned a {}"
+			},
+			"args": {
+				"first": {
+					"var": "scn"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l26",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 27,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l26"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 28,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Change",
+				"scene": "scenes/level2.cbscene"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 29,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Model"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Hill"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hill",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "hill"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hill_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 31,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "hill there {}"
+			},
+			"args": {
+				"first": {
+					"var": "hill_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l31",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 32,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l31"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 33,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Model"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Boss"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "boss2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 34,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "boss2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "boss_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 35,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "boss there {}"
+			},
+			"args": {
+				"first": {
+					"var": "boss_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l35",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 36,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l35"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

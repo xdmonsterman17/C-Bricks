@@ -1,0 +1,37 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"objects": [
+		{
+			"id": 3,
+			"class": "Node",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 3,
+			"fields": {
+				"sky": "#e8e8e0"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Sprite2D",
+			"name": "Sheet",
+			"parent": 3,
+			"fields": {
+				"position": "270, 160",
+				"texture": "sheet.png",
+				"columns": "2",
+				"rows": "2",
+				"frame": "2",
+				"scale": "3, 3"
+			}
+		}
+	],
+	"next_id": 4
+}

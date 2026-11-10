@@ -1,0 +1,96 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 4,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Ball",
+				"extends": "Node",
+				"fields": [
+					[
+						"x",
+						"int"
+					],
+					[
+						"label",
+						"string"
+					],
+					[
+						"pos",
+						"vector3"
+					],
+					[
+						"friend",
+						"Ball"
+					],
+					[
+						"secret",
+						"int"
+					],
+					[
+						"spot",
+						"vector3"
+					]
+				],
+				"synced": "x, label, pos, friend, spot!"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[created] a Ball"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

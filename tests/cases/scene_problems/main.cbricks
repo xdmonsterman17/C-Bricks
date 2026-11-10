@@ -1,0 +1,75 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 10,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Instance",
+				"scene": "scenes/two.cbscene"
+			},
+			"args": {
+				"parent": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"root": {
+					"var": "r",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Change",
+				"scene": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

@@ -1,0 +1,1407 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 149,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					104,
+					105,
+					107,
+					108,
+					110,
+					111,
+					113,
+					114,
+					116,
+					117,
+					119,
+					120,
+					122,
+					123,
+					125,
+					126,
+					128,
+					129,
+					130,
+					131,
+					132,
+					134,
+					135,
+					137,
+					138,
+					140,
+					141,
+					143,
+					144,
+					146,
+					147
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Join"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_join",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Join] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_join"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_102",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					103
+				]
+			}
+		},
+		{
+			"id": 103,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_102"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "{} of {}"
+			},
+			"args": {
+				"first": {
+					"type": "int",
+					"value": "3"
+				},
+				"second": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_format",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Format] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_format"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_105",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					106
+				]
+			}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_105"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_length",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Length] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_length"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_108",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_108"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Substring"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello world"
+				},
+				"start": {
+					"type": "int",
+					"value": "6"
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_substring",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Substring] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_substring"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_111",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					112
+				]
+			}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_111"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"what": {
+					"type": "string",
+					"value": "ll"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_find",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Find] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_find"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_114",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					115
+				]
+			}
+		},
+		{
+			"id": 115,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_114"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Replace"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "a-b-c"
+				},
+				"what": {
+					"type": "string",
+					"value": "-"
+				},
+				"with": {
+					"type": "string",
+					"value": "+"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_replace",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Replace] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_replace"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_117",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					118
+				]
+			}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_117"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Upper case"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "mixed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_upper_case",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Upper case] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_upper_case"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_120",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					121
+				]
+			}
+		},
+		{
+			"id": 121,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_120"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Lower case"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "MiXeD"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_lower_case",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Lower case] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_lower_case"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_123",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					124
+				]
+			}
+		},
+		{
+			"id": 124,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_123"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Trim"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "  pad  "
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_trim",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Trim] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_trim"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_126",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					127
+				]
+			}
+		},
+		{
+			"id": 127,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_126"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "a,b,c"
+				},
+				"separator": {
+					"type": "string",
+					"value": ","
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_split",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[text.Split] "
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t_split"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To text"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "42"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_to_text",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.To text] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_to_text"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_132",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					133
+				]
+			}
+		},
+		{
+			"id": 133,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_132"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To int"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "42"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_to_int",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.To int] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_to_int"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_135",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					136
+				]
+			}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_135"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To float"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "2.5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_to_float",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.To float] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_to_float"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_138",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					139
+				]
+			}
+		},
+		{
+			"id": 139,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_138"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Starts with"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"what": {
+					"type": "string",
+					"value": "he"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_starts_with",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Starts with] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_starts_with"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_141",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					142
+				]
+			}
+		},
+		{
+			"id": 142,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_141"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Ends with"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"what": {
+					"type": "string",
+					"value": "lo"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_ends_with",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Ends with] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_ends_with"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_144",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					145
+				]
+			}
+		},
+		{
+			"id": 145,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_144"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Join list",
+				"separator": "-"
+			},
+			"args": {
+				"list": {
+					"var": "t_split"
+				},
+				"separator": {
+					"type": "string",
+					"value": "-"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "joined",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[text.Join list] {}"
+			},
+			"args": {
+				"first": {
+					"var": "joined"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_147",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					148
+				]
+			}
+		},
+		{
+			"id": 148,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_147"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

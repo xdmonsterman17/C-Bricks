@@ -1,0 +1,1184 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 147,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					113,
+					114,
+					115,
+					116,
+					118,
+					124,
+					125,
+					126,
+					127,
+					128,
+					129,
+					130,
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					137,
+					138,
+					140,
+					142,
+					143,
+					144
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "math_func",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"func": "sqrt"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "16"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "r1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "r1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "math_func",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"func": "pow"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "2"
+				},
+				"exp": {
+					"type": "float",
+					"value": "10"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "r2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "r2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "minmax",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "max"
+			},
+			"args": {
+				"a": {
+					"type": "int",
+					"value": "3"
+				},
+				"b": {
+					"type": "int",
+					"value": "7"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "r3",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "r3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "convert",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"to": "int"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "3.7"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "r4",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "r4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "logic",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Or"
+			},
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "false"
+				},
+				"b": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "logic",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Not"
+			},
+			"args": {
+				"a": {
+					"var": "c1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "=="
+			},
+			"args": {
+				"a": {
+					"type": "string",
+					"value": "abc"
+				},
+				"b": {
+					"type": "string",
+					"value": "abc"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "same",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "same"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(2 + 3) * 4",
+				"type": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "f1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "f1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "k"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "repeat",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"times": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"counter": {
+					"var": "k",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					117
+				]
+			}
+		},
+		{
+			"id": 119,
+			"type": "continue",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "break",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "j"
+				},
+				"b": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					119
+				]
+			}
+		},
+		{
+			"id": 122,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "j"
+				},
+				"b": {
+					"type": "int",
+					"value": "4"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					120
+				]
+			}
+		},
+		{
+			"id": 123,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "j"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "0"
+				},
+				"to": {
+					"type": "int",
+					"value": "10"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "j",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					121,
+					122,
+					123
+				]
+			}
+		},
+		{
+			"id": 125,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "w",
+				"scope": "Local"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"name": "w"
+			},
+			"args": {},
+			"outs": {
+				"copy": {
+					"var": "w2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "w2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "read",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"as": "float",
+				"prompt": ""
+			},
+			"args": {},
+			"outs": {
+				"value": {
+					"var": "fv",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "fv"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "time",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"seconds": {
+					"var": "now",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "now > 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "write_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Write"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "case_output.txt"
+				},
+				"text": {
+					"type": "string",
+					"value": "hi\\n"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "wrote",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "wrote"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "write_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Append"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "case_output.txt"
+				},
+				"text": {
+					"type": "string",
+					"value": "there\\n"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "file_exists",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "case_output.txt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ex",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ex"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "read_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "case_output.txt"
+				}
+			},
+			"outs": {
+				"text": {
+					"var": "back",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": false
+			},
+			"args": {
+				"value": {
+					"var": "back"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "include",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"header": "<limits.h>"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "printf(\"%d\\n\", INT_MAX > 0);"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "rerouted"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "reroute",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					141
+				]
+			}
+		},
+		{
+			"id": 143,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "not reached"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "exit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					146
+				]
+			}
+		},
+		{
+			"id": 146,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "bye"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"frames": []
+}

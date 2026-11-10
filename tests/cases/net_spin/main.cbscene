@@ -1,0 +1,32 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 4,
+	"objects": [
+		{
+			"id": 3,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Spinner",
+			"name": "Spinner",
+			"parent": 3,
+			"fields": {
+				"rotation": "45, 0, 45"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 3,
+			"fields": {
+				"position": "0, 2, 4"
+			}
+		}
+	]
+}

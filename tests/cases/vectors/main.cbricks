@@ -1,0 +1,1425 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 137,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					113,
+					114,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					122,
+					123,
+					124,
+					125,
+					126,
+					127,
+					128,
+					129,
+					130,
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					400,
+					401,
+					402,
+					403,
+					404,
+					405,
+					406,
+					407,
+					408,
+					409,
+					410,
+					411,
+					412,
+					413,
+					414,
+					415
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "1"
+				},
+				"y": {
+					"type": "float",
+					"value": "2"
+				},
+				"z": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "p",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "p"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split"
+			},
+			"args": {
+				"a": {
+					"var": "p"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "px",
+					"use": false
+				},
+				"y": {
+					"var": "py",
+					"use": false
+				},
+				"z": {
+					"var": "pz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pz"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"a": {
+					"var": "p"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "q",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "q"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Subtract"
+			},
+			"args": {
+				"a": {
+					"var": "q"
+				},
+				"b": {
+					"var": "p"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "r",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "r"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Scale"
+			},
+			"args": {
+				"a": {
+					"var": "r"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2.5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "s",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "s"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "3, 4, 0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Normalize"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0, 9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "n",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "n"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Normalize"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "n0",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "n0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Distance"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "1, 4, 5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dd",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "dd"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Lerp"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "10, 20, -4"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.25"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "m",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "m"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Dot"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "1, 2, 3"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "4, 5, 6"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dt",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "dt"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Cross"
+			},
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "1, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "w"
+			},
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "(0.5, sqrt(4.0), -1)"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "w"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "w"
+			},
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "w"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "vector3"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "pts",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "pts"
+				},
+				"value": {
+					"var": "p"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "pts"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pts"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "at {} going {}"
+			},
+			"args": {
+				"first": {
+					"var": "p"
+				},
+				"second": {
+					"var": "c"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "msg",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "msg"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To text"
+			},
+			"args": {
+				"value": {
+					"var": "n"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "nt",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nt"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 400,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"dims": "2D"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "3"
+				},
+				"y": {
+					"type": "float",
+					"value": "4"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "p2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 401,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "p2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 402,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length",
+				"dims": "2D"
+			},
+			"args": {
+				"a": {
+					"var": "p2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "l2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 403,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "l2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 404,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add",
+				"dims": "2D"
+			},
+			"args": {
+				"a": {
+					"var": "p2"
+				},
+				"b": {
+					"type": "vector2",
+					"value": "1, -1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "q2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 405,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Cross",
+				"dims": "2D"
+			},
+			"args": {
+				"a": {
+					"type": "vector2",
+					"value": "1, 0"
+				},
+				"b": {
+					"type": "vector2",
+					"value": "0, 1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 406,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 407,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split",
+				"dims": "2D"
+			},
+			"args": {
+				"a": {
+					"var": "q2"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "qx",
+					"use": false
+				},
+				"y": {
+					"var": "qy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 408,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "qy"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 409,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "2D: {}"
+			},
+			"args": {
+				"first": {
+					"var": "q2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "m2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 410,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "m2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 411,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "vector2"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "pts2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 412,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "pts2"
+				},
+				"value": {
+					"var": "p2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 413,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pts2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 414,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "p2"
+			},
+			"args": {
+				"value": {
+					"type": "vector2",
+					"value": "1, 1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 415,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "p2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

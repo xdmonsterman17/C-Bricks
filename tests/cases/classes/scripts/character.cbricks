@@ -1,0 +1,269 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 200,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Character",
+				"extends": "Object",
+				"fields": [
+					[
+						"hp",
+						"int"
+					],
+					[
+						"tag",
+						"string"
+					],
+					[
+						"notes",
+						"string list"
+					]
+				],
+				"synced": "hp"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3,
+					4
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "hp"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "a character is made"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "hit",
+				"returns": "int",
+				"params": [
+					[
+						"dmg",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					11,
+					12
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "math",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Subtract"
+			},
+			"args": {
+				"a": {
+					"var": "hp"
+				},
+				"b": {
+					"var": "dmg"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "return",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"gives": "A value"
+			},
+			"args": {
+				"value": {
+					"var": "hp"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "describe",
+				"returns": "void",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					21,
+					22
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "{} has {} hp"
+			},
+			"args": {
+				"first": {
+					"var": "tag"
+				},
+				"second": {
+					"var": "hp"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

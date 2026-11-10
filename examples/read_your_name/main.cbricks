@@ -1,0 +1,132 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 100,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {},
+			"fields": {
+				"as": "line",
+				"prompt": "What's your name? "
+			},
+			"id": 2,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "name"
+				}
+			},
+			"pos": [
+				240.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "read"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Hello, "
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				192.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "name"
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				320.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "!"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				448.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		}
+	],
+	"target": "native",
+	"version": 3
+}

@@ -1,0 +1,196 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 17,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Node",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Camera2D",
+			"name": "View",
+			"parent": 1,
+			"fields": {
+				"position": "0, 0",
+				"zoom": "2"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Shape2D",
+			"name": "Dot",
+			"parent": 1,
+			"fields": {
+				"position": "0, 0",
+				"size": "20, 20",
+				"color": "BLUE",
+				"shape": "Circle"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Panel",
+			"name": "Frame",
+			"parent": 1,
+			"fields": {
+				"anchor": "full",
+				"offset": "4, 4",
+				"color": "#ffffff10",
+				"border": "1",
+				"border_color": "#ffffff80"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Panel",
+			"name": "HudBack",
+			"parent": 1,
+			"fields": {
+				"anchor": "top_left",
+				"offset": "8, 8",
+				"size": "140, 40",
+				"border": "2",
+				"border_color": "WHITE",
+				"radius": "8"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Label",
+			"name": "Score",
+			"parent": 5,
+			"fields": {
+				"anchor": "left",
+				"offset": "10, 0",
+				"size": "120, 16",
+				"font_size": "16",
+				"color": "YELLOW"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Bar",
+			"name": "Health",
+			"parent": 1,
+			"fields": {
+				"anchor": "bottom",
+				"offset": "0, -10",
+				"size": "150, 14",
+				"value": "70"
+			}
+		},
+		{
+			"id": 8,
+			"class": "Image",
+			"name": "Icon",
+			"parent": 1,
+			"fields": {
+				"anchor": "top_right",
+				"offset": "-8, 8",
+				"size": "32, 32",
+				"texture": "icon.png"
+			}
+		},
+		{
+			"id": 9,
+			"class": "Label",
+			"name": "Middle",
+			"parent": 1,
+			"fields": {
+				"anchor": "center",
+				"size": "200, 20",
+				"align": "center",
+				"text": "PAUSED"
+			}
+		},
+		{
+			"id": 10,
+			"class": "Spatial3D",
+			"name": "Rig",
+			"parent": 1,
+			"fields": {
+				"position": "50, 0, 0"
+			}
+		},
+		{
+			"id": 11,
+			"class": "Label",
+			"name": "Tag",
+			"parent": 10,
+			"fields": {
+				"anchor": "bottom_left",
+				"offset": "8, -8",
+				"size": "100, 12",
+				"font_size": "12",
+				"text": "under 3D",
+				"color": "LIME"
+			}
+		},
+		{
+			"id": 12,
+			"class": "Control",
+			"name": "Hidden",
+			"parent": 1,
+			"fields": {
+				"visible": "false",
+				"anchor": "center"
+			}
+		},
+		{
+			"id": 13,
+			"class": "Label",
+			"name": "Never",
+			"parent": 12,
+			"fields": {
+				"text": "NEVER SHOWN",
+				"color": "RED"
+			}
+		},
+		{
+			"id": 15,
+			"class": "Button",
+			"name": "Go",
+			"parent": 1,
+			"fields": {
+				"anchor": "top",
+				"offset": "0, 58",
+				"size": "90, 24",
+				"text": "Go",
+				"radius": "6"
+			}
+		},
+		{
+			"id": 16,
+			"class": "Button",
+			"name": "Nope",
+			"parent": 1,
+			"fields": {
+				"anchor": "bottom_right",
+				"offset": "-8, -34",
+				"size": "70, 22",
+				"font_size": "14",
+				"text": "Off",
+				"disabled": "true"
+			}
+		},
+		{
+			"id": 14,
+			"class": "Label",
+			"name": "Right",
+			"parent": 1,
+			"fields": {
+				"anchor": "right",
+				"offset": "-8, 0",
+				"size": "60, 14",
+				"font_size": "14",
+				"align": "right",
+				"text": "right"
+			}
+		}
+	]
+}

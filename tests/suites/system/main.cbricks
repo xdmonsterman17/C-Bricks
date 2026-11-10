@@ -1,0 +1,554 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 122,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					108,
+					109,
+					110,
+					112,
+					113,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "sleep",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"ms": {
+					"type": "int",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[sleep] done"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "env",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "PATH"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "path",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"var": "path"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "path_len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "path_len"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has_path",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[env] {}"
+			},
+			"args": {
+				"first": {
+					"var": "has_path"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_106",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					107
+				]
+			}
+		},
+		{
+			"id": 107,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_106"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "env",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "CB_SURELY_UNSET_VARIABLE"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "unset",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"var": "unset"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "unset_len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[env.unset] {}"
+			},
+			"args": {
+				"first": {
+					"var": "unset_len"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_110",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					111
+				]
+			}
+		},
+		{
+			"id": 111,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_110"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "run_command",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"command": {
+					"type": "string",
+					"value": "echo from-the-shell"
+				}
+			},
+			"outs": {
+				"code": {
+					"var": "code",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[run_command] {}"
+			},
+			"args": {
+				"first": {
+					"var": "code"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_113",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					114
+				]
+			}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_113"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Color",
+				"color": "green"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Reset"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Move cursor"
+			},
+			"args": {
+				"row": {
+					"type": "int",
+					"value": "1"
+				},
+				"column": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Hide cursor"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Show cursor"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Clear screen"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[terminal] 6 modes written"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

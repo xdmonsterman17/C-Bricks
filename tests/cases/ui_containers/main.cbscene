@@ -1,0 +1,123 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 12,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Node",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Panel",
+			"name": "MenuBack",
+			"parent": 1,
+			"fields": {
+				"anchor": "left",
+				"offset": "10, 0",
+				"size": "152, 130",
+				"radius": "6"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Menu",
+			"name": "Menu",
+			"parent": 2,
+			"fields": {
+				"anchor": "full",
+				"padding": "6",
+				"separation": "6",
+				"fill": "true"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Button",
+			"name": "Play",
+			"parent": 3,
+			"fields": {
+				"size": "10, 30",
+				"text": "Play"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Button",
+			"name": "Options",
+			"parent": 3,
+			"fields": {
+				"size": "10, 30",
+				"text": "Options",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Button",
+			"name": "Quit",
+			"parent": 3,
+			"fields": {
+				"size": "10, 30",
+				"text": "Quit"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Label",
+			"name": "Footer",
+			"parent": 3,
+			"fields": {
+				"size": "100, 14",
+				"font_size": "12",
+				"align": "center",
+				"text": "v1.0"
+			}
+		},
+		{
+			"id": 8,
+			"class": "HBox",
+			"name": "Toolbar",
+			"parent": 1,
+			"fields": {
+				"anchor": "top_right",
+				"offset": "-8, 8",
+				"size": "120, 30",
+				"separation": "4"
+			}
+		},
+		{
+			"id": 9,
+			"class": "Panel",
+			"name": "Red",
+			"parent": 8,
+			"fields": {
+				"size": "24, 24",
+				"color": "RED"
+			}
+		},
+		{
+			"id": 10,
+			"class": "Panel",
+			"name": "Green",
+			"parent": 8,
+			"fields": {
+				"size": "24, 30",
+				"color": "GREEN"
+			}
+		},
+		{
+			"id": 11,
+			"class": "Panel",
+			"name": "Blue",
+			"parent": 8,
+			"fields": {
+				"size": "40, 24",
+				"color": "BLUE"
+			}
+		}
+	]
+}

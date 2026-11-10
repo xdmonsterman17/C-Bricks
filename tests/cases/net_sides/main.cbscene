@@ -1,0 +1,38 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 5,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Node",
+			"name": "Game",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Script",
+			"name": "Rules",
+			"parent": 1,
+			"script": "scripts/rules.cbricks",
+			"fields": {}
+		},
+		{
+			"id": 3,
+			"class": "LocalScript",
+			"name": "Hud",
+			"parent": 1,
+			"script": "scripts/hud.cbricks",
+			"fields": {}
+		},
+		{
+			"id": 4,
+			"class": "ModuleScript",
+			"name": "Common",
+			"parent": 1,
+			"script": "scripts/common.cbricks",
+			"fields": {}
+		}
+	]
+}

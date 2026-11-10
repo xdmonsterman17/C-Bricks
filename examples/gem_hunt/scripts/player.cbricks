@@ -1,0 +1,1229 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 31,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"speed",
+						"float"
+					],
+					[
+						"score",
+						"int"
+					],
+					[
+						"time_left",
+						"float"
+					]
+				],
+				"name": "Player",
+				"synced": "score"
+			},
+			"id": 1,
+			"links": {},
+			"note": "The player: a Part that moves itself",
+			"outs": {},
+			"pos": [
+				0.0,
+				3360.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "class"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"out": [
+					3,
+					4
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				224.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "created"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "6"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "speed"
+			},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				208.0,
+				224.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "60"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "time_left"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				208.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 5,
+			"links": {
+				"out": [
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					18,
+					19,
+					20,
+					21,
+					22,
+					23,
+					24
+				]
+			},
+			"note": "dt: the frame's length in seconds",
+			"outs": {},
+			"pos": [
+				0.0,
+				512.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "every_frame"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-dt"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "time_left"
+			},
+			"id": 6,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				224.0,
+				512.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "W",
+				"when": "Key down"
+			},
+			"id": 7,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kw"
+				}
+			},
+			"pos": [
+				224.0,
+				640.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "S",
+				"when": "Key down"
+			},
+			"id": 8,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ks"
+				}
+			},
+			"pos": [
+				224.0,
+				768.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "A",
+				"when": "Key down"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ka"
+				}
+			},
+			"pos": [
+				224.0,
+				896.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "D",
+				"when": "Key down"
+			},
+			"id": 10,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kd"
+				}
+			},
+			"pos": [
+				224.0,
+				1024.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "(kd ? 1.0 : 0.0) - (ka ? 1.0 : 0.0)"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "(ks ? 1.0 : 0.0) - (kw ? 1.0 : 0.0)"
+				}
+			},
+			"fields": {
+				"op": "Make"
+			},
+			"id": 11,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "dir"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				224.0,
+				1152.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "time_left"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": ">"
+			},
+			"id": 12,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					13,
+					14,
+					15,
+					16,
+					17
+				]
+			},
+			"outs": {},
+			"pos": [
+				224.0,
+				1280.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "dir"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Normalize"
+			},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "dir"
+				},
+				"x": {
+					"use": false,
+					"var": "x_2"
+				},
+				"y": {
+					"use": false,
+					"var": "y_2"
+				},
+				"z": {
+					"use": false,
+					"var": "z_2"
+				}
+			},
+			"pos": [
+				432.0,
+				1280.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "dir"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "speed * dt"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Scale"
+			},
+			"id": 14,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "step"
+				},
+				"x": {
+					"use": false,
+					"var": "x_3"
+				},
+				"y": {
+					"use": false,
+					"var": "y_3"
+				},
+				"z": {
+					"use": false,
+					"var": "z_3"
+				}
+			},
+			"pos": [
+				432.0,
+				1408.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "step"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "position"
+			},
+			"id": 15,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_4"
+				}
+			},
+			"pos": [
+				432.0,
+				1536.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "position"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Split"
+			},
+			"id": 16,
+			"links": {
+				"next": []
+			},
+			"note": "Stay inside the walls",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "v"
+				},
+				"x": {
+					"use": false,
+					"var": "px"
+				},
+				"y": {
+					"use": false,
+					"var": "py"
+				},
+				"z": {
+					"use": false,
+					"var": "pz"
+				}
+			},
+			"pos": [
+				432.0,
+				1664.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "fmax(-9.2, fmin(9.2, px))"
+				},
+				"y": {
+					"var": "py"
+				},
+				"z": {
+					"type": "float",
+					"value": "fmax(-9.2, fmin(9.2, pz))"
+				}
+			},
+			"fields": {
+				"op": "Make"
+			},
+			"id": 17,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "position"
+				},
+				"x": {
+					"use": false,
+					"var": "x_4"
+				},
+				"y": {
+					"use": false,
+					"var": "y_4"
+				},
+				"z": {
+					"use": false,
+					"var": "z_4"
+				}
+			},
+			"pos": [
+				432.0,
+				1808.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Camera"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Camera3D",
+				"op": "Find"
+			},
+			"id": 18,
+			"links": {
+				"next": []
+			},
+			"note": "The camera follows the player",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "cam"
+				}
+			},
+			"pos": [
+				224.0,
+				1936.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "position"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 7, 9"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 19,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "eye"
+				},
+				"x": {
+					"use": false,
+					"var": "x_5"
+				},
+				"y": {
+					"use": false,
+					"var": "y_5"
+				},
+				"z": {
+					"use": false,
+					"var": "z_5"
+				}
+			},
+			"pos": [
+				224.0,
+				2112.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "cam"
+				},
+				"value": {
+					"var": "eye"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 20,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				224.0,
+				2240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "cam"
+				},
+				"value": {
+					"var": "position"
+				}
+			},
+			"fields": {
+				"field": "target",
+				"mode": "Set"
+			},
+			"id": 21,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_2"
+				}
+			},
+			"pos": [
+				224.0,
+				2368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Hud"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Label",
+				"op": "Find"
+			},
+			"id": 22,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "hud"
+				}
+			},
+			"pos": [
+				224.0,
+				2496.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "time_left > 0 ? (int)ceil(time_left) : 0",
+				"type": "int"
+			},
+			"id": 23,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "secs"
+				}
+			},
+			"pos": [
+				224.0,
+				2624.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "secs"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": ">"
+			},
+			"id": 24,
+			"links": {
+				"false": [
+					27,
+					28
+				],
+				"next": [],
+				"true": [
+					25,
+					26
+				]
+			},
+			"outs": {},
+			"pos": [
+				224.0,
+				2752.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "score"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"var": "secs"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "Gems: {}     Time: {}     (WASD)",
+				"op": "Format"
+			},
+			"id": 25,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line"
+				}
+			},
+			"pos": [
+				432.0,
+				2752.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "hud"
+				},
+				"value": {
+					"var": "line"
+				}
+			},
+			"fields": {
+				"field": "text",
+				"mode": "Set"
+			},
+			"id": 26,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_3"
+				}
+			},
+			"pos": [
+				432.0,
+				2912.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "score"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "Time's up! Gems: {}",
+				"op": "Format"
+			},
+			"id": 27,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line"
+				}
+			},
+			"pos": [
+				432.0,
+				3040.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "hud"
+				},
+				"value": {
+					"var": "line"
+				}
+			},
+			"fields": {
+				"field": "text",
+				"mode": "Set"
+			},
+			"id": 28,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_4"
+				}
+			},
+			"pos": [
+				432.0,
+				3200.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"name": "add_point",
+				"params": [],
+				"returns": "void"
+			},
+			"id": 29,
+			"links": {
+				"out": [
+					30
+				]
+			},
+			"note": "Called by a Gem when it's picked up",
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "function"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "score"
+			},
+			"id": 30,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_5"
+				}
+			},
+			"pos": [
+				224.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		}
+	],
+	"version": 4
+}

@@ -1,0 +1,259 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 10,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"life",
+						"float"
+					]
+				],
+				"name": "Spark",
+				"synced": ""
+			},
+			"id": 1,
+			"links": {},
+			"note": "Where a shot hit: gone after a moment",
+			"outs": {},
+			"pos": [
+				0.0,
+				432.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "class"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"out": [
+					3
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "created"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0.14"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "size"
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					4
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				208.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "#ffeb3b"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "color"
+			},
+			"id": 4,
+			"links": {
+				"next": [
+					5
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				416.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "0.12"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "life"
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				624.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 6,
+			"links": {
+				"out": [
+					9
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				192.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "every_frame"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "life"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "<="
+			},
+			"id": 7,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					8
+				]
+			},
+			"outs": {},
+			"pos": [
+				416.0,
+				192.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"object": {
+					"var": "self"
+				}
+			},
+			"fields": {},
+			"id": 8,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				624.0,
+				192.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "destroy"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-dt"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "life"
+			},
+			"id": 9,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_4"
+				}
+			},
+			"pos": [
+				208.0,
+				192.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		}
+	],
+	"version": 4
+}

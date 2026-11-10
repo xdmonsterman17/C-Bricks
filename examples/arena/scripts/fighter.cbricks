@@ -1,0 +1,452 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 14,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"walk",
+						"vector2"
+					],
+					[
+						"yaw",
+						"float"
+					],
+					[
+						"pitch",
+						"float"
+					],
+					[
+						"trigger",
+						"bool"
+					],
+					[
+						"cooldown",
+						"float"
+					],
+					[
+						"health",
+						"int"
+					],
+					[
+						"score",
+						"int"
+					],
+					[
+						"down",
+						"float"
+					],
+					[
+						"home",
+						"vector3"
+					]
+				],
+				"name": "Fighter",
+				"synced": "health, score, down"
+			},
+			"id": 1,
+			"links": {},
+			"note": "A player's body: scenes/fighter.cbscene's root. Its Input script (on the player's machine) sends walk / yaw / pitch / trigger; its Brain script (on the server) moves it",
+			"outs": {},
+			"pos": [
+				0.0,
+				464.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "class"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"out": [
+					4
+				]
+			},
+			"note": "On the server (players' machines get a copy)",
+			"outs": {},
+			"pos": [
+				0.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "created"
+		},
+		{
+			"args": {},
+			"fields": {
+				"of": "Shape3D",
+				"world": false
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					6
+				]
+			},
+			"note": "A visor: shows where it faces",
+			"outs": {
+				"object": {
+					"use": false,
+					"var": "visor"
+				}
+			},
+			"pos": [
+				640.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "new_object"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0.8, 1.8, 0.8"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "size"
+			},
+			"id": 4,
+			"links": {
+				"next": [
+					5
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				224.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "100"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "health"
+			},
+			"id": 5,
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				432.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "visor"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0, 0.55, -0.42"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 6,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				864.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "visor"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "0.6, 0.2, 0.1"
+				}
+			},
+			"fields": {
+				"field": "size",
+				"mode": "Set"
+			},
+			"id": 7,
+			"links": {
+				"next": [
+					8
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_2"
+				}
+			},
+			"pos": [
+				1136.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "visor"
+				},
+				"value": {
+					"type": "string",
+					"value": "#212121"
+				}
+			},
+			"fields": {
+				"field": "color",
+				"mode": "Set"
+			},
+			"id": 8,
+			"links": {
+				"next": [
+					9
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_3"
+				}
+			},
+			"pos": [
+				1376.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "visor"
+				},
+				"parent": {
+					"var": "self"
+				}
+			},
+			"fields": {
+				"op": "Set parent"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "result"
+				}
+			},
+			"pos": [
+				1600.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {},
+			"fields": {
+				"name": "hurt",
+				"params": [
+					[
+						"amount",
+						"int"
+					]
+				],
+				"returns": "void"
+			},
+			"id": 10,
+			"links": {
+				"out": [
+					13
+				]
+			},
+			"note": "An enemy bit it (on the server): its player's machine is told",
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "function"
+		},
+		{
+			"args": {
+				"object": {
+					"var": "self"
+				},
+				"player": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"do": "Owner"
+			},
+			"id": 11,
+			"links": {
+				"next": [
+					12
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "who"
+				}
+			},
+			"pos": [
+				432.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "ownership"
+		},
+		{
+			"args": {
+				"amount": {
+					"var": "amount"
+				},
+				"player": {
+					"var": "who"
+				}
+			},
+			"fields": {
+				"remote": "hurt",
+				"to": "One player"
+			},
+			"id": 12,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "fire_clients"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "-amount"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "health"
+			},
+			"id": 13,
+			"links": {
+				"next": [
+					11
+				]
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				224.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		}
+	],
+	"version": 4
+}

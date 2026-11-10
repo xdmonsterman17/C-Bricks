@@ -1,0 +1,232 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 10,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Spark",
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"life",
+						"float"
+					]
+				],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "Where a shot hit: gone after a moment"
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "size"
+			},
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0.14"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "color"
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "#ffeb3b"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "life"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "0.12"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "every_frame",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					9
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "<="
+			},
+			"args": {
+				"a": {
+					"var": "life"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "destroy",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"object": {
+					"var": "self"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "life"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-dt"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					7
+				]
+			}
+		}
+	]
+}

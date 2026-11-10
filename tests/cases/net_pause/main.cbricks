@@ -1,0 +1,1166 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 43,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "160"
+				},
+				"height": {
+					"type": "int",
+					"value": "120"
+				},
+				"title": {
+					"type": "string",
+					"value": "net pause"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "world_t"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "role"
+				},
+				"b": {
+					"type": "string",
+					"value": "server"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					8
+				],
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Ticker",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "tk",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "0.5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"next": [
+					7
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Frame time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "dt",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "world_t"
+			},
+			"args": {
+				"value": {
+					"var": "dt"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "t",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "role"
+				},
+				"b": {
+					"type": "string",
+					"value": "client"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					16
+				],
+				"next": [
+					34
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					17
+				],
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "20"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					19
+				],
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "w20"
+			},
+			"args": {
+				"value": {
+					"var": "world_t"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					20
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "t20"
+			},
+			"args": {
+				"value": {
+					"var": "t"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					21
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_steps"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "s20",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "70"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Time scale"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ts",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "isp",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "get_steps"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "s70",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"type": "float",
+				"expression": "(world_t - w20) / (t - t20)"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ratio",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					27
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"type": "bool",
+				"expression": "ratio > 0.4 && ratio < 0.6"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "half",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					28
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"type": "bool",
+				"expression": "s70 > s20 + 30"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ran",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[client] time scale {}, its frames at half speed: {}"
+			},
+			"args": {
+				"first": {
+					"var": "ts"
+				},
+				"second": {
+					"var": "half"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_29",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					30
+				]
+			}
+		},
+		{
+			"id": 30,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_29"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					31
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[client] Paused? {}, When frame starts still ran: {}"
+			},
+			"args": {
+				"first": {
+					"var": "isp"
+				},
+				"second": {
+					"var": "ran"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_31",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_31"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 34,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "role"
+				},
+				"b": {
+					"type": "string",
+					"value": "server"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					35
+				]
+			}
+		},
+		{
+			"id": 35,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": ">"
+			},
+			"args": {
+				"a": {
+					"var": "t"
+				},
+				"b": {
+					"type": "float",
+					"value": "3.0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					36
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Ticker"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Ticker"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "tk2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ticks"
+			},
+			"args": {
+				"record": {
+					"var": "tk2"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "ticks",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 38,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"type": "bool",
+				"expression": "ticks > 30"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ticked",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					39
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "sp",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					40
+				]
+			}
+		},
+		{
+			"id": 40,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[server] Paused? {}, the world still ran: {}"
+			},
+			"args": {
+				"first": {
+					"var": "sp"
+				},
+				"second": {
+					"var": "ticked"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_40",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_40"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

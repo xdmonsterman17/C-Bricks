@@ -1,0 +1,848 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 31,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Player",
+				"extends": "Shape3D",
+				"fields": [
+					[
+						"speed",
+						"float"
+					],
+					[
+						"score",
+						"int"
+					],
+					[
+						"time_left",
+						"float"
+					]
+				],
+				"synced": "score"
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "The player: a Part that moves itself"
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3,
+					4
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "speed"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "6"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "time_left"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "every_frame",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					18,
+					19,
+					20,
+					21,
+					22,
+					23,
+					24
+				]
+			},
+			"note": "dt: the frame's length in seconds"
+		},
+		{
+			"id": 6,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "time_left"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-dt"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "W"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kw",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "S"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ks",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "A"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ka",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "kd"
+			},
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "(kd ? 1.0 : 0.0) - (ka ? 1.0 : 0.0)"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "(ks ? 1.0 : 0.0) - (kw ? 1.0 : 0.0)"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dir",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": ">"
+			},
+			"args": {
+				"a": {
+					"var": "time_left"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					13,
+					14,
+					15,
+					16,
+					17
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Normalize"
+			},
+			"args": {
+				"a": {
+					"var": "dir"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dir",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Scale"
+			},
+			"args": {
+				"a": {
+					"var": "dir"
+				},
+				"factor": {
+					"type": "float",
+					"value": "speed * dt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "step",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "position"
+			},
+			"args": {
+				"value": {
+					"var": "step"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 16,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split"
+			},
+			"args": {
+				"a": {
+					"var": "position"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "px",
+					"use": false
+				},
+				"y": {
+					"var": "py",
+					"use": false
+				},
+				"z": {
+					"var": "pz",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "Stay inside the walls"
+		},
+		{
+			"id": 17,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "fmax(-9.2, fmin(9.2, px))"
+				},
+				"y": {
+					"var": "py"
+				},
+				"z": {
+					"type": "float",
+					"value": "fmax(-9.2, fmin(9.2, pz))"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "position",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Camera3D"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Camera"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "cam",
+					"use": false
+				}
+			},
+			"links": {},
+			"note": "The camera follows the player"
+		},
+		{
+			"id": 19,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"a": {
+					"var": "position"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 7, 9"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "eye",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "cam"
+				},
+				"value": {
+					"var": "eye"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "target"
+			},
+			"args": {
+				"record": {
+					"var": "cam"
+				},
+				"value": {
+					"var": "position"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Label"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Hud"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hud",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 23,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "time_left > 0 ? (int)ceil(time_left) : 0",
+				"type": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "secs",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 24,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": ">"
+			},
+			"args": {
+				"a": {
+					"var": "secs"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					25,
+					26
+				],
+				"false": [
+					27,
+					28
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Gems: {}     Time: {}     (WASD)"
+			},
+			"args": {
+				"first": {
+					"var": "score"
+				},
+				"second": {
+					"var": "secs"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 26,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "text"
+			},
+			"args": {
+				"record": {
+					"var": "hud"
+				},
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 27,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "Time's up! Gems: {}"
+			},
+			"args": {
+				"first": {
+					"var": "score"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 28,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "text"
+			},
+			"args": {
+				"record": {
+					"var": "hud"
+				},
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 29,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "add_point",
+				"returns": "void",
+				"params": []
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					30
+				]
+			},
+			"note": "Called by a Gem when it's picked up"
+		},
+		{
+			"id": 30,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "score"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

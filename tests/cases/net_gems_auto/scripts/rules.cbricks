@@ -1,0 +1,766 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 27,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "player_joined",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"note": "Each player gets a Hero (the do-it-yourself starter player): the scene's Runner, theirs"
+		},
+		{
+			"id": 2,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Instance",
+				"scene": "scenes/hero.cbscene"
+			},
+			"args": {
+				"parent": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"root": {
+					"var": "runner",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pname",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set name"
+			},
+			"args": {
+				"object": {
+					"var": "runner"
+				},
+				"name": {
+					"var": "pname"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Give to"
+			},
+			"args": {
+				"object": {
+					"var": "runner"
+				},
+				"player": {
+					"var": "player"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					6
+				]
+			},
+			"note": "Theirs: Player Direction reads their keys; the scene's Welcome runs on their machine"
+		},
+		{
+			"id": 6,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "-6"
+				},
+				"y": {
+					"type": "float",
+					"value": "0.8"
+				},
+				"z": {
+					"type": "float",
+					"value": "-6.0 + 3.0 * (player % 5)"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "spot",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"note": "A lane each (players are numbers)"
+		},
+		{
+			"id": 7,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "runner"
+				},
+				"value": {
+					"var": "spot"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "string"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "colors",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#1e88e5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#e53935"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#fdd835"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#8e24aa"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "colors"
+				},
+				"value": {
+					"type": "string",
+					"value": "#fb8c00"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"list": {
+					"var": "colors"
+				},
+				"index": {
+					"type": "int",
+					"value": "(player - 1) % 5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "color",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "color"
+			},
+			"args": {
+				"record": {
+					"var": "runner"
+				},
+				"value": {
+					"var": "color"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[server] a runner for {}"
+			},
+			"args": {
+				"first": {
+					"var": "pname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_16",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_16"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[server] {} joined"
+			},
+			"args": {
+				"first": {
+					"var": "pname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_18",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_18"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "player_left",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					21
+				]
+			},
+			"note": "What they own goes with them"
+		},
+		{
+			"id": 21,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pname",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Owned by"
+			},
+			"args": {
+				"player": {
+					"var": "player"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "theirs",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "for_each",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"list": {
+					"var": "theirs"
+				}
+			},
+			"outs": {
+				"item": {
+					"var": "thing",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					24
+				],
+				"done": [
+					25
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "destroy",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"object": {
+					"var": "thing"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 25,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[server] {} left"
+			},
+			"args": {
+				"first": {
+					"var": "pname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_25",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_25"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"side": "Server"
+}

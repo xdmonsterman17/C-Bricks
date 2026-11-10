@@ -1,0 +1,789 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 27,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "role"
+				},
+				"b": {
+					"type": "string",
+					"value": "server"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					4
+				],
+				"false": [
+					7
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "3.4"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[server] done"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "line_5",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "player",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "me",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "price"
+			},
+			"args": {
+				"item": {
+					"type": "string",
+					"value": "sword"
+				},
+				"timeout": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"answer": {
+					"var": "cost",
+					"use": false
+				},
+				"answered": {
+					"var": "ok",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "price"
+			},
+			"args": {
+				"item": {
+					"type": "string",
+					"value": "rock"
+				},
+				"timeout": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"answer": {
+					"var": "cost2",
+					"use": false
+				},
+				"answered": {
+					"var": "ok2",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "token"
+			},
+			"args": {
+				"timeout": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"answer": {
+					"var": "tok",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "tok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "tname",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "ownership",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is mine"
+			},
+			"args": {
+				"object": {
+					"var": "tok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "mine",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					21
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "invoke_server",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"remote": "slow"
+			},
+			"args": {
+				"timeout": {
+					"type": "float",
+					"value": "0.3"
+				}
+			},
+			"outs": {
+				"answered": {
+					"var": "ok4",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Option"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "stay"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "stay_text",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To float"
+			},
+			"args": {
+				"text": {
+					"var": "stay_text"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "stay",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"var": "stay"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}] sword: {} ({})"
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				},
+				"second": {
+					"var": "cost"
+				},
+				"third": {
+					"var": "ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_17",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_17"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}] rock: {} ({})"
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				},
+				"second": {
+					"var": "cost2"
+				},
+				"third": {
+					"var": "ok2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_19",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					20
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_19"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}] got {}, mine: {}"
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				},
+				"second": {
+					"var": "tname"
+				},
+				"third": {
+					"var": "mine"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_21",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_21"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}] slow answered: {}"
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				},
+				"second": {
+					"var": "ok4"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_23",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_23"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}] done"
+			},
+			"args": {
+				"first": {
+					"var": "me"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_25",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_25"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

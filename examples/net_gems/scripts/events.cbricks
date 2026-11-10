@@ -1,0 +1,473 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 12,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"remote": "picked"
+			},
+			"id": 1,
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "on_server_fired"
+		},
+		{
+			"args": {
+				"player": {
+					"var": "who"
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 2,
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "pname"
+				}
+			},
+			"pos": [
+				208.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "pname"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"var": "score"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "[picked] {} has {} gems",
+				"op": "Format"
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					4
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line_3"
+				}
+			},
+			"pos": [
+				432.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "line_3"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				784.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {},
+			"fields": {
+				"remote": "winner"
+			},
+			"id": 5,
+			"links": {
+				"out": [
+					6
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "on_server_fired"
+		},
+		{
+			"args": {
+				"player": {
+					"var": "who"
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 6,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "wname"
+				}
+			},
+			"pos": [
+				208.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Banner"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Label",
+				"op": "Find"
+			},
+			"id": 7,
+			"links": {
+				"next": [
+					8
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "banner"
+				}
+			},
+			"pos": [
+				432.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "wname"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "{} wins! Again...",
+				"op": "Format"
+			},
+			"id": 8,
+			"links": {
+				"next": [
+					9
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "btext"
+				}
+			},
+			"pos": [
+				688.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "banner"
+				},
+				"value": {
+					"var": "btext"
+				}
+			},
+			"fields": {
+				"field": "text",
+				"mode": "Set"
+			},
+			"id": 9,
+			"links": {
+				"next": [
+					10
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				976.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "wname"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "[winner] {} wins!",
+				"op": "Format"
+			},
+			"id": 10,
+			"links": {
+				"next": [
+					11
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line_10"
+				}
+			},
+			"pos": [
+				1184.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "line_10"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 11,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				1504.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		}
+	],
+	"side": "Client",
+	"version": 4
+}

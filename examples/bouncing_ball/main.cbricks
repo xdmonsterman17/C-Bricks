@@ -1,0 +1,820 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 50,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {
+				"fps": {
+					"type": "int",
+					"value": "60"
+				},
+				"height": {
+					"type": "int",
+					"value": "450"
+				},
+				"title": {
+					"type": "string",
+					"value": "Bouncing Ball (C-Bricks)"
+				},
+				"width": {
+					"type": "int",
+					"value": "800"
+				}
+			},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "window"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "400"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "x",
+				"scope": "Local"
+			},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				240.0,
+				192.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "225"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "y",
+				"scope": "Local"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				240.0,
+				320.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "240"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "vx",
+				"scope": "Local"
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				240.0,
+				448.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "180"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "vy",
+				"scope": "Local"
+			},
+			"id": 6,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_4"
+				}
+			},
+			"pos": [
+				240.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 7,
+			"links": {
+				"done": [
+					18
+				],
+				"frame": [
+					8,
+					9,
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					16,
+					17
+				]
+			},
+			"note": "each frame: move, bounce, draw",
+			"outs": {},
+			"pos": [
+				240.0,
+				704.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_loop"
+		},
+		{
+			"args": {},
+			"fields": {
+				"what": "Frame time"
+			},
+			"id": 8,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "dt"
+				}
+			},
+			"pos": [
+				464.0,
+				704.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_info"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "vx * dt"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "x"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_5"
+				}
+			},
+			"pos": [
+				464.0,
+				832.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "vy * dt"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "y"
+			},
+			"id": 10,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_6"
+				}
+			},
+			"pos": [
+				464.0,
+				960.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "x < 30 || x > 770"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 11,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					19
+				]
+			},
+			"outs": {},
+			"pos": [
+				464.0,
+				1088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-vx"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "vx"
+			},
+			"id": 19,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_7"
+				}
+			},
+			"pos": [
+				704.0,
+				1088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "y < 30 || y > 420"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 12,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					20
+				]
+			},
+			"outs": {},
+			"pos": [
+				464.0,
+				1296.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "-vy"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "vy"
+			},
+			"id": 20,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_8"
+				}
+			},
+			"pos": [
+				704.0,
+				1296.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "SPACE",
+				"when": "Key pressed"
+			},
+			"id": 13,
+			"links": {
+				"next": [
+					21
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "faster"
+				}
+			},
+			"pos": [
+				464.0,
+				1504.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "faster"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 21,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					22,
+					23
+				]
+			},
+			"outs": {},
+			"pos": [
+				688.0,
+				1504.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "vx * 1.25"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "vx"
+			},
+			"id": 22,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_9"
+				}
+			},
+			"pos": [
+				896.0,
+				1504.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "vy * 1.25"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "vy"
+			},
+			"id": 23,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_10"
+				}
+			},
+			"pos": [
+				896.0,
+				1632.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "RAYWHITE"
+				}
+			},
+			"fields": {},
+			"id": 14,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				464.0,
+				1760.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "clear"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "MAROON"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "30"
+				},
+				"size": {
+					"type": "int",
+					"value": "20"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello!"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "(int)x"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "(int)y"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Circle"
+			},
+			"id": 15,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				464.0,
+				1888.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {
+				"first": {
+					"type": "int",
+					"value": "(int)sqrt(vx * vx + vy * vy)"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "speed {} px/s  (Space: faster)",
+				"op": "Format"
+			},
+			"id": 16,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "label"
+				}
+			},
+			"pos": [
+				464.0,
+				2048.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "DARKGRAY"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "40"
+				},
+				"size": {
+					"type": "int",
+					"value": "20"
+				},
+				"text": {
+					"var": "label"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "20"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "20"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Text"
+			},
+			"id": 17,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				464.0,
+				2208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Window closed. Bye!"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 18,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				464.0,
+				2368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		}
+	],
+	"version": 3
+}

@@ -1,0 +1,12 @@
+[project]
+
+name="Net Gems"
+version="1.0"
+
+[run]
+
+args=""
+
+[build]
+
+target="native"

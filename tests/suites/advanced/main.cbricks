@@ -1,0 +1,247 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 109,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					102,
+					103,
+					105,
+					106,
+					108
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "include",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"header": "<stdlib.h>"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "call_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "abs",
+				"returns": "int",
+				"args": [
+					[
+						"x",
+						"int"
+					]
+				],
+				"header": "<stdlib.h>"
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "-5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "absolute",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[call_c.header] {}"
+			},
+			"args": {
+				"first": {
+					"var": "absolute"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_103",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					104
+				]
+			}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_103"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "call_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "twice",
+				"returns": "int",
+				"args": [
+					[
+						"x",
+						"int"
+					]
+				],
+				"header": ""
+			},
+			"args": {
+				"x": {
+					"type": "int",
+					"value": "4"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "doubled",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[call_c.declared] {}"
+			},
+			"args": {
+				"first": {
+					"var": "doubled"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_106",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					107
+				]
+			}
+		},
+		{
+			"id": 107,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_106"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "printf(\"[raw_c] C written as it is\\n\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

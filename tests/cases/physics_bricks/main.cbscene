@@ -1,0 +1,58 @@
+{
+	"format": "c-bricks-scene",
+	"version": 1,
+	"next_id": 10,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Part",
+			"name": "Wall",
+			"parent": 0,
+			"fields": {
+				"position": "0, 1, -5",
+				"size": "4, 2, 1",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Part",
+			"name": "Box",
+			"parent": 0,
+			"fields": {
+				"position": "3, 0.5, 0"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Part",
+			"name": "Player",
+			"parent": 0,
+			"fields": {
+				"position": "0, 0.9, 0",
+				"size": "0.8, 1.8, 0.8"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Part",
+			"name": "Turned",
+			"parent": 0,
+			"fields": {
+				"position": "5, 1, -2",
+				"size": "4, 2, 1",
+				"rotation": "0, 90, 0",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Part",
+			"name": "Behind",
+			"parent": 0,
+			"fields": {
+				"position": "0, 1, -8"
+			}
+		}
+	]
+}

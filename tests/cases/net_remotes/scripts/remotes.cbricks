@@ -1,0 +1,90 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 4,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "chat",
+				"direction": "To server",
+				"values": [
+					[
+						"text",
+						"string"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "said",
+				"direction": "To clients",
+				"values": [
+					[
+						"who",
+						"int"
+					],
+					[
+						"text",
+						"string"
+					],
+					[
+						"board",
+						"Board"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "whisper",
+				"direction": "To clients",
+				"values": [
+					[
+						"text",
+						"string"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

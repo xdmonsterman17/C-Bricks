@@ -1,0 +1,75 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 4,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "price",
+				"direction": "Ask server",
+				"values": [
+					[
+						"item",
+						"string"
+					]
+				],
+				"answer": "int"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "token",
+				"direction": "Ask server",
+				"values": [],
+				"answer": "Token"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "slow",
+				"direction": "Ask server",
+				"values": [],
+				"answer": "bool"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

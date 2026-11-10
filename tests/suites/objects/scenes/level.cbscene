@@ -1,0 +1,14 @@
+{
+	"format": "c-bricks-scene",
+	"version": 3,
+	"next_id": 2,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Spatial3D",
+			"name": "Level2",
+			"parent": 0,
+			"fields": {}
+		}
+	]
+}

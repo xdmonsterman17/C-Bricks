@@ -1,0 +1,2954 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 207,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					109,
+					110,
+					112,
+					113,
+					115,
+					116,
+					118,
+					119,
+					120,
+					122,
+					123,
+					124,
+					126,
+					127,
+					128,
+					129,
+					131,
+					132,
+					133,
+					135,
+					136,
+					137,
+					139,
+					140,
+					141,
+					142,
+					143,
+					145,
+					146,
+					148,
+					149,
+					150,
+					151,
+					153,
+					154,
+					155,
+					157,
+					158,
+					159,
+					161,
+					162,
+					163,
+					165,
+					166,
+					167,
+					169,
+					170,
+					172,
+					173,
+					174,
+					176,
+					177,
+					178,
+					179,
+					181,
+					182,
+					183,
+					184,
+					186,
+					206
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "Objects suite"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Thing",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "t",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Runner",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "mover",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "position"
+			},
+			"args": {
+				"record": {
+					"var": "mover"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "-3, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "velocity"
+			},
+			"args": {
+				"record": {
+					"var": "mover"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "12, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "e",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Exists] {}"
+			},
+			"args": {
+				"first": {
+					"var": "e"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_107",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					108
+				]
+			}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_107"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Is a",
+				"of": "Shape3D"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "isa",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Is a] {}"
+			},
+			"args": {
+				"first": {
+					"var": "isa"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_110",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					111
+				]
+			}
+		},
+		{
+			"id": 111,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_110"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Class name"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "cn",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Class name] {}"
+			},
+			"args": {
+				"first": {
+					"var": "cn"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_113",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					114
+				]
+			}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_113"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "nm",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Name] {}"
+			},
+			"args": {
+				"first": {
+					"var": "nm"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_116",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					117
+				]
+			}
+		},
+		{
+			"id": 117,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_116"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "As",
+				"of": "Thing"
+			},
+			"args": {
+				"object": {
+					"var": "mover"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "not_thing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "not_thing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "as_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.As] {}"
+			},
+			"args": {
+				"first": {
+					"var": "as_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_120",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					121
+				]
+			}
+		},
+		{
+			"id": 121,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_120"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Id"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "tid",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "tid"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "id_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Id] {}"
+			},
+			"args": {
+				"first": {
+					"var": "id_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_124",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					125
+				]
+			}
+		},
+		{
+			"id": 125,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_124"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set name"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"name": {
+					"type": "string",
+					"value": "Bob"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "World"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "w",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "w"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "wname",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.World] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_129",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					130
+				]
+			}
+		},
+		{
+			"id": 130,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_129"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Thing"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Bob"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "found",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "found"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "fname",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Set name Find] {}"
+			},
+			"args": {
+				"first": {
+					"var": "fname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_133",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					134
+				]
+			}
+		},
+		{
+			"id": 134,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_133"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Parent"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "par",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "par"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "pname",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Parent] {}"
+			},
+			"args": {
+				"first": {
+					"var": "pname"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_137",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					138
+				]
+			}
+		},
+		{
+			"id": 138,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_137"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Shape3D",
+				"world": false
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "child",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set parent"
+			},
+			"args": {
+				"object": {
+					"var": "child"
+				},
+				"parent": {
+					"var": "t"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Children"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "kids",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "kids"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "nkids",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[object.Set parent Children] {}"
+			},
+			"args": {
+				"first": {
+					"var": "nkids"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_143",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					144
+				]
+			}
+		},
+		{
+			"id": 144,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_143"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "call_method",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"class": "Thing",
+				"method": "poke"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"n": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "poked",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[call_method] {}"
+			},
+			"args": {
+				"first": {
+					"var": "poked"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_146",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					147
+				]
+			}
+		},
+		{
+			"id": 147,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_146"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 148,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Thing",
+				"world": false
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "spare",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 149,
+			"type": "destroy",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"object": {
+					"var": "spare"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 150,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "spare"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "spare_there",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 151,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[destroy] {}"
+			},
+			"args": {
+				"first": {
+					"var": "spare_there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_151",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					152
+				]
+			}
+		},
+		{
+			"id": 152,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_151"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 153,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Add",
+				"group": "enemies"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 154,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is in",
+				"group": "enemies"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "is_g",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 155,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[group.Is in] {}"
+			},
+			"args": {
+				"first": {
+					"var": "is_g"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_155",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					156
+				]
+			}
+		},
+		{
+			"id": 156,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_155"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 157,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Objects in",
+				"group": "enemies"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_g",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 158,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "in_g"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "n_in_g",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 159,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[group.Objects in] {}"
+			},
+			"args": {
+				"first": {
+					"var": "n_in_g"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_159",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					160
+				]
+			}
+		},
+		{
+			"id": 160,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_159"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 161,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Remove",
+				"group": "enemies"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 162,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is in",
+				"group": "enemies"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "still_g",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 163,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[group.Remove] {}"
+			},
+			"args": {
+				"first": {
+					"var": "still_g"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_163",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					164
+				]
+			}
+		},
+		{
+			"id": 164,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_163"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 165,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"key": {
+					"type": "string",
+					"value": "team"
+				},
+				"value": {
+					"type": "string",
+					"value": "red"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 166,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Get"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"key": {
+					"type": "string",
+					"value": "team"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "team",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 167,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[metadata.Set Get] {}"
+			},
+			"args": {
+				"first": {
+					"var": "team"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_167",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					168
+				]
+			}
+		},
+		{
+			"id": 168,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_167"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 169,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Has"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"key": {
+					"type": "string",
+					"value": "team"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has_team",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 170,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[metadata.Has] {}"
+			},
+			"args": {
+				"first": {
+					"var": "has_team"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_170",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					171
+				]
+			}
+		},
+		{
+			"id": 171,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_170"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 172,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Remove"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"key": {
+					"type": "string",
+					"value": "team"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 173,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Has"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				},
+				"key": {
+					"type": "string",
+					"value": "team"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has_team2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 174,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[metadata.Remove] {}"
+			},
+			"args": {
+				"first": {
+					"var": "has_team2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_174",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					175
+				]
+			}
+		},
+		{
+			"id": 175,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_174"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 176,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Instance",
+				"scene": "scenes/crate.cbscene"
+			},
+			"args": {
+				"parent": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"root": {
+					"var": "crate",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 177,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Children"
+			},
+			"args": {
+				"object": {
+					"var": "crate"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "crate_kids",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 178,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "crate_kids"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "n_crate_kids",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 179,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[scene.Instance] {}"
+			},
+			"args": {
+				"first": {
+					"var": "n_crate_kids"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_179",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					180
+				]
+			}
+		},
+		{
+			"id": 180,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_179"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 181,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "0.3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 182,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "frames"
+			},
+			"args": {
+				"record": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "wf",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 183,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "wf"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "wait_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 184,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[wait.world keeps running] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wait_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_184",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					185
+				]
+			}
+		},
+		{
+			"id": 185,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_184"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 186,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 187,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 188,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "30"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					189,
+					190,
+					191,
+					193,
+					194,
+					195,
+					197,
+					198,
+					199,
+					200,
+					202,
+					203,
+					205
+				]
+			}
+		},
+		{
+			"id": 189,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "frames"
+			},
+			"args": {
+				"record": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "tf",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 190,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "tf"
+				},
+				"b": {
+					"type": "int",
+					"value": "20"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ef_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 191,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[every_frame] {}"
+			},
+			"args": {
+				"first": {
+					"var": "ef_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_191",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					192
+				]
+			}
+		},
+		{
+			"id": 192,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_191"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 193,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "drawn"
+			},
+			"args": {
+				"record": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "td",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 194,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "td"
+				},
+				"b": {
+					"type": "int",
+					"value": "20"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dr_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 195,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[drawn] {}"
+			},
+			"args": {
+				"first": {
+					"var": "dr_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_195",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					196
+				]
+			}
+		},
+		{
+			"id": 196,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_195"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 197,
+			"type": "scene",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Change",
+				"scene": "scenes/level.cbscene"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 198,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Spatial3D"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Level2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "lv",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 199,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "lv"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "lv_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 200,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[scene.Change] {}"
+			},
+			"args": {
+				"first": {
+					"var": "lv_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_200",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					201
+				]
+			}
+		},
+		{
+			"id": 201,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_200"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 202,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "t"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_gone",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 203,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[scene.Change clears] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_gone"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_203",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					204
+				]
+			}
+		},
+		{
+			"id": 204,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_203"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 205,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 206,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					187,
+					188
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,165 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 5,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"note": "In the Hero scene: runs on the machine of the player it's given to",
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {
+				"player": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 2,
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"note": "Blank Player: the owner of the Runner it's in",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "me"
+				}
+			},
+			"pos": [
+				224.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "me"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"type": "int",
+					"value": "2"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "Welcome, {}! WASD to run, collect 10 gems to win.",
+				"op": "Format"
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					4
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line_3"
+				}
+			},
+			"pos": [
+				464.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "line_3"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		}
+	],
+	"side": "Client",
+	"version": 4
+}

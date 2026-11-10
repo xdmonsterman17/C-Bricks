@@ -1,0 +1,32 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 4,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Fighter",
+			"name": "Fighter",
+			"parent": 0,
+			"fields": {
+				"color": "#1e88e5"
+			}
+		},
+		{
+			"id": 2,
+			"class": "LocalScript",
+			"name": "Input",
+			"parent": 1,
+			"script": "scripts/fighter_input.cbricks",
+			"fields": {}
+		},
+		{
+			"id": 3,
+			"class": "Script",
+			"name": "Brain",
+			"parent": 1,
+			"script": "scripts/fighter_server.cbricks",
+			"fields": {}
+		}
+	]
+}

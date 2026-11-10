@@ -1,0 +1,846 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 406,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					100,
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					300,
+					301,
+					302,
+					303,
+					304,
+					305,
+					400,
+					401,
+					402,
+					403,
+					404,
+					405,
+					110,
+					111
+				]
+			}
+		},
+		{
+			"id": 100,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "800"
+				},
+				"height": {
+					"type": "int",
+					"value": "450"
+				},
+				"title": {
+					"type": "string",
+					"value": "World file"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 101,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Ball"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Ball"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ball",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "velocity"
+			},
+			"args": {
+				"record": {
+					"var": "ball"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "3, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Part"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Nobody"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "nobody",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "nobody"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "found",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "found"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Spinner"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Spinner"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "sp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Parent"
+			},
+			"args": {
+				"object": {
+					"var": "sp"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "holder",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "holder"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hname",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "hname"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					200,
+					201
+				]
+			}
+		},
+		{
+			"id": 200,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 201,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "150"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					202,
+					203,
+					204
+				]
+			}
+		},
+		{
+			"id": 202,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"world_file.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 203,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ball"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 204,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 300,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Camera"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Camera"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "cam",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 301,
+			"type": "snapshot",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"into": "File",
+				"transparent": false
+			},
+			"args": {
+				"camera": {
+					"var": "cam"
+				},
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "180"
+				},
+				"subject": {
+					"var": ""
+				},
+				"path": {
+					"type": "string",
+					"value": "shot.png"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "saved",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 302,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "saved"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 303,
+			"type": "snapshot",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"into": "File",
+				"transparent": true
+			},
+			"args": {
+				"camera": {
+					"var": "cam"
+				},
+				"width": {
+					"type": "int",
+					"value": "128"
+				},
+				"height": {
+					"type": "int",
+					"value": "128"
+				},
+				"subject": {
+					"var": "ball"
+				},
+				"path": {
+					"type": "string",
+					"value": "ball.png"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "saved2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 304,
+			"type": "snapshot",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"into": "Texture",
+				"transparent": true
+			},
+			"args": {
+				"camera": {
+					"var": "cam"
+				},
+				"width": {
+					"type": "int",
+					"value": "64"
+				},
+				"height": {
+					"type": "int",
+					"value": "48"
+				},
+				"subject": {
+					"var": "ball"
+				}
+			},
+			"outs": {
+				"texture": {
+					"var": "icon",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 305,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "icon"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 400,
+			"type": "group",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Objects in",
+				"group": "ground"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "grounds",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 401,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "grounds"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ng",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 402,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Part"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Floor"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "floor",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 403,
+			"type": "metadata",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Get"
+			},
+			"args": {
+				"object": {
+					"var": "floor"
+				},
+				"key": {
+					"type": "string",
+					"value": "kind"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "kind",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 404,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "groups {} meta {}"
+			},
+			"args": {
+				"first": {
+					"var": "ng"
+				},
+				"second": {
+					"var": "kind"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "gm",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 405,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "gm"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

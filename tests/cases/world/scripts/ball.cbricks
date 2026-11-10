@@ -1,0 +1,328 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 18,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Ball",
+				"extends": "Part",
+				"fields": [
+					[
+						"velocity",
+						"vector3"
+					]
+				],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "created",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3,
+					4,
+					5
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "shape"
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Sphere"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "color"
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "RED"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "size"
+			},
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0.6"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "touched",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					11,
+					12,
+					13,
+					14
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Class name"
+			},
+			"args": {
+				"object": {
+					"var": "other"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "what",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "the ball hit a {}"
+			},
+			"args": {
+				"first": {
+					"var": "what"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "msg",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "msg"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "velocity"
+			},
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "every_frame",
+			"pos": [
+				0,
+				400
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "vector",
+			"pos": [
+				0,
+				400
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Scale"
+			},
+			"args": {
+				"a": {
+					"var": "velocity"
+				},
+				"factor": {
+					"var": "dt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "step",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "var",
+			"pos": [
+				0,
+				400
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "position"
+			},
+			"args": {
+				"value": {
+					"var": "step"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

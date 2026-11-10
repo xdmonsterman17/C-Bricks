@@ -1,0 +1,92 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://vh3xpj31uw3g" path="res://addons/brickscript/runtime/network_menu.gd" id="1_netmn"]
+
+[node name="NetworkMenu" type="CanvasLayer"]
+script = ExtResource("1_netmn")
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 352.0
+offset_bottom = 12.0
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Box" type="VBoxContainer" parent="Panel/Margin"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/Margin/Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Multiplayer"
+
+[node name="Help" type="Label" parent="Panel/Margin/Box"]
+visible = false
+layout_mode = 2
+
+[node name="NameRow" type="HBoxContainer" parent="Panel/Margin/Box"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="Panel/Margin/Box/NameRow"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+text = "Name"
+
+[node name="Name" type="LineEdit" parent="Panel/Margin/Box/NameRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Your name"
+max_length = 24
+
+[node name="AddressRow" type="HBoxContainer" parent="Panel/Margin/Box"]
+layout_mode = 2
+
+[node name="AddressLabel" type="Label" parent="Panel/Margin/Box/AddressRow"]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+text = "Address"
+
+[node name="Address" type="LineEdit" parent="Panel/Margin/Box/AddressRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "127.0.0.1"
+placeholder_text = "host or host:port"
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Margin/Box"]
+layout_mode = 2
+
+[node name="Host" type="Button" parent="Panel/Margin/Box/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "Host"
+
+[node name="Join" type="Button" parent="Panel/Margin/Box/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "Join"
+
+[node name="Leave" type="Button" parent="Panel/Margin/Box/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+disabled = true
+text = "Leave"
+
+[node name="Status" type="Label" parent="Panel/Margin/Box"]
+layout_mode = 2
+text = "Single-player. Host a game, or join one."
+autowrap_mode = 3
+
+[node name="Hint" type="Label" parent="Panel/Margin/Box"]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+text = "F1: hide / show this menu"

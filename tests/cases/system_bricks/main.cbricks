@@ -1,0 +1,325 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 50,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "sleep",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"ms": {
+					"type": "int",
+					"value": "20"
+				}
+			},
+			"outs": {},
+			"links": {},
+			"note": "a short wait"
+		},
+		{
+			"id": 3,
+			"type": "env",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "PATH"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "path",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"var": "path"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "n",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "bool",
+					"value": "n > 0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "run_command",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"command": {
+					"type": "string",
+					"value": "echo from-the-shell"
+				}
+			},
+			"outs": {
+				"code": {
+					"var": "code",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "code"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Color",
+				"color": "bright green",
+				"background": false
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "green text"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "terminal",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Reset"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "env",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "CB_SURELY_NOT_SET_42"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "missing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "missing=[{}]"
+			},
+			"args": {
+				"first": {
+					"var": "missing"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"frames": []
+}

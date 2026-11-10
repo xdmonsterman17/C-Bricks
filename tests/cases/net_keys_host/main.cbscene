@@ -1,0 +1,23 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 3,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Node",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Camera3D",
+			"name": "Camera3D",
+			"parent": 1,
+			"fields": {
+				"position": "0, 6, 8"
+			}
+		}
+	]
+}

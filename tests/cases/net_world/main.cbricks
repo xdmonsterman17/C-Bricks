@@ -1,0 +1,2091 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 70,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Role"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "role",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "role"
+				},
+				"b": {
+					"type": "string",
+					"value": "server"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					4
+				],
+				"false": [
+					28
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Node"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Crate"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "crate",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "destroy",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"object": {
+					"var": "crate"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Sign"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Sign"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "sign",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					7
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "text"
+			},
+			"args": {
+				"record": {
+					"var": "sign"
+				},
+				"value": {
+					"type": "string",
+					"value": "hello"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					8
+				]
+			}
+		},
+		{
+			"id": 8,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Ball",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "b",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					9
+				]
+			}
+		},
+		{
+			"id": 9,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "ball"
+			},
+			"args": {
+				"record": {
+					"var": "sign"
+				},
+				"value": {
+					"var": "b"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					10
+				]
+			}
+		},
+		{
+			"id": 10,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "x"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					11
+				]
+			}
+		},
+		{
+			"id": 11,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "label"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "string",
+					"value": "one"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					12
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "secret"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					13
+				]
+			}
+		},
+		{
+			"id": 13,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "1.0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					14
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "x"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					15
+				]
+			}
+		},
+		{
+			"id": 15,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "label"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "string",
+					"value": "two"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					16
+				]
+			}
+		},
+		{
+			"id": 16,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "pos"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "1, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					17
+				]
+			}
+		},
+		{
+			"id": 17,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "spot"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "2, 0, 0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					18
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set name"
+			},
+			"args": {
+				"object": {
+					"var": "b"
+				},
+				"name": {
+					"type": "string",
+					"value": "Bally"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					19
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "new_object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Ball",
+				"world": true
+			},
+			"args": {},
+			"outs": {
+				"object": {
+					"var": "pal",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					20
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "friend"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"var": "pal"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					21
+				]
+			}
+		},
+		{
+			"id": 21,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "1.0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					22
+				]
+			}
+		},
+		{
+			"id": 22,
+			"type": "destroy",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"object": {
+					"var": "pal"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					23
+				]
+			}
+		},
+		{
+			"id": 23,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "x"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					24
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "label"
+			},
+			"args": {
+				"record": {
+					"var": "b"
+				},
+				"value": {
+					"type": "string",
+					"value": "three"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					25
+				]
+			}
+		},
+		{
+			"id": 25,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "1.5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					26
+				]
+			}
+		},
+		{
+			"id": 26,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[server] done"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "line_26",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					27
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_26"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 28,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Flag"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "late"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "late",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					29
+				]
+			}
+		},
+		{
+			"id": 29,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "late"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					30
+				],
+				"next": [
+					34
+				]
+			}
+		},
+		{
+			"id": 30,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "1.2"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					31
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "network",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Join"
+			},
+			"args": {
+				"address": {
+					"type": "string",
+					"value": "127.0.0.1"
+				},
+				"port": {
+					"type": "int",
+					"value": "47314"
+				},
+				"timeout": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "joined",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					32
+				]
+			}
+		},
+		{
+			"id": 32,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[late] joined {}"
+			},
+			"args": {
+				"first": {
+					"var": "joined"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_32",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					33
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_32"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 34,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Option"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "tag"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "tag",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					35
+				]
+			}
+		},
+		{
+			"id": 35,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "report"
+			},
+			"args": {
+				"tag": {
+					"type": "string",
+					"value": "1"
+				},
+				"who": {
+					"var": "tag"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					36
+				]
+			}
+		},
+		{
+			"id": 36,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "1.1"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					37
+				]
+			}
+		},
+		{
+			"id": 37,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "report"
+			},
+			"args": {
+				"tag": {
+					"type": "string",
+					"value": "2"
+				},
+				"who": {
+					"var": "tag"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					38
+				]
+			}
+		},
+		{
+			"id": 38,
+			"type": "wait",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"seconds": {
+					"type": "float",
+					"value": "1.0"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					39
+				]
+			}
+		},
+		{
+			"id": 39,
+			"type": "call",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"function": "report"
+			},
+			"args": {
+				"tag": {
+					"type": "string",
+					"value": "3"
+				},
+				"who": {
+					"var": "tag"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 40,
+			"type": "function",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "report",
+				"returns": "void",
+				"params": [
+					[
+						"who",
+						"string"
+					],
+					[
+						"tag",
+						"string"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					41
+				]
+			}
+		},
+		{
+			"id": 41,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Sign"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Sign"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "sg",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					42
+				]
+			}
+		},
+		{
+			"id": 42,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "text"
+			},
+			"args": {
+				"record": {
+					"var": "sg"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "text",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					43
+				]
+			}
+		},
+		{
+			"id": 43,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Node"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Crate"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "cr",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					44
+				]
+			}
+		},
+		{
+			"id": 44,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "cr"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "crate_there",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					45
+				]
+			}
+		},
+		{
+			"id": 45,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Node"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Lamp"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "la",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					46
+				]
+			}
+		},
+		{
+			"id": 46,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "la"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "lamp_there",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					47
+				]
+			}
+		},
+		{
+			"id": 47,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}{}] sign={} crate={}"
+			},
+			"args": {
+				"first": {
+					"var": "who"
+				},
+				"second": {
+					"var": "tag"
+				},
+				"third": {
+					"var": "text"
+				},
+				"fourth": {
+					"var": "crate_there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_47",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					48
+				]
+			}
+		},
+		{
+			"id": 48,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_47"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					49
+				]
+			}
+		},
+		{
+			"id": 49,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}{}] lamp={}"
+			},
+			"args": {
+				"first": {
+					"var": "who"
+				},
+				"second": {
+					"var": "tag"
+				},
+				"third": {
+					"var": "lamp_there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_49",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					50
+				]
+			}
+		},
+		{
+			"id": 50,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_49"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					51
+				]
+			}
+		},
+		{
+			"id": 51,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ball"
+			},
+			"args": {
+				"record": {
+					"var": "sg"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "bl",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					52
+				]
+			}
+		},
+		{
+			"id": 52,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has_ball",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					53
+				]
+			}
+		},
+		{
+			"id": 53,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "has_ball"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					54
+				]
+			}
+		},
+		{
+			"id": 54,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Name"
+			},
+			"args": {
+				"object": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "bname",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					55
+				]
+			}
+		},
+		{
+			"id": 55,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "x"
+			},
+			"args": {
+				"record": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "bx",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					56
+				]
+			}
+		},
+		{
+			"id": 56,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "label"
+			},
+			"args": {
+				"record": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "blabel",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					57
+				]
+			}
+		},
+		{
+			"id": 57,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "pos"
+			},
+			"args": {
+				"record": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "bpos",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					58
+				]
+			}
+		},
+		{
+			"id": 58,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "secret"
+			},
+			"args": {
+				"record": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "bsecret",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					59
+				]
+			}
+		},
+		{
+			"id": 59,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "friend"
+			},
+			"args": {
+				"record": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "bfriend",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					60
+				]
+			}
+		},
+		{
+			"id": 60,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "spot"
+			},
+			"args": {
+				"record": {
+					"var": "bl"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "bspot",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					61
+				]
+			}
+		},
+		{
+			"id": 61,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Exists"
+			},
+			"args": {
+				"object": {
+					"var": "bfriend"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "friend_there",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					62
+				]
+			}
+		},
+		{
+			"id": 62,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}{}] ball {} x={}"
+			},
+			"args": {
+				"first": {
+					"var": "who"
+				},
+				"second": {
+					"var": "tag"
+				},
+				"third": {
+					"var": "bname"
+				},
+				"fourth": {
+					"var": "bx"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_62",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					63
+				]
+			}
+		},
+		{
+			"id": 63,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_62"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					64
+				]
+			}
+		},
+		{
+			"id": 64,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}{}] label={} pos={}"
+			},
+			"args": {
+				"first": {
+					"var": "who"
+				},
+				"second": {
+					"var": "tag"
+				},
+				"third": {
+					"var": "blabel"
+				},
+				"fourth": {
+					"var": "bpos"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_64",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					65
+				]
+			}
+		},
+		{
+			"id": 65,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_64"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					66
+				]
+			}
+		},
+		{
+			"id": 66,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}{}] friend={} secret={}"
+			},
+			"args": {
+				"first": {
+					"var": "who"
+				},
+				"second": {
+					"var": "tag"
+				},
+				"third": {
+					"var": "friend_there"
+				},
+				"fourth": {
+					"var": "bsecret"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_66",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					67
+				]
+			}
+		},
+		{
+			"id": 67,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_66"
+				}
+			},
+			"outs": {},
+			"links": {
+				"next": [
+					68
+				]
+			}
+		},
+		{
+			"id": 68,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}{}] spot={}"
+			},
+			"args": {
+				"first": {
+					"var": "who"
+				},
+				"second": {
+					"var": "tag"
+				},
+				"third": {
+					"var": "bspot"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_68",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					69
+				]
+			}
+		},
+		{
+			"id": 69,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_68"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

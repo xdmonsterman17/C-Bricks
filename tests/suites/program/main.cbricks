@@ -1,0 +1,876 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 132,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					104,
+					105,
+					107,
+					108,
+					110,
+					111,
+					113,
+					114,
+					116,
+					117,
+					119,
+					120,
+					121,
+					123,
+					124,
+					126,
+					127,
+					129,
+					130
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Count"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "a_count",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.Count] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_count"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_102",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					103
+				]
+			}
+		},
+		{
+			"id": 103,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_102"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "At index"
+			},
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a_at_index",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.At index] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_at_index"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_105",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					106
+				]
+			}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_105"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Option"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a_option",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.Option] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_option"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_108",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_108"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Flag"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "loud"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a_flag",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.Flag] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_flag"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_111",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					112
+				]
+			}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_111"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "write_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Write"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				},
+				"text": {
+					"type": "string",
+					"value": "one\\n"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "wrote",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[write_file.Write] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wrote"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_114",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					115
+				]
+			}
+		},
+		{
+			"id": 115,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_114"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "write_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Append"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				},
+				"text": {
+					"type": "string",
+					"value": "two\\n"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "appended",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[write_file.Append] {}"
+			},
+			"args": {
+				"first": {
+					"var": "appended"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_117",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					118
+				]
+			}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_117"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "read_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				}
+			},
+			"outs": {
+				"text": {
+					"var": "back",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"var": "back"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "back_len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[read_file] {}"
+			},
+			"args": {
+				"first": {
+					"var": "back_len"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_121",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					122
+				]
+			}
+		},
+		{
+			"id": 122,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_121"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "file_exists",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "there",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[file_exists] {}"
+			},
+			"args": {
+				"first": {
+					"var": "there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_124",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					125
+				]
+			}
+		},
+		{
+			"id": 125,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_124"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "file_exists",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "nowhere.txt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "not_there",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[file_exists.missing] {}"
+			},
+			"args": {
+				"first": {
+					"var": "not_there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_127",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					128
+				]
+			}
+		},
+		{
+			"id": 128,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_127"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[quit] Exit program next (code 0)"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[quit] not reached"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

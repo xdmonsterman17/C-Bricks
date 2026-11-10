@@ -1,0 +1,97 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 4,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "input",
+				"direction": "To server",
+				"values": [
+					[
+						"walk",
+						"vector2"
+					],
+					[
+						"yaw",
+						"float"
+					],
+					[
+						"pitch",
+						"float"
+					],
+					[
+						"trigger",
+						"bool"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "A player's machine, every frame: which way its keys push, where its mouse looks, whether it's shooting"
+		},
+		{
+			"id": 2,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "hurt",
+				"direction": "To clients",
+				"values": [
+					[
+						"amount",
+						"int"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "The server tells a bitten player's machine (its camera shakes, the screen flashes red)"
+		},
+		{
+			"id": 3,
+			"type": "remote",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "hit",
+				"direction": "To clients",
+				"values": [
+					[
+						"killed",
+						"bool"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {},
+			"note": "The server tells a shooter their shot landed (a hit marker; red: it went down)"
+		}
+	]
+}

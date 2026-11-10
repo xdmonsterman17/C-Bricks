@@ -1,0 +1,76 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 50,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				32,
+				32
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "var",
+			"pos": [
+				240,
+				32
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "score",
+				"scope": "Local"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "print",
+			"pos": [
+				240,
+				160
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "scroe"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"frames": []
+}

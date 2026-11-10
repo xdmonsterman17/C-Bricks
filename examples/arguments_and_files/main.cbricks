@@ -1,0 +1,406 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 100,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					8,
+					9
+				]
+			},
+			"outs": {},
+			"pos": [
+				32.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		},
+		{
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"name": {
+					"type": "string",
+					"value": "name"
+				}
+			},
+			"fields": {
+				"what": "Option"
+			},
+			"id": 2,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "who"
+				}
+			},
+			"pos": [
+				240.0,
+				32.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "args"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "who"
+				},
+				"b": {
+					"type": "string",
+					"value": ""
+				}
+			},
+			"fields": {
+				"operator": "=="
+			},
+			"id": 3,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					10
+				]
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				144.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "stranger"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "who",
+				"scope": "Local"
+			},
+			"id": 10,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				448.0,
+				144.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "Hello, "
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "who"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				480.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/greeting.txt"
+				}
+			},
+			"fields": {},
+			"id": 6,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"text": {
+					"use": false,
+					"var": "greeting"
+				}
+			},
+			"pos": [
+				240.0,
+				608.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "read_file"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "greeting"
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 7,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				720.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/models/cube.obj"
+				}
+			},
+			"fields": {
+				"function": "count_lines"
+			},
+			"id": 8,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "lines"
+				}
+			},
+			"pos": [
+				240.0,
+				848.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "call"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "lines"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": ">"
+			},
+			"id": 9,
+			"links": {
+				"false": [
+					14
+				],
+				"next": [],
+				"true": [
+					11,
+					12,
+					13
+				]
+			},
+			"outs": {},
+			"pos": [
+				240.0,
+				1008.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "cube.obj has this many lines: "
+				}
+			},
+			"fields": {
+				"newline": false
+			},
+			"id": 11,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				1008.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "lines"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 12,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				1136.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "the model was read (shown with --verbose)"
+				}
+			},
+			"fields": {},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				1264.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "debug_log"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "false"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				},
+				"message": {
+					"type": "string",
+					"value": "assets/models/cube.obj is missing: run from the project folder, or pass --cd"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 14,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				448.0,
+				1376.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "assert"
+		}
+	],
+	"target": "native",
+	"version": 3
+}

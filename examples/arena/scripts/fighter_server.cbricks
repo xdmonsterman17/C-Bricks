@@ -1,0 +1,2367 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 64,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"remote": "input"
+			},
+			"id": 1,
+			"links": {
+				"out": [
+					2
+				]
+			},
+			"note": "A player's input: kept on their Fighter (any client can send anything: only their own)",
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "on_client_fired"
+		},
+		{
+			"args": {
+				"player": {
+					"var": "sender"
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 2,
+			"links": {
+				"next": [
+					3
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "who"
+				}
+			},
+			"pos": [
+				336.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"name": {
+					"var": "who"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Fighter",
+				"op": "Find"
+			},
+			"id": 3,
+			"links": {
+				"next": [
+					4
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "f"
+				}
+			},
+			"pos": [
+				560.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "f"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Exists"
+			},
+			"id": 4,
+			"links": {
+				"next": [
+					5
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "is_there"
+				}
+			},
+			"pos": [
+				768.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "is_there"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 5,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					6
+				]
+			},
+			"outs": {},
+			"pos": [
+				976.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "walk"
+				}
+			},
+			"fields": {
+				"field": "walk",
+				"mode": "Set"
+			},
+			"id": 6,
+			"links": {
+				"next": [
+					7
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				1184.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "yaw"
+				}
+			},
+			"fields": {
+				"field": "yaw",
+				"mode": "Set"
+			},
+			"id": 7,
+			"links": {
+				"next": [
+					8
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_2"
+				}
+			},
+			"pos": [
+				1392.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "float",
+					"value": "fmax(-1.4, fmin(1.4, pitch))"
+				}
+			},
+			"fields": {
+				"field": "pitch",
+				"mode": "Set"
+			},
+			"id": 8,
+			"links": {
+				"next": [
+					9
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_3"
+				}
+			},
+			"pos": [
+				1600.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "trigger"
+				}
+			},
+			"fields": {
+				"field": "trigger",
+				"mode": "Set"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_4"
+				}
+			},
+			"pos": [
+				1920.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 10,
+			"links": {
+				"out": [
+					11
+				]
+			},
+			"note": "Every frame, every player's Fighter: move, shoot, come back after being caught",
+			"outs": {},
+			"pos": [
+				0.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "frame_start"
+		},
+		{
+			"args": {
+				"player": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Players"
+			},
+			"id": 11,
+			"links": {
+				"next": [
+					12
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "everyone"
+				}
+			},
+			"pos": [
+				224.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"list": {
+					"var": "everyone"
+				}
+			},
+			"fields": {},
+			"id": 12,
+			"links": {
+				"done": [],
+				"loop": [
+					13
+				]
+			},
+			"outs": {
+				"index": {
+					"use": false,
+					"var": ""
+				},
+				"item": {
+					"use": false,
+					"var": "pl"
+				}
+			},
+			"pos": [
+				464.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "for_each"
+		},
+		{
+			"args": {
+				"player": {
+					"var": "pl"
+				}
+			},
+			"fields": {
+				"op": "Name"
+			},
+			"id": 13,
+			"links": {
+				"next": [
+					14
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "pname"
+				}
+			},
+			"pos": [
+				672.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "player"
+		},
+		{
+			"args": {
+				"name": {
+					"var": "pname"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Fighter",
+				"op": "Find"
+			},
+			"id": 14,
+			"links": {
+				"next": [
+					15
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "f"
+				}
+			},
+			"pos": [
+				880.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "f"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Exists"
+			},
+			"id": 15,
+			"links": {
+				"next": [
+					16
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "has_f"
+				}
+			},
+			"pos": [
+				1088.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "has_f"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 16,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					17
+				]
+			},
+			"outs": {},
+			"pos": [
+				1296.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "health",
+				"mode": "Get"
+			},
+			"id": 17,
+			"links": {
+				"next": [
+					18
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "hp"
+				}
+			},
+			"pos": [
+				1504.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "hp"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": ">"
+			},
+			"id": 18,
+			"links": {
+				"false": [
+					56
+				],
+				"next": [],
+				"true": [
+					19
+				]
+			},
+			"outs": {},
+			"pos": [
+				1712.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "walk",
+				"mode": "Get"
+			},
+			"id": 19,
+			"links": {
+				"next": [
+					20
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "walk"
+				}
+			},
+			"pos": [
+				1920.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "yaw",
+				"mode": "Get"
+			},
+			"id": 20,
+			"links": {
+				"next": [
+					21
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "yaw"
+				}
+			},
+			"pos": [
+				2128.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "pitch",
+				"mode": "Get"
+			},
+			"id": 21,
+			"links": {
+				"next": [
+					22
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "pitch"
+				}
+			},
+			"pos": [
+				2336.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "(walk.x * cos(yaw) + walk.y * sin(yaw)) * 6.0 * dt"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "(walk.y * cos(yaw) - walk.x * sin(yaw)) * 6.0 * dt"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 22,
+			"links": {
+				"next": [
+					23
+				]
+			},
+			"note": "WASD, turned by where they look",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "step"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				2544.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"motion": {
+					"var": "step"
+				},
+				"part": {
+					"var": "f"
+				}
+			},
+			"fields": {},
+			"id": 23,
+			"links": {
+				"next": [
+					24
+				]
+			},
+			"note": "Walls and crates stop them",
+			"outs": {
+				"blocked": {
+					"use": false,
+					"var": ""
+				}
+			},
+			"pos": [
+				3360.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "move_collide"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "yaw * 57.29578"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 24,
+			"links": {
+				"next": [
+					25
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "turn"
+				},
+				"x": {
+					"use": false,
+					"var": "x_2"
+				},
+				"y": {
+					"use": false,
+					"var": "y_2"
+				},
+				"z": {
+					"use": false,
+					"var": "z_2"
+				}
+			},
+			"pos": [
+				3584.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "turn"
+				}
+			},
+			"fields": {
+				"field": "rotation",
+				"mode": "Set"
+			},
+			"id": 25,
+			"links": {
+				"next": [
+					26
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_5"
+				}
+			},
+			"pos": [
+				3840.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "cooldown",
+				"mode": "Get"
+			},
+			"id": 26,
+			"links": {
+				"next": [
+					27
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "cd"
+				}
+			},
+			"pos": [
+				4048.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "cd - dt",
+				"type": "float"
+			},
+			"id": 27,
+			"links": {
+				"next": [
+					28
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "cd"
+				}
+			},
+			"pos": [
+				4256.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "cd"
+				}
+			},
+			"fields": {
+				"field": "cooldown",
+				"mode": "Set"
+			},
+			"id": 28,
+			"links": {
+				"next": [
+					29
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_6"
+				}
+			},
+			"pos": [
+				4464.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "trigger",
+				"mode": "Get"
+			},
+			"id": 29,
+			"links": {
+				"next": [
+					30
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "trig"
+				}
+			},
+			"pos": [
+				4672.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "trig && cd <= 0"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 30,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					31
+				]
+			},
+			"note": "A shot through their crosshair",
+			"outs": {},
+			"pos": [
+				4880.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "float",
+					"value": "0.2"
+				}
+			},
+			"fields": {
+				"field": "cooldown",
+				"mode": "Set"
+			},
+			"id": 31,
+			"links": {
+				"next": [
+					32
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_7"
+				}
+			},
+			"pos": [
+				5104.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Get"
+			},
+			"id": 32,
+			"links": {
+				"next": [
+					33
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "at"
+				}
+			},
+			"pos": [
+				5312.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "at"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0.6, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 33,
+			"links": {
+				"next": [
+					34
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "eye"
+				},
+				"x": {
+					"use": false,
+					"var": "x_3"
+				},
+				"y": {
+					"use": false,
+					"var": "y_3"
+				},
+				"z": {
+					"use": false,
+					"var": "z_3"
+				}
+			},
+			"pos": [
+				5520.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "-sin(yaw) * cos(pitch) * 100"
+				},
+				"y": {
+					"type": "float",
+					"value": "sin(pitch) * 100"
+				},
+				"z": {
+					"type": "float",
+					"value": "-cos(yaw) * cos(pitch) * 100"
+				}
+			},
+			"fields": {
+				"dims": "3D",
+				"op": "Make"
+			},
+			"id": 34,
+			"links": {
+				"next": [
+					35
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "reach"
+				},
+				"x": {
+					"use": false,
+					"var": "x_4"
+				},
+				"y": {
+					"use": false,
+					"var": "y_4"
+				},
+				"z": {
+					"use": false,
+					"var": "z_4"
+				}
+			},
+			"pos": [
+				5728.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "eye"
+				},
+				"b": {
+					"var": "reach"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Add"
+			},
+			"id": 35,
+			"links": {
+				"next": [
+					36
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ray_end"
+				},
+				"x": {
+					"use": false,
+					"var": "x_5"
+				},
+				"y": {
+					"use": false,
+					"var": "y_5"
+				},
+				"z": {
+					"use": false,
+					"var": "z_5"
+				}
+			},
+			"pos": [
+				6368.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"from": {
+					"var": "eye"
+				},
+				"ignore": {
+					"var": "f"
+				},
+				"to": {
+					"var": "ray_end"
+				}
+			},
+			"fields": {},
+			"id": 36,
+			"links": {
+				"hit": [
+					37
+				],
+				"missed": [],
+				"next": []
+			},
+			"outs": {
+				"distance": {
+					"use": false,
+					"var": ""
+				},
+				"hit": {
+					"use": false,
+					"var": "target"
+				},
+				"normal": {
+					"use": false,
+					"var": ""
+				},
+				"point": {
+					"use": false,
+					"var": "spot"
+				}
+			},
+			"pos": [
+				6592.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "raycast"
+		},
+		{
+			"args": {},
+			"fields": {
+				"of": "Spark",
+				"world": true
+			},
+			"id": 37,
+			"links": {
+				"next": [
+					55
+				]
+			},
+			"outs": {
+				"object": {
+					"use": false,
+					"var": "flash"
+				}
+			},
+			"pos": [
+				6800.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "new_object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "target"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Enemy",
+				"op": "As"
+			},
+			"id": 38,
+			"links": {
+				"next": [
+					39
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "enemy"
+				}
+			},
+			"pos": [
+				7216.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "target"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Parent"
+			},
+			"id": 39,
+			"links": {
+				"next": [
+					40
+				]
+			},
+			"note": "Hit its visor? Then its body",
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "holder"
+				}
+			},
+			"pos": [
+				7456.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "holder"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Enemy",
+				"op": "As"
+			},
+			"id": 40,
+			"links": {
+				"next": [
+					41
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "enemy2"
+				}
+			},
+			"pos": [
+				7696.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "enemy"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Exists"
+			},
+			"id": 41,
+			"links": {
+				"next": [
+					42
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "is_enemy"
+				}
+			},
+			"pos": [
+				7952.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "is_enemy"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 42,
+			"links": {
+				"false": [],
+				"next": [
+					43
+				],
+				"true": []
+			},
+			"outs": {},
+			"pos": [
+				8192.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "enemy2"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Exists"
+			},
+			"id": 43,
+			"links": {
+				"next": [
+					44
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "is_enemy2"
+				}
+			},
+			"pos": [
+				8400.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "is_enemy2"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 44,
+			"links": {
+				"false": [],
+				"next": [
+					46
+				],
+				"true": [
+					45
+				]
+			},
+			"outs": {},
+			"pos": [
+				8656.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "enemy2"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "enemy"
+			},
+			"id": 45,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				8864.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "bool",
+					"value": "is_enemy || is_enemy2"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 46,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					47
+				]
+			},
+			"outs": {},
+			"pos": [
+				8864.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"amount": {
+					"type": "int",
+					"value": "25"
+				},
+				"object": {
+					"var": "enemy"
+				}
+			},
+			"fields": {
+				"class": "Enemy",
+				"method": "damage"
+			},
+			"id": 47,
+			"links": {
+				"next": [
+					48
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "killed"
+				}
+			},
+			"pos": [
+				9152.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "call_method"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "killed"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 48,
+			"links": {
+				"false": [],
+				"next": [
+					54
+				],
+				"true": [
+					49
+				]
+			},
+			"outs": {},
+			"pos": [
+				9408.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "score",
+				"mode": "Get"
+			},
+			"id": 49,
+			"links": {
+				"next": [
+					50
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "pts"
+				}
+			},
+			"pos": [
+				9616.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "pts + 1",
+				"type": "int"
+			},
+			"id": 50,
+			"links": {
+				"next": [
+					51
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "pts"
+				}
+			},
+			"pos": [
+				9824.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "pts"
+				}
+			},
+			"fields": {
+				"field": "score",
+				"mode": "Set"
+			},
+			"id": 51,
+			"links": {
+				"next": [
+					52
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_8"
+				}
+			},
+			"pos": [
+				10032.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "pname"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"var": "pts"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"type": "string",
+					"value": ""
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "[server] {} got one ({})",
+				"op": "Format"
+			},
+			"id": 52,
+			"links": {
+				"next": [
+					53
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "line_52"
+				}
+			},
+			"pos": [
+				10240.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"value": {
+					"var": "line_52"
+				}
+			},
+			"fields": {
+				"newline": true
+			},
+			"id": 53,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				10592.0,
+				368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "print"
+		},
+		{
+			"args": {
+				"killed": {
+					"var": "killed"
+				},
+				"player": {
+					"var": "pl"
+				}
+			},
+			"fields": {
+				"remote": "hit",
+				"to": "One player"
+			},
+			"id": 54,
+			"links": {
+				"next": []
+			},
+			"note": "The shooter's hit marker",
+			"outs": {},
+			"pos": [
+				9616.0,
+				544.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "fire_clients"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "flash"
+				},
+				"value": {
+					"var": "spot"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 55,
+			"links": {
+				"next": [
+					38
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_9"
+				}
+			},
+			"pos": [
+				7008.0,
+				240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "down",
+				"mode": "Get"
+			},
+			"id": 56,
+			"links": {
+				"next": [
+					57
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "down"
+				}
+			},
+			"pos": [
+				1920.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "down + dt",
+				"type": "float"
+			},
+			"id": 57,
+			"links": {
+				"next": [
+					58
+				]
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "down"
+				}
+			},
+			"pos": [
+				2128.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "down"
+				}
+			},
+			"fields": {
+				"field": "down",
+				"mode": "Set"
+			},
+			"id": 58,
+			"links": {
+				"next": [
+					59
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_10"
+				}
+			},
+			"pos": [
+				2336.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "down"
+				},
+				"b": {
+					"type": "float",
+					"value": "3"
+				}
+			},
+			"fields": {
+				"operator": ">="
+			},
+			"id": 59,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					60
+				]
+			},
+			"note": "3 seconds after being caught: back home, healed",
+			"outs": {},
+			"pos": [
+				2544.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "100"
+				}
+			},
+			"fields": {
+				"field": "health",
+				"mode": "Set"
+			},
+			"id": 60,
+			"links": {
+				"next": [
+					61
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_11"
+				}
+			},
+			"pos": [
+				2768.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "down",
+				"mode": "Set"
+			},
+			"id": 61,
+			"links": {
+				"next": [
+					62
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_12"
+				}
+			},
+			"pos": [
+				2976.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "home",
+				"mode": "Get"
+			},
+			"id": 62,
+			"links": {
+				"next": [
+					63
+				]
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "home"
+				}
+			},
+			"pos": [
+				3184.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "f"
+				},
+				"value": {
+					"var": "home"
+				}
+			},
+			"fields": {
+				"field": "position",
+				"mode": "Set"
+			},
+			"id": 63,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_13"
+				}
+			},
+			"pos": [
+				3392.0,
+				688.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		}
+	],
+	"side": "Server",
+	"version": 4
+}

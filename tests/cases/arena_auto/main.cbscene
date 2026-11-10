@@ -1,0 +1,827 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 73,
+	"objects": [
+		{
+			"id": 72,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 72,
+			"fields": {
+				"fov": "75",
+				"position": "0, 1.5, 8",
+				"target": "0, 1.5, 7"
+			},
+			"groups": [
+				"local"
+			],
+			"id": 1
+		},
+		{
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 72,
+			"fields": {
+				"rotation": "-59.8, 30.9, 0"
+			},
+			"id": 2
+		},
+		{
+			"class": "Shape3D",
+			"name": "Floor",
+			"parent": 72,
+			"fields": {
+				"size": "30, 0.2, 30",
+				"position": "0, -0.1, 0",
+				"color": "#455a64"
+			},
+			"id": 3
+		},
+		{
+			"class": "Spatial3D",
+			"name": "Walls",
+			"parent": 72,
+			"fields": {},
+			"id": 4
+		},
+		{
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 72,
+			"fields": {
+				"sky": "#1d2b3a",
+				"ambient": "0.45",
+				"fog": "0.02"
+			},
+			"id": 5
+		},
+		{
+			"id": 6,
+			"class": "Shape3D",
+			"name": "North wall",
+			"parent": 4,
+			"fields": {
+				"position": "0, 1.5, -15",
+				"size": "30.6, 3, 0.6",
+				"color": "#78909c",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Shape3D",
+			"name": "South wall",
+			"parent": 4,
+			"fields": {
+				"position": "0, 1.5, 15",
+				"size": "30.6, 3, 0.6",
+				"color": "#78909c",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 8,
+			"class": "Shape3D",
+			"name": "West wall",
+			"parent": 4,
+			"fields": {
+				"position": "-15, 1.5, 0",
+				"size": "0.6, 3, 30",
+				"color": "#78909c",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 9,
+			"class": "Shape3D",
+			"name": "East wall",
+			"parent": 4,
+			"fields": {
+				"position": "15, 1.5, 0",
+				"size": "0.6, 3, 30",
+				"color": "#78909c",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 10,
+			"class": "Shape3D",
+			"name": "Crate",
+			"parent": 72,
+			"fields": {
+				"position": "-5, 0.75, -3",
+				"size": "1.5, 1.5, 1.5",
+				"color": "#a1887f",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 11,
+			"class": "Shape3D",
+			"name": "Crate 2",
+			"parent": 72,
+			"fields": {
+				"position": "4, 0.75, -6",
+				"size": "1.5, 1.5, 1.5",
+				"color": "#a1887f",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 12,
+			"class": "Shape3D",
+			"name": "Crate 3",
+			"parent": 72,
+			"fields": {
+				"position": "7, 1, 2",
+				"size": "2, 2, 2",
+				"color": "#a1887f",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 13,
+			"class": "Shape3D",
+			"name": "Crate 4",
+			"parent": 72,
+			"fields": {
+				"position": "-8, 0.75, 4",
+				"size": "1.5, 1.5, 3",
+				"color": "#a1887f",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 14,
+			"class": "Shape3D",
+			"name": "Pillar",
+			"parent": 72,
+			"fields": {
+				"position": "0, 2, -9",
+				"size": "1, 4, 1",
+				"color": "#a1887f",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 15,
+			"class": "Shape3D",
+			"name": "Low wall",
+			"parent": 72,
+			"fields": {
+				"position": "-2, 0.5, 4",
+				"size": "4, 1, 0.5",
+				"color": "#a1887f",
+				"solid": "true"
+			}
+		},
+		{
+			"id": 16,
+			"class": "Script",
+			"name": "Rules",
+			"parent": 72,
+			"script": "scripts/rules.cbricks",
+			"fields": {}
+		},
+		{
+			"id": 17,
+			"class": "Control",
+			"name": "HUD",
+			"parent": 72,
+			"fields": {
+				"anchor": "full"
+			}
+		},
+		{
+			"id": 18,
+			"class": "Panel",
+			"name": "Flash",
+			"parent": 17,
+			"fields": {
+				"anchor": "full",
+				"color": "#ff000050",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 19,
+			"class": "Panel",
+			"name": "Stats",
+			"parent": 17,
+			"fields": {
+				"anchor": "top_left",
+				"offset": "12, 12",
+				"size": "230, 64",
+				"radius": "8",
+				"color": "#00000090"
+			}
+		},
+		{
+			"id": 20,
+			"class": "Label",
+			"name": "Score",
+			"parent": 19,
+			"fields": {
+				"anchor": "top_left",
+				"offset": "12, 8",
+				"size": "200, 22",
+				"font_size": "22",
+				"text": "Score: 0"
+			}
+		},
+		{
+			"id": 21,
+			"class": "Bar",
+			"name": "Health",
+			"parent": 19,
+			"fields": {
+				"anchor": "bottom_left",
+				"offset": "12, -10",
+				"size": "206, 14",
+				"value": "100",
+				"color": "#e53935"
+			}
+		},
+		{
+			"id": 22,
+			"class": "Label",
+			"name": "Crosshair",
+			"parent": 17,
+			"fields": {
+				"anchor": "center",
+				"size": "40, 36",
+				"font_size": "36",
+				"align": "center",
+				"text": "+"
+			}
+		},
+		{
+			"id": 23,
+			"class": "Label",
+			"name": "HitMarker",
+			"parent": 17,
+			"fields": {
+				"anchor": "center",
+				"offset": "0, 1",
+				"size": "60, 40",
+				"font_size": "40",
+				"align": "center",
+				"text": "x",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 24,
+			"class": "Panel",
+			"name": "Scores",
+			"parent": 17,
+			"fields": {
+				"anchor": "center",
+				"size": "440, 292",
+				"radius": "10",
+				"color": "#000000c0",
+				"border": "1",
+				"border_color": "#ffffff50",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 25,
+			"class": "VBox",
+			"name": "Rows",
+			"parent": 24,
+			"fields": {
+				"anchor": "full",
+				"padding": "14",
+				"separation": "4"
+			}
+		},
+		{
+			"id": 26,
+			"class": "HBox",
+			"name": "Head",
+			"parent": 25,
+			"fields": {
+				"size": "400, 30"
+			}
+		},
+		{
+			"id": 27,
+			"class": "Label",
+			"name": "HName",
+			"parent": 26,
+			"fields": {
+				"size": "230, 26",
+				"font_size": "22",
+				"color": "#ffeb3b",
+				"text": "Player"
+			}
+		},
+		{
+			"id": 28,
+			"class": "Label",
+			"name": "HPts",
+			"parent": 26,
+			"fields": {
+				"size": "80, 26",
+				"font_size": "22",
+				"color": "#ffeb3b",
+				"text": "Score"
+			}
+		},
+		{
+			"id": 29,
+			"class": "Label",
+			"name": "HHp",
+			"parent": 26,
+			"fields": {
+				"size": "80, 26",
+				"font_size": "22",
+				"color": "#ffeb3b",
+				"text": "Health"
+			}
+		},
+		{
+			"id": 30,
+			"class": "HBox",
+			"name": "Row0",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 31,
+			"class": "Label",
+			"name": "Name0",
+			"parent": 30,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 32,
+			"class": "Label",
+			"name": "Pts0",
+			"parent": 30,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 33,
+			"class": "Label",
+			"name": "Hp0",
+			"parent": 30,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 34,
+			"class": "HBox",
+			"name": "Row1",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 35,
+			"class": "Label",
+			"name": "Name1",
+			"parent": 34,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 36,
+			"class": "Label",
+			"name": "Pts1",
+			"parent": 34,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 37,
+			"class": "Label",
+			"name": "Hp1",
+			"parent": 34,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 38,
+			"class": "HBox",
+			"name": "Row2",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 39,
+			"class": "Label",
+			"name": "Name2",
+			"parent": 38,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 40,
+			"class": "Label",
+			"name": "Pts2",
+			"parent": 38,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 41,
+			"class": "Label",
+			"name": "Hp2",
+			"parent": 38,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 42,
+			"class": "HBox",
+			"name": "Row3",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 43,
+			"class": "Label",
+			"name": "Name3",
+			"parent": 42,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 44,
+			"class": "Label",
+			"name": "Pts3",
+			"parent": 42,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 45,
+			"class": "Label",
+			"name": "Hp3",
+			"parent": 42,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 46,
+			"class": "HBox",
+			"name": "Row4",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 47,
+			"class": "Label",
+			"name": "Name4",
+			"parent": 46,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 48,
+			"class": "Label",
+			"name": "Pts4",
+			"parent": 46,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 49,
+			"class": "Label",
+			"name": "Hp4",
+			"parent": 46,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 50,
+			"class": "HBox",
+			"name": "Row5",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 51,
+			"class": "Label",
+			"name": "Name5",
+			"parent": 50,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 52,
+			"class": "Label",
+			"name": "Pts5",
+			"parent": 50,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 53,
+			"class": "Label",
+			"name": "Hp5",
+			"parent": 50,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 54,
+			"class": "HBox",
+			"name": "Row6",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 55,
+			"class": "Label",
+			"name": "Name6",
+			"parent": 54,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 56,
+			"class": "Label",
+			"name": "Pts6",
+			"parent": 54,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 57,
+			"class": "Label",
+			"name": "Hp6",
+			"parent": 54,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 58,
+			"class": "HBox",
+			"name": "Row7",
+			"parent": 25,
+			"fields": {
+				"size": "400, 26",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 59,
+			"class": "Label",
+			"name": "Name7",
+			"parent": 58,
+			"fields": {
+				"size": "230, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 60,
+			"class": "Label",
+			"name": "Pts7",
+			"parent": 58,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 61,
+			"class": "Label",
+			"name": "Hp7",
+			"parent": 58,
+			"fields": {
+				"size": "80, 22",
+				"font_size": "20",
+				"text": ""
+			}
+		},
+		{
+			"id": 62,
+			"class": "Panel",
+			"name": "Message",
+			"parent": 17,
+			"fields": {
+				"anchor": "center",
+				"offset": "0, -90",
+				"size": "620, 56",
+				"radius": "10",
+				"color": "#000000b0",
+				"border": "2",
+				"border_color": "#ffeb3b",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 63,
+			"class": "Label",
+			"name": "Caught",
+			"parent": 62,
+			"fields": {
+				"anchor": "center",
+				"size": "600, 30",
+				"font_size": "30",
+				"align": "center",
+				"color": "#ffeb3b",
+				"text": "You were caught! Back in a moment..."
+			}
+		},
+		{
+			"id": 64,
+			"class": "Panel",
+			"name": "Title",
+			"parent": 72,
+			"fields": {
+				"anchor": "full",
+				"color": "#0b1520d8",
+				"visible": "false"
+			}
+		},
+		{
+			"id": 65,
+			"class": "Label",
+			"name": "Logo",
+			"parent": 64,
+			"fields": {
+				"anchor": "top",
+				"offset": "0, 70",
+				"size": "500, 70",
+				"font_size": "72",
+				"align": "center",
+				"color": "#ffeb3b",
+				"text": "ARENA"
+			}
+		},
+		{
+			"id": 66,
+			"class": "VBox",
+			"name": "Menu",
+			"parent": 64,
+			"fields": {
+				"anchor": "center",
+				"offset": "0, 30",
+				"size": "260, 206",
+				"separation": "10"
+			}
+		},
+		{
+			"id": 67,
+			"class": "Button",
+			"name": "Play",
+			"parent": 66,
+			"fields": {
+				"size": "260, 44",
+				"font_size": "24",
+				"text": "Play",
+				"radius": "8"
+			}
+		},
+		{
+			"id": 68,
+			"class": "Button",
+			"name": "Host",
+			"parent": 66,
+			"fields": {
+				"size": "260, 44",
+				"font_size": "24",
+				"text": "Host",
+				"radius": "8"
+			}
+		},
+		{
+			"id": 69,
+			"class": "Button",
+			"name": "Join",
+			"parent": 66,
+			"fields": {
+				"size": "260, 44",
+				"font_size": "24",
+				"text": "Join (127.0.0.1)",
+				"radius": "8"
+			}
+		},
+		{
+			"id": 70,
+			"class": "Button",
+			"name": "Quit",
+			"parent": 66,
+			"fields": {
+				"size": "260, 44",
+				"font_size": "24",
+				"text": "Quit",
+				"radius": "8"
+			}
+		},
+		{
+			"id": 71,
+			"class": "Label",
+			"name": "Hint",
+			"parent": 64,
+			"fields": {
+				"anchor": "bottom",
+				"offset": "0, -24",
+				"size": "900, 20",
+				"font_size": "20",
+				"align": "center",
+				"color": "#ffffffa0",
+				"text": "Mouse: look   WASD: move   Click: shoot   Tab: scores   Esc: menu"
+			}
+		}
+	]
+}

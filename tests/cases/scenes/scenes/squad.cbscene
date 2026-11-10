@@ -1,0 +1,28 @@
+{
+	"format": "c-bricks-scene",
+	"version": 1,
+	"next_id": 100,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Model",
+			"name": "Squad",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"scene": "scenes/enemy.cbscene",
+			"name": "E1",
+			"parent": 1,
+			"fields": {}
+		},
+		{
+			"id": 3,
+			"scene": "scenes/enemy.cbscene",
+			"name": "E2",
+			"parent": 1,
+			"fields": {}
+		}
+	]
+}

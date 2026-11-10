@@ -1,0 +1,479 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 16,
+	"nodes": [
+		{
+			"args": {},
+			"fields": {
+				"extends": "Shape3D",
+				"fields": [],
+				"name": "Gem",
+				"synced": ""
+			},
+			"id": 1,
+			"links": {},
+			"note": "A gem: a tilted box that spins",
+			"outs": {},
+			"pos": [
+				0.0,
+				1376.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "class"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 2,
+			"links": {
+				"out": [
+					3,
+					4,
+					5
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "created"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "color"
+			},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				208.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0.5"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "size"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				208.0,
+				128.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "45, 0, 45"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "rotation"
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_3"
+				}
+			},
+			"pos": [
+				208.0,
+				256.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 6,
+			"links": {
+				"out": [
+					7
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "every_frame"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "vector3",
+					"value": "0, 120 * dt, 0"
+				}
+			},
+			"fields": {
+				"mode": "Add",
+				"name": "rotation"
+			},
+			"id": 7,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_4"
+				}
+			},
+			"pos": [
+				208.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 8,
+			"links": {
+				"out": [
+					9,
+					10,
+					11
+				]
+			},
+			"note": "other: the Part that touched this gem",
+			"outs": {},
+			"pos": [
+				0.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "touched"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "other"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Player",
+				"op": "As"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "who"
+				}
+			},
+			"pos": [
+				224.0,
+				576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gem"
+				},
+				"object": {
+					"var": "who"
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"op": "Exists"
+			},
+			"id": 10,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "by_player"
+				}
+			},
+			"pos": [
+				224.0,
+				704.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "by_player"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 11,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					12,
+					13,
+					14,
+					15
+				]
+			},
+			"outs": {},
+			"pos": [
+				224.0,
+				832.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"object": {
+					"var": "who"
+				}
+			},
+			"fields": {
+				"class": "Player",
+				"method": "add_point"
+			},
+			"id": 12,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				832.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "call_method"
+		},
+		{
+			"args": {
+				"max": {
+					"type": "int",
+					"value": "8"
+				},
+				"min": {
+					"type": "int",
+					"value": "-8"
+				}
+			},
+			"fields": {},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "rx"
+				}
+			},
+			"pos": [
+				432.0,
+				960.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "random"
+		},
+		{
+			"args": {
+				"max": {
+					"type": "int",
+					"value": "8"
+				},
+				"min": {
+					"type": "int",
+					"value": "-8"
+				}
+			},
+			"fields": {},
+			"id": 14,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "rz"
+				}
+			},
+			"pos": [
+				432.0,
+				1088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "random"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"var": "rx"
+				},
+				"y": {
+					"type": "float",
+					"value": "0.8"
+				},
+				"z": {
+					"var": "rz"
+				}
+			},
+			"fields": {
+				"op": "Make"
+			},
+			"id": 15,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "position"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				432.0,
+				1216.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		}
+	],
+	"version": 4
+}

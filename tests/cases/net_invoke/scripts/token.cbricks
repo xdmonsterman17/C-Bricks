@@ -1,0 +1,28 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 2,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Token",
+				"extends": "Node",
+				"fields": [],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

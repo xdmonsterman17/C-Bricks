@@ -1,0 +1,12 @@
+[project]
+
+name="Arguments And Files"
+version="1.0"
+
+[run]
+
+args="--name=Ada"
+
+[build]
+
+target="native"

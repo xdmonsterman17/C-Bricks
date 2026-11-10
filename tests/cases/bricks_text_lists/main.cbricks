@@ -1,0 +1,1522 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 157,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					113,
+					114,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					122,
+					123,
+					124,
+					125,
+					126,
+					127,
+					128,
+					129,
+					130,
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					137,
+					138,
+					139,
+					140,
+					141,
+					142,
+					143,
+					144,
+					145,
+					146,
+					147,
+					148,
+					149,
+					152,
+					154,
+					155,
+					156
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Substring"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello world"
+				},
+				"start": {
+					"type": "int",
+					"value": "6"
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"what": {
+					"type": "string",
+					"value": "ll"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t3",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Replace"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "a-b-c"
+				},
+				"what": {
+					"type": "string",
+					"value": "-"
+				},
+				"with": {
+					"type": "string",
+					"value": "+"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t4",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Lower case"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "MiXeD"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t5",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Trim"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "  pad  "
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t6",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[{}]"
+			},
+			"args": {
+				"first": {
+					"var": "t6"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t6b",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t6b"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To int"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "42"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t7",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t7"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To float"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "2.5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t8",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t8"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Starts with"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"what": {
+					"type": "string",
+					"value": "he"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t9",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t9"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Ends with"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "hello"
+				},
+				"what": {
+					"type": "string",
+					"value": "lo"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t10",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t10"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To text"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "7"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t11",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Join"
+			},
+			"args": {
+				"text": {
+					"var": "t11"
+				},
+				"more": {
+					"type": "string",
+					"value": "!"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t12",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "t12"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "string"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "names",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"value": {
+					"type": "string",
+					"value": "b"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"value": {
+					"type": "string",
+					"value": "a"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"value": {
+					"type": "string",
+					"value": "c"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"index": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "second",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "second"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"index": {
+					"type": "int",
+					"value": "0"
+				},
+				"value": {
+					"type": "string",
+					"value": "z"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Remove"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"index": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "names"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "len"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Contains"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				},
+				"value": {
+					"type": "string",
+					"value": "a"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "has",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "has"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Clear"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"list": {
+					"var": "names"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "len2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "len2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "nums",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"value": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Reverse"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Sort"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 148,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "nums"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 149,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "letter",
+				"scope": "Local"
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "b"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 150,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "A!"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 151,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "B!"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 152,
+			"type": "switch",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"cases": [
+					"a",
+					"b"
+				]
+			},
+			"args": {
+				"value": {
+					"var": "letter"
+				}
+			},
+			"outs": {},
+			"links": {
+				"case_0": [
+					150
+				],
+				"case_1": [
+					151
+				]
+			}
+		},
+		{
+			"id": 153,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "none"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 154,
+			"type": "switch",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"cases": [
+					"1"
+				]
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {},
+			"links": {
+				"default": [
+					153
+				]
+			}
+		},
+		{
+			"id": 155,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"list": {
+					"var": "nums"
+				},
+				"index": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "oops",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 156,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "not reached"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	],
+	"frames": []
+}

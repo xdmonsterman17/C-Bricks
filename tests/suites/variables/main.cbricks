@@ -1,0 +1,703 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 126,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					105,
+					106,
+					108,
+					109,
+					111,
+					112,
+					113,
+					115,
+					116,
+					117,
+					119,
+					120,
+					121,
+					124
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "x",
+				"scope": "Chain"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"name": "x"
+			},
+			"args": {},
+			"outs": {
+				"copy": {
+					"var": "copy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[var.Get] {}"
+			},
+			"args": {
+				"first": {
+					"var": "copy"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_103",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					104
+				]
+			}
+		},
+		{
+			"id": 104,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_103"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "x"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "10"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[var.Add] {}"
+			},
+			"args": {
+				"first": {
+					"var": "x"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_106",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					107
+				]
+			}
+		},
+		{
+			"id": 107,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_106"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "kept",
+				"scope": "Shared"
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "shared"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[var.Set Shared] {}"
+			},
+			"args": {
+				"first": {
+					"var": "kept"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_109",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					110
+				]
+			}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_109"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "f"
+			},
+			"args": {
+				"value": {
+					"type": "float",
+					"value": "3.7"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "convert",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"to": "int"
+			},
+			"args": {
+				"value": {
+					"var": "f"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "as_int",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[convert.int] {}"
+			},
+			"args": {
+				"first": {
+					"var": "as_int"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_113",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					114
+				]
+			}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_113"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "convert",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"to": "float"
+			},
+			"args": {
+				"value": {
+					"var": "as_int"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "as_float",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "math",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Divide"
+			},
+			"args": {
+				"a": {
+					"var": "as_float"
+				},
+				"b": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "half",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[convert.float] {}"
+			},
+			"args": {
+				"first": {
+					"var": "half"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_117",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					118
+				]
+			}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_117"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "zero"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "convert",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"to": "bool"
+			},
+			"args": {
+				"value": {
+					"var": "zero"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "as_bool",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[convert.bool] {}"
+			},
+			"args": {
+				"first": {
+					"var": "as_bool"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_121",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					122
+				]
+			}
+		},
+		{
+			"id": 122,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_121"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "constant",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "LIMIT",
+				"type": "int"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "9"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[constant] {}"
+			},
+			"args": {
+				"first": {
+					"var": "LIMIT"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_124",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					125
+				]
+			}
+		},
+		{
+			"id": 125,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_124"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

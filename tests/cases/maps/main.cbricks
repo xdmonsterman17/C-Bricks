@@ -1,0 +1,1448 @@
+{
+	"format": "c-bricks",
+	"version": 3,
+	"next_id": 152,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					105,
+					106,
+					107,
+					108,
+					109,
+					110,
+					111,
+					112,
+					113,
+					114,
+					115,
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					122,
+					123,
+					124,
+					125,
+					126,
+					127,
+					128,
+					130,
+					129,
+					133,
+					134,
+					135,
+					136,
+					137,
+					138,
+					139,
+					140,
+					141,
+					142,
+					143,
+					144,
+					145,
+					146,
+					147,
+					148,
+					149,
+					150,
+					151
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ages",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				},
+				"value": {
+					"type": "int",
+					"value": "36"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "bob"
+				},
+				"value": {
+					"type": "int",
+					"value": "41"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "cy"
+				},
+				"value": {
+					"type": "int",
+					"value": "7"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "bob"
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ages"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "bob"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "a1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get or"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "zed"
+				},
+				"default": {
+					"type": "int",
+					"value": "-1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "a2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get or"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "cy"
+				},
+				"default": {
+					"type": "int",
+					"value": "-1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a3",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "a3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Has"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "h1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "h1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Remove"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Remove"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "nobody"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Has"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ada"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "h2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "h2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Count"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Keys"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ks",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "ks"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Values"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "vs",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "vs"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "alias"
+			},
+			"args": {
+				"value": {
+					"var": "ages"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "alias"
+				},
+				"key": {
+					"type": "string",
+					"value": "dee"
+				},
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Count"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "0"
+				},
+				"to": {
+					"type": "int",
+					"value": "100"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "i",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					131,
+					132
+				]
+			}
+		},
+		{
+			"id": 130,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "big",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "To text"
+			},
+			"args": {
+				"value": {
+					"var": "i"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ik",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "big"
+				},
+				"key": {
+					"var": "ik"
+				},
+				"value": {
+					"type": "int",
+					"value": "i * 2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Count"
+			},
+			"args": {
+				"map": {
+					"var": "big"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c3",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c3"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"map": {
+					"var": "big"
+				},
+				"key": {
+					"type": "string",
+					"value": "77"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "b77",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "b77"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Clear"
+			},
+			"args": {
+				"map": {
+					"var": "big"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Count"
+			},
+			"args": {
+				"map": {
+					"var": "big"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "c4",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "c4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "string"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "caps",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "caps"
+				},
+				"key": {
+					"type": "string",
+					"value": "fr"
+				},
+				"value": {
+					"type": "string",
+					"value": "Paris"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "caps"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 99,
+			"type": "record",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Pet",
+				"fields": [
+					[
+						"name",
+						"string"
+					],
+					[
+						"toys",
+						"int map"
+					]
+				]
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "make_record",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"of": "Pet"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "name"
+			},
+			"args": {
+				"record": {
+					"var": "p"
+				},
+				"value": {
+					"type": "string",
+					"value": "Rex"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 145,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "toys"
+			},
+			"args": {
+				"record": {
+					"var": "p"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "tm",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "tm"
+				},
+				"key": {
+					"type": "string",
+					"value": "ball"
+				},
+				"value": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"of": "Pet"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "pets",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 148,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Set"
+			},
+			"args": {
+				"map": {
+					"var": "pets"
+				},
+				"key": {
+					"type": "string",
+					"value": "dog"
+				},
+				"value": {
+					"var": "p"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 149,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "pets"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 150,
+			"type": "map",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Get"
+			},
+			"args": {
+				"map": {
+					"var": "ages"
+				},
+				"key": {
+					"type": "string",
+					"value": "ghost"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "boom",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 151,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "not reached"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

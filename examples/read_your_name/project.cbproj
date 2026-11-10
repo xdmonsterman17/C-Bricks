@@ -1,0 +1,12 @@
+[project]
+
+name="Read Your Name"
+version="1.0"
+
+[run]
+
+args=""
+
+[build]
+
+target="native"

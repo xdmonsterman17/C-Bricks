@@ -1,0 +1,146 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 17,
+	"objects": [
+		{
+			"id": 16,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 16,
+			"fields": {
+				"fov": "55",
+				"position": "0, 16, 14"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 16,
+			"fields": {
+				"rotation": "-55, 34, 0"
+			}
+		},
+		{
+			"id": 14,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 16,
+			"fields": {
+				"sky": "#87ceeb"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Shape3D",
+			"name": "Floor",
+			"parent": 16,
+			"fields": {
+				"size": "20, 0.2, 20",
+				"position": "0, -0.1, 0",
+				"color": "#5aa846"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Spatial3D",
+			"name": "Walls",
+			"parent": 16,
+			"fields": {}
+		},
+		{
+			"id": 5,
+			"class": "Shape3D",
+			"name": "North wall",
+			"parent": 4,
+			"fields": {
+				"position": "0, 0.6, -10.3",
+				"size": "21.2, 1.6, 0.6",
+				"color": "#a1887f"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Shape3D",
+			"name": "South wall",
+			"parent": 4,
+			"fields": {
+				"position": "0, 0.6, 10.3",
+				"size": "21.2, 1.6, 0.6",
+				"color": "#a1887f"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Shape3D",
+			"name": "West wall",
+			"parent": 4,
+			"fields": {
+				"position": "-10.3, 0.6, 0",
+				"size": "0.6, 1.6, 20",
+				"color": "#a1887f"
+			}
+		},
+		{
+			"id": 8,
+			"class": "Shape3D",
+			"name": "East wall",
+			"parent": 4,
+			"fields": {
+				"position": "10.3, 0.6, 0",
+				"size": "0.6, 1.6, 20",
+				"color": "#a1887f"
+			}
+		},
+		{
+			"id": 15,
+			"class": "Panel",
+			"name": "Scores",
+			"parent": 16,
+			"fields": {
+				"anchor": "top_left",
+				"offset": "12, 12",
+				"size": "560, 40",
+				"radius": "8",
+				"color": "#ffffffc0"
+			}
+		},
+		{
+			"id": 9,
+			"class": "Label",
+			"name": "Hud",
+			"parent": 15,
+			"fields": {
+				"anchor": "left",
+				"offset": "12, 0",
+				"size": "540, 24",
+				"font_size": "24",
+				"color": "#1b1b1b",
+				"text": ""
+			}
+		},
+		{
+			"id": 10,
+			"class": "Label",
+			"name": "Banner",
+			"parent": 16,
+			"fields": {
+				"anchor": "top",
+				"offset": "0, 64",
+				"size": "600, 34",
+				"font_size": "34",
+				"align": "center",
+				"color": "#b8860b",
+				"text": ""
+			}
+		}
+	]
+}

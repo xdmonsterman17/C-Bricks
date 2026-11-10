@@ -1,0 +1,48 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 6,
+	"objects": [
+		{
+			"id": 5,
+			"class": "Node",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Sign",
+			"name": "Sign",
+			"parent": 5,
+			"fields": {
+				"text": "offline"
+			}
+		},
+		{
+			"id": 2,
+			"class": "LocalScript",
+			"name": "Hud",
+			"parent": 1,
+			"script": "scripts/hud.cbricks",
+			"fields": {}
+		},
+		{
+			"id": 3,
+			"class": "Node",
+			"name": "Crate",
+			"parent": 5,
+			"fields": {}
+		},
+		{
+			"id": 4,
+			"class": "Node",
+			"name": "Lamp",
+			"parent": 5,
+			"fields": {},
+			"groups": [
+				"local"
+			]
+		}
+	]
+}

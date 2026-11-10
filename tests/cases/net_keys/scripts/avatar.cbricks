@@ -1,0 +1,179 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 7,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "class",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"name": "Avatar",
+				"extends": "Shape3D",
+				"fields": [],
+				"synced": ""
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "every_frame",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					3
+				]
+			}
+		},
+		{
+			"id": 3,
+			"type": "player_input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Direction"
+			},
+			"args": {
+				"player": {
+					"var": ""
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "dir",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Split",
+				"dims": "2D"
+			},
+			"args": {
+				"a": {
+					"var": "dir"
+				}
+			},
+			"outs": {
+				"x": {
+					"var": "dx",
+					"use": false
+				},
+				"y": {
+					"var": "dy",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					5
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make",
+				"dims": "3D"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "dx * dt * 3"
+				},
+				"y": {
+					"type": "float",
+					"value": "0"
+				},
+				"z": {
+					"type": "float",
+					"value": "dy * dt * 3"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "step",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					6
+				]
+			}
+		},
+		{
+			"id": 6,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "position"
+			},
+			"args": {
+				"value": {
+					"var": "step"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}
