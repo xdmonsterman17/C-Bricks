@@ -310,7 +310,7 @@ static func search_dirs() -> PackedStringArray:
 			dirs.append(bundle.path_join(sub))
 	var installed := ToolchainManager.installed_root()  # (what the Toolchains window installed)
 	if DirAccess.dir_exists_absolute(installed):
-		for sub in ["zig", "djgpp/bin", "dosbox-x", "cmake/bin", "cmake/CMake.app/Contents/bin", "emsdk/upstream/emscripten"]:
+		for sub in ["zig", "djgpp/bin", "dosbox-x", "dosbox-x/bin/x64/Release", "dosbox-x/bin/ARM64/Release", "dosbox-x/dosbox-x/dosbox-x.app/Contents/MacOS", "cmake/bin", "cmake/CMake.app/Contents/bin", "emsdk/upstream/emscripten"]:
 			dirs.append(installed.path_join(sub))
 	for d in OS.get_environment("PATH").split(sep, false):
 		if d not in dirs:

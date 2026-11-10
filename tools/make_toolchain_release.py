@@ -17,6 +17,28 @@ CMAKE = "3.31.6"
 EMSDK = "6.0.13"
 HOST = "aarch64-linux"  # what the archives made here run on
 
+# Downloaded from their authors' own releases (pinned: URL, sha256 and size checked when this was written, 2026-11-10).
+# DJGPP: andrewwutw/build-djgpp v3.4 (GCC 12.2, the same as the one built here; unpacks to djgpp/). The macOS one is x86_64
+# (Apple Silicon runs it through Rosetta), the Windows one x86_64 (Windows on ARM emulates it).
+DJGPP_UP = "https://github.com/andrewwutw/build-djgpp/releases/download/v3.4/"
+DJGPP_PLATFORMS = {
+    "x86_64-linux": ("djgpp-linux64-gcc1220.tar.bz2", "8464f17017d6ab1b2bb2df4ed82357b5bf692e6e2b7fee37e315638f3d505f00", 80596981),
+    "x86_64-macos": ("djgpp-osx-gcc1220.tar.bz2", "cf605786efe14166d32aede89c37e41bf1272178ae73a624e7e84761cca38549", 59883520),
+    "aarch64-macos": ("djgpp-osx-gcc1220.tar.bz2", "cf605786efe14166d32aede89c37e41bf1272178ae73a624e7e84761cca38549", 59883520),
+    "x86_64-windows": ("djgpp-mingw-gcc1220-standalone.zip", "6f88b531d216f4d92668c960b5cde9a829b5611e06d2c3e431041e33f01c1a52", 126821837),
+    "aarch64-windows": ("djgpp-mingw-gcc1220-standalone.zip", "6f88b531d216f4d92668c960b5cde9a829b5611e06d2c3e431041e33f01c1a52", 126821837),
+}
+# DOSBox-X 2026.10.01 (joncampbell123/dosbox-x): official Windows and macOS builds (zips; no strip: the programs sit in
+# bin/x64/Release/, bin/ARM64/Release/ and dosbox-x/dosbox-x.app/Contents/MacOS/, which Toolchains.search_dirs knows).
+# There is no official Linux x86_64 binary (distros package it): install it yourself there.
+DBX_UP = "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v2026.10.01/"
+DBX_PLATFORMS = {
+    "x86_64-windows": ("dosbox-x-vsbuild-win64-2026.10.01-portable.zip", "3c50915e63aefe35777d65ebb4391a06b4a2c2342e4c75cbee6bbda4c6916e33", 44575207),
+    "aarch64-windows": ("dosbox-x-vsbuild-arm64-2026.10.01-portable.zip", "f1a15bcad81610429aea07ac5b74c81b8f78b58527e34b2fabb19ffafb429614", 40966368),
+    "x86_64-macos": ("dosbox-x-macosx-x86_64-2026.10.01.zip", "a0605348355ff4a45c781f124c44122e97156ae3f7d048637f545c9de641bedb", 102364921),
+    "aarch64-macos": ("dosbox-x-macosx-arm64-2026.10.01.zip", "8514ab856e8ac2611fbdac7adf334c34085c1e00d700a88711f842adec50240f", 94369585),
+}
+
 
 def fetch(url):
     with urllib.request.urlopen(url, timeout=60) as r:
@@ -88,6 +110,11 @@ def main():
         else:
             tools[name] = {"version": "", "platforms": {}}
             print("no archive for", title, "(build/toolchains/%s missing)" % name)
+
+    # the other computers' DJGPP / DOSBox-X: the authors' own downloads (pinned above)
+    for name, up, table, strip, ver in [("djgpp", DJGPP_UP, DJGPP_PLATFORMS, 1, "GCC 12.2"), ("dosbox-x", DBX_UP, DBX_PLATFORMS, 0, "2026.10.01")]:
+        for plat, (fn, h, size) in table.items():
+            tools[name]["platforms"][plat] = {"url": up + fn, "sha256": h, "size": size, "strip": strip, "version": ver}
 
     with open(os.path.join(ROOT, "toolchains_manifest.json"), "w") as f:
         json.dump({"format": 1, "tools": tools}, f, indent=1)

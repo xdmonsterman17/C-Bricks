@@ -138,6 +138,41 @@
      "sha256": "5f475ee0a1997d426e31ea5e143cd4d1e3c45497a9683b2bcb59bc7d8ee9f981",
      "size": 37299756,
      "strip": 1
+    },
+    "x86_64-linux": {
+     "url": "https://github.com/andrewwutw/build-djgpp/releases/download/v3.4/djgpp-linux64-gcc1220.tar.bz2",
+     "sha256": "8464f17017d6ab1b2bb2df4ed82357b5bf692e6e2b7fee37e315638f3d505f00",
+     "size": 80596981,
+     "strip": 1,
+     "version": "GCC 12.2"
+    },
+    "x86_64-macos": {
+     "url": "https://github.com/andrewwutw/build-djgpp/releases/download/v3.4/djgpp-osx-gcc1220.tar.bz2",
+     "sha256": "cf605786efe14166d32aede89c37e41bf1272178ae73a624e7e84761cca38549",
+     "size": 59883520,
+     "strip": 1,
+     "version": "GCC 12.2"
+    },
+    "aarch64-macos": {
+     "url": "https://github.com/andrewwutw/build-djgpp/releases/download/v3.4/djgpp-osx-gcc1220.tar.bz2",
+     "sha256": "cf605786efe14166d32aede89c37e41bf1272178ae73a624e7e84761cca38549",
+     "size": 59883520,
+     "strip": 1,
+     "version": "GCC 12.2"
+    },
+    "x86_64-windows": {
+     "url": "https://github.com/andrewwutw/build-djgpp/releases/download/v3.4/djgpp-mingw-gcc1220-standalone.zip",
+     "sha256": "6f88b531d216f4d92668c960b5cde9a829b5611e06d2c3e431041e33f01c1a52",
+     "size": 126821837,
+     "strip": 1,
+     "version": "GCC 12.2"
+    },
+    "aarch64-windows": {
+     "url": "https://github.com/andrewwutw/build-djgpp/releases/download/v3.4/djgpp-mingw-gcc1220-standalone.zip",
+     "sha256": "6f88b531d216f4d92668c960b5cde9a829b5611e06d2c3e431041e33f01c1a52",
+     "size": 126821837,
+     "strip": 1,
+     "version": "GCC 12.2"
     }
    }
   },
@@ -149,6 +184,34 @@
      "sha256": "076fe16f4b2ecaa60010f13de9f714306d8cee40898386d67290c619b4f5e577",
      "size": 9433364,
      "strip": 1
+    },
+    "x86_64-windows": {
+     "url": "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v2026.10.01/dosbox-x-vsbuild-win64-2026.10.01-portable.zip",
+     "sha256": "3c50915e63aefe35777d65ebb4391a06b4a2c2342e4c75cbee6bbda4c6916e33",
+     "size": 44575207,
+     "strip": 0,
+     "version": "2026.10.01"
+    },
+    "aarch64-windows": {
+     "url": "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v2026.10.01/dosbox-x-vsbuild-arm64-2026.10.01-portable.zip",
+     "sha256": "f1a15bcad81610429aea07ac5b74c81b8f78b58527e34b2fabb19ffafb429614",
+     "size": 40966368,
+     "strip": 0,
+     "version": "2026.10.01"
+    },
+    "x86_64-macos": {
+     "url": "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v2026.10.01/dosbox-x-macosx-x86_64-2026.10.01.zip",
+     "sha256": "a0605348355ff4a45c781f124c44122e97156ae3f7d048637f545c9de641bedb",
+     "size": 102364921,
+     "strip": 0,
+     "version": "2026.10.01"
+    },
+    "aarch64-macos": {
+     "url": "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v2026.10.01/dosbox-x-macosx-arm64-2026.10.01.zip",
+     "sha256": "8514ab856e8ac2611fbdac7adf334c34085c1e00d700a88711f842adec50240f",
+     "size": 94369585,
+     "strip": 0,
+     "version": "2026.10.01"
     }
    }
   }

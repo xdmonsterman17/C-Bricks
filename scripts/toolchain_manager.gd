@@ -47,6 +47,9 @@ static func downloads_dir() -> String:
 
 ## "aarch64-linux", "x86_64-windows"...: the kind of computer (the manifest's platform keys, zig's names).
 static func platform() -> String:
+	var forced := OS.get_environment("CBRICKS_PLATFORM")  # (tests: pretend to be another computer)
+	if forced != "":
+		return forced
 	var arch := Engine.get_architecture_name()
 	var cpu := {"x86_64": "x86_64", "arm64": "aarch64", "x86_32": "x86", "arm32": "arm", "rv64": "riscv64"}.get(arch, arch) as String
 	var os_name := {"Linux": "linux", "Windows": "windows", "macOS": "macos", "FreeBSD": "freebsd"}.get(OS.get_name(), OS.get_name().to_lower()) as String
@@ -68,7 +71,7 @@ static func entry(id: String) -> Dictionary:
 	if e.is_empty():
 		return {}
 	e = e.duplicate()
-	e["version"] = t.get("version", "")
+	e["version"] = e.get("version", t.get("version", ""))  # (a platform may carry its own)
 	return e
 
 

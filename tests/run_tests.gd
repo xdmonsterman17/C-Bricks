@@ -934,6 +934,20 @@ func _check_toolchain_install() -> void:
 	Toolchains._rm_tree(ToolchainManager.root_override)
 	ToolchainManager.root_override = ""
 	Toolchains._rm_tree(base)
+	# the real manifest: every download has an https URL, a sha256 and a size (2026-11-10: other computers' entries are pinned by hand)
+	var sha_re := RegEx.create_from_string("^[0-9a-f]{64}$")
+	var manifest_tools := ToolchainManager.manifest().get("tools", {}) as Dictionary
+	for mid in ["zig", "djgpp", "dosbox-x", "emscripten", "cmake"]:
+		if not manifest_tools.has(mid):
+			problems.append("manifest has no %s" % mid)
+			continue
+		for mplat in ((manifest_tools[mid] as Dictionary).get("platforms", {}) as Dictionary):
+			var ment: Dictionary = manifest_tools[mid].platforms[mplat]
+			if not str(ment.get("url", "")).begins_with("https://") or sha_re.search(str(ment.get("sha256", ""))) == null or int(ment.get("size", 0)) <= 0:
+				problems.append("manifest %s / %s: needs an https url, a 64-digit sha256 and a size" % [mid, mplat])
+	for mplat in ["x86_64-linux", "x86_64-windows", "aarch64-windows", "x86_64-macos", "aarch64-macos"]:
+		if not (manifest_tools.get("djgpp", {}).get("platforms", {}) as Dictionary).has(mplat):
+			problems.append("manifest: DJGPP has no download for %s" % mplat)
 	_finish("toolchain_install", problems, [])
 
 

@@ -36,8 +36,12 @@ editor; "What it asks of you" is the short version, not the license text (read t
 | Emscripten (via emsdk) | MIT / NCSA (+ LLVM's license) | https://emscripten.org/ |
 | CMake | BSD-3-Clause | https://cmake.org/ |
 
-The GPL programs (DJGPP, DOSBox-X) are offered as unmodified binaries from this project's GitHub release
-`toolchains-1`; their source is at the links above, at the versions named. If a link is gone, ask the
-author for the source.
+On Linux ARM64 the GPL programs (DJGPP, DOSBox-X) are offered as unmodified binaries from this project's GitHub
+release `toolchains-1`; on the other computers the editor downloads them straight from their authors' own releases
+(it does not host them): DJGPP GCC 12.2 from https://github.com/andrewwutw/build-djgpp (release v3.4: Linux x86_64,
+macOS (x86_64, which Apple Silicon runs through Rosetta) and Windows x86_64), and DOSBox-X 2026.10.01 from
+https://github.com/joncampbell123/dosbox-x (Windows x86_64 / ARM64 and macOS; there is no official Linux x86_64
+build: install it from your distribution). Their source is at the links above, at the versions named. If a link is
+gone, ask the author for the source.
 
 The Brickscript addon is the author's own design reference; none of its code is in C-Bricks' released files.
