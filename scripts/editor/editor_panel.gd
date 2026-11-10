@@ -323,7 +323,7 @@ func _ready() -> void:
 	close_project()
 	# example copies no longer in Recent Projects (left over) go
 	var scratch := ProjectSettings.globalize_path(EXAMPLE_SCRATCH)
-	for d in DirAccess.get_directories_at(scratch):
+	for d in (DirAccess.get_directories_at(scratch) if DirAccess.dir_exists_absolute(scratch) else PackedStringArray()):
 		if not scratch.path_join(d) in _recent:
 			_remove_tree(scratch.path_join(d))
 	var last := _recent[0] if not _recent.is_empty() else ""
