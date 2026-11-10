@@ -81,7 +81,7 @@ static func _old_files(path: String, out: Array) -> void:
 
 
 ## Where new projects (and opened examples' copies) go by default: Documents/Projects/C-Bricks
-## (user, 2026-11-07; /home/xdmonster/Documents/Projects/C-Bricks on the user's Pi).
+## (user, 2026-11-07; Documents/Projects/C-Bricks on the user's Pi).
 static func default_parent() -> String:
 	var docs := OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
 	if docs == "":

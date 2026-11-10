@@ -1,5 +1,11 @@
 # C-Bricks
 
+**A visual editor for C: build programs by wiring bricks, get readable, portable C99 that builds for 21 targets (Windows, macOS, Linux, the BSDs, Web, even MS-DOS).**
+
+- **Get the editor:** [latest release](https://github.com/xdmonsterman17/C-Bricks/releases/tag/editor-1) (Linux ARM64 build for now; the editor is a Godot 4.7 app, so you can also open this folder in Godot 4.7 and run it). Unpack it and run `C-Bricks.arm64`. Compilers (zig, DJGPP for MS-DOS, DOSBox-X, Emscripten, CMake) are downloaded from the editor's **Toolchains** window when you want them.
+- **License:** the source is readable but not free to copy or redistribute; the editor is free to run; **everything you make with it is yours** to use, ship and sell, no strings. See [LICENSE](LICENSE). Third-party parts (raylib, CWSDPMI, Watt-32 and others) keep their own licenses: [NOTICE.md](NOTICE.md). A hobby project: use it, break it, tell me what's wrong.
+- **Docs:** [API.md](API.md) lists every brick and how the editor works.
+
 A Godot 4.7 app, in GDScript, for writing C programs with bricks and wires. **[API.md](API.md)** is the full reference: every brick (what it does, its inputs, settings and outputs, when to use it) and how the editor works. Its editor follows the **Brickscript** editor's design and behavior (the `brickscript` addon in the user's plugin-test project). Each project becomes readable, portable C99 that builds for any platform, and the program runs in a built-in console.
 
 ## Projects
