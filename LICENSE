@@ -1,0 +1,77 @@
+C-Bricks License (source-available; not an open-source license)
+
+Copyright (c) 2026 xdmonsterman17. All rights reserved.
+(Replace the name above with the name you want shown, if it should not be the GitHub account's.)
+
+In plain words: you may read the source code. You may run the editor and use it for anything,
+including commercial work. Everything you make with the editor is yours to use, ship and sell.
+You may not copy, modify or redistribute the source code or the editor itself.
+The legal text follows; where it differs from this summary, the text decides.
+
+1. WHAT THIS COVERS
+
+"C-Bricks" means the files in this repository (the editor's GDScript source, the runtime C files in
+scripts/runtime/, the icons, the examples, the documentation, the tools and the tests), and the
+editor built from them. "The Editor" means a built, ready-to-run copy of C-Bricks released by the
+author. It does NOT include the Third-Party Components of section 6, which keep their own licenses.
+
+2. THE SOURCE CODE
+
+The source code of C-Bricks is made available to read. Except as section 4 allows for Output, you
+may not copy, modify, adapt, translate, sublicense, sell, publish or distribute the source code or
+any part of it, you may not build another program, editor, code generator or service from it, and
+you may not use it to train a model or to build a competing product. Cloning or forking the
+repository on GitHub, and viewing it there, is allowed as far as GitHub's Terms of Service give
+that right to everyone; that is the only copying this license permits.
+
+3. THE EDITOR
+
+You may download the Editor from the author and run it, free of charge, for any purpose, personal or
+commercial. You may not redistribute, resell, sublicense, modify or reverse engineer the Editor
+(except where the law gives you that right regardless of this license), and you may not offer it as
+a hosted service. To let someone else have the Editor, point them to where the author publishes it.
+
+4. WHAT YOU MAKE WITH THE EDITOR ("OUTPUT")
+
+"Output" means everything the Editor creates or helps you create: your projects (the .cbricks,
+.cbscene and project.cbproj files and your assets), the C source and headers it generates, the
+exported project folders (Makefile, CMakeLists.txt, build scripts, README), the programs built from
+them for any platform, and the .exe / .html / binaries you build. It includes the C-Bricks runtime
+files (the contents of scripts/runtime/ and the generated cbricks.h and cbricks_*.c) as they appear
+inside your Output.
+
+The author owns no part of your projects. The author grants you a worldwide, perpetual, irrevocable,
+royalty-free license to use, copy, modify, publish, distribute, sublicense and sell Output,
+including the runtime files embedded in it, for any purpose, commercial or not, under any license
+you choose, with no attribution required (credit is appreciated, not required). The runtime
+files are licensed this way only as part of Output: you may not pull them out to redistribute them
+on their own or to build a competing tool (section 2 applies to them then).
+
+The examples: when you open an example, the Editor makes a copy for you; that copy is Output.
+Parts of Output that come from Third-Party Components (section 6) stay under those components'
+licenses; NOTICE.md says which ones can end up in your programs and what each asks of you.
+
+5. NO WARRANTY, NO LIABILITY
+
+C-BRICKS, THE EDITOR AND THE OUTPUT'S RUNTIME FILES ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+KIND, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NON-INFRINGEMENT. THE AUTHOR IS NOT LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THEIR
+USE, INCLUDING DATA LOSS OR PROBLEMS IN PROGRAMS YOU BUILD AND SHIP.
+
+6. THIRD-PARTY COMPONENTS
+
+Some files are not the author's and are under their own licenses, which this license does not
+change: everything in thirdparty/ (raylib and what it contains, Watt-32, CWSDPMI, the Crynwr packet
+driver, DMXOPL), the Godot Engine inside the Editor, and the programs the Toolchains window
+downloads (zig, DJGPP, DOSBox-X, Emscripten, CMake). NOTICE.md lists them with their licenses and
+where their source is.
+
+7. ENDING
+
+If you break section 2 or 3, the permissions of those sections end for you. The grant in section 4 for
+Output you already made stays, because it is given for Output, not for the Editor.
+
+8. GENERAL
+
+If a part of this license is unenforceable, the rest stays. This license is not legal advice and the
+author is not offering one.

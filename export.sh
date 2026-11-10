@@ -1,6 +1,12 @@
 #!/usr/bin/env sh
 # Exports the C-Bricks editor for this machine (Linux ARM64) into build/linux-arm64/.
-# Usage: ./export.sh [path-to-godot]
+# Usage: ./export.sh [--with-toolchains] [path-to-godot]
+# Slim by default (user, 2026-11-10: the executable was 300 MB): ~100 MB; the editor's Toolchains window downloads zig,
+# DJGPP, DOSBox-X, Emscripten and CMake when they're wanted (toolchains_manifest.json lists where from:
+# tools/make_toolchain_release.py). --with-toolchains puts zig, DJGPP and DOSBox-X inside the executable as before
+# (~308 MB, for a computer with no internet): unpacked on first use.
+WITH_TOOLCHAINS=0
+if [ "$1" = "--with-toolchains" ]; then WITH_TOOLCHAINS=1; shift; fi
 GODOT="${1:-godot}"
 cd "$(dirname "$0")"
 # Started from the file manager (right-click > Execute: no terminal): reopen itself in one, which closes
@@ -16,6 +22,7 @@ mkdir -p build/linux-arm64
 # Every example compiled first (prebuilt/, shipped in the pack): their first Run is instant.
 "$GODOT" --headless --path . -s res://tools/prebuild.gd || echo "export.sh: some examples weren't prebuilt (see above): they compile on their first Run"
 
+if [ "$WITH_TOOLCHAINS" = 1 ]; then
 # The toolchains (2026-11-09): zig, DJGPP (MS-DOS) and DOSBox-X are gathered in build/toolchains (kept between
 # exports), zipped into toolchains_pack/ and exported INSIDE the executable (2026-11-09, user: one single file):
 # the editor unpacks them into its user folder the first time something is built (Toolchains.unpack).
@@ -54,6 +61,10 @@ else
 fi
 cp thirdparty/TOOLCHAINS.md "$OUT/README.md"
 python3 tools/make_toolchain_pack.py "$OUT" toolchains_pack
+else
+rm -rf toolchains_pack  # (slim: nothing of the toolchains goes into the executable)
+echo "export.sh: slim export (no toolchains inside: the Toolchains window downloads them; --with-toolchains bundles them)"
+fi
 rm -f build/linux-arm64/C-Bricks.pck
 "$GODOT" --headless --path . --export-release "Linux ARM64"
 echo "export.sh: done."

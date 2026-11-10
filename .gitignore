@@ -7,3 +7,13 @@
 .build/
 tests/reports/
 toolchains_pack/
+
+# Working notes (kept locally, not published; removed from history 2026-11-10)
+/CLAUDE.md
+/PROGRESS.md
+/BUGS.md
+/DECISIONS.md
+/DEBUG.md
+/SetupClaude.sh
+/.claude/
+/prebuilt/

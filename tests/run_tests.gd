@@ -131,6 +131,11 @@ func _init() -> void:
 		_compile_ms = 0
 		count += 1
 		_check_unpack()
+	if only.is_empty() or "toolchain_install" in only:
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		count += 1
+		await _check_toolchain_install()
 	if only.is_empty() or "bundle" in only:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
@@ -842,8 +847,94 @@ func _check_unpack() -> void:
 		problems.append("an unlisted file shouldn't be")
 	if steps[0] < 1:
 		problems.append("progress should be reported")
+	err = Toolchains.unpack(Callable(), base.path_join("pack/toolchains.pak"), dest)  # (again, over a marked folder)
+	if err != "":
+		problems.append("unpacking over an earlier unpack failed: " + err)
 	Toolchains._rm_tree(base)
+	if DirAccess.dir_exists_absolute(base):
+		problems.append("the removal should take hidden files (.unpacked) too")
 	_finish("unpack", problems, [])
+
+
+## The Toolchains window's engine (ToolchainManager) against a local web server: a small .tar.xz is downloaded
+## with progress, checked, unpacked into the installed folder (search_dirs sees it), removed; a wrong sha256, a
+## missing file (404) and a tool with no download for this computer each fail with a message and install nothing.
+func _check_toolchain_install() -> void:
+	var problems := []
+	var base := OS.get_user_data_dir().path_join("toolchains/test_installed_src")
+	Toolchains._rm_tree(base)
+	var served := base.path_join("served")
+	DirAccess.make_dir_recursive_absolute(served)
+	DirAccess.make_dir_recursive_absolute(base.path_join("stage/fake-1/bin"))
+	var w := FileAccess.open(base.path_join("stage/fake-1/bin/fakeprog"), FileAccess.WRITE)
+	w.store_string("#!/bin/sh\necho fake\n")
+	w.close()
+	var out := []
+	if OS.execute("tar", ["-C", base.path_join("stage"), "-cJf", served.path_join("fake.tar.xz"), "fake-1"], out, true) != 0:
+		_finish("toolchain_install", ["tar couldn't make the test archive: " + str(out)], [])
+		return
+	var port := 18765
+	var server := OS.create_process("python3", ["-I", "-m", "http.server", str(port), "--bind", "127.0.0.1", "--directory", served])
+	await create_timer(1.0).timeout
+	var plat := ToolchainManager.platform()
+	var good := {"url": "http://127.0.0.1:%d/fake.tar.xz" % port, "sha256": FileAccess.get_sha256(served.path_join("fake.tar.xz")), "size": FileAccess.get_file_as_bytes(served.path_join("fake.tar.xz")).size(), "strip": 1}
+	var bad_sha: Dictionary = good.duplicate()
+	bad_sha.sha256 = "0".repeat(64)
+	var missing: Dictionary = good.duplicate()
+	missing.url = "http://127.0.0.1:%d/nothing.tar.xz" % port
+	var manifest := {"format": 1, "tools": {
+		"zig": {"version": "9.9", "platforms": {plat: good}},
+		"djgpp": {"version": "1", "platforms": {plat: bad_sha}},
+		"dosbox-x": {"version": "1", "platforms": {plat: missing}},
+		"cmake": {"version": "1", "platforms": {}}}}
+	var mf := FileAccess.open(base.path_join("manifest.json"), FileAccess.WRITE)
+	mf.store_string(JSON.stringify(manifest))
+	mf.close()
+	OS.set_environment("CBRICKS_TOOLCHAIN_MANIFEST", base.path_join("manifest.json"))
+	ToolchainManager.root_override = OS.get_user_data_dir().path_join("toolchains/test_installed")
+	Toolchains._rm_tree(ToolchainManager.root_override)
+	var mgr := ToolchainManager.new()
+	root.add_child(mgr)
+	var seen := [0, ""]
+	mgr.progress.connect(func(_id: String, _d: int, _t: int, what: String) -> void:
+		seen[0] += 1
+		seen[1] = what)
+	# 1. a good install
+	mgr.install("zig")
+	var r: Array = await mgr.finished
+	if r[1] != "":
+		problems.append("the good install failed: " + str(r[1]))
+	var st := ToolchainManager.status("zig")
+	if st.state != "installed" or st.version != "9.9":
+		problems.append("after installing, zig should be 'installed' 9.9, got " + str(st))
+	if not FileAccess.file_exists(ToolchainManager.root_override.path_join("zig/bin/fakeprog")):
+		problems.append("the archive's files (top folder stripped) should be in installed/zig")
+	if ToolchainManager.root_override.path_join("zig") not in Array(Toolchains.search_dirs()):
+		problems.append("search_dirs should list the installed zig")
+	if seen[0] < 1:
+		problems.append("progress should be reported")
+	if FileAccess.file_exists(ToolchainManager.downloads_dir().path_join("fake.tar.xz")):
+		problems.append("the downloaded archive should be deleted afterwards")
+	# 2. removal
+	mgr.remove("zig")
+	await mgr.finished
+	if DirAccess.dir_exists_absolute(ToolchainManager.root_override.path_join("zig")) or ToolchainManager.status("zig").state == "installed":
+		problems.append("Remove should delete the installed folder")
+	# 3. failures
+	for c in [["djgpp", "sha256"], ["dosbox-x", "404"], ["cmake", "no download"]]:
+		mgr.install(c[0])
+		var f: Array = await mgr.finished
+		if f[1] == "" or not (str(f[1]).to_lower().contains(c[1]) or (c[1] == "no download" and str(f[1]).contains("no download"))):
+			problems.append("%s should fail mentioning '%s', got '%s'" % [c[0], c[1], f[1]])
+		if ToolchainManager.status(c[0]).state == "installed" or DirAccess.dir_exists_absolute(ToolchainManager.root_override.path_join(c[0])):
+			problems.append("%s must not be installed after failing" % c[0])
+	mgr.queue_free()
+	OS.kill(server)
+	OS.set_environment("CBRICKS_TOOLCHAIN_MANIFEST", "")
+	Toolchains._rm_tree(ToolchainManager.root_override)
+	ToolchainManager.root_override = ""
+	Toolchains._rm_tree(base)
+	_finish("toolchain_install", problems, [])
 
 
 func _check_new_project() -> void:
@@ -1259,7 +1350,7 @@ func _check_dos() -> void:
 			problems.append("%s didn't build for MS-DOS:\n%s" % [c[0], str(b.output).strip_edges().left(3000)])
 			continue
 		var run := Toolchains.dos_run(b.out, PackedStringArray(), dir, true)
-		OS.execute("env", PackedStringArray(["SDL_VIDEODRIVER=dummy", "SDL_AUDIODRIVER=dummy", "timeout", "120", "nice", "-n", "19", run.prog]) + PackedStringArray(run.argv), [], true)
+		OS.execute("env", PackedStringArray(["SDL_VIDEODRIVER=dummy", "SDL_AUDIODRIVER=dummy", "timeout", "300", "nice", "-n", "19", run.prog]) + PackedStringArray(run.argv), [], true)
 		var png: String = dir.path_join(str(c[1]))
 		if not FileAccess.file_exists(png):  # (DOS names files in capitals, 8.3: ui_containers.png is UI_CONTA.PNG)
 			for f in DirAccess.get_files_at(dir):

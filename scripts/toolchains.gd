@@ -222,9 +222,11 @@ static func bundle_dir() -> String:
 static func _rm_tree(path: String) -> void:
 	if not DirAccess.dir_exists_absolute(path) or not path.begins_with(OS.get_user_data_dir().path_join("toolchains")):
 		return
-	for d in DirAccess.get_directories_at(path):
+	var da := DirAccess.open(path)
+	da.include_hidden = true  # (get_files_at skips dotfiles: the .unpacked mark stayed and the folder with it)
+	for d in da.get_directories():
 		_rm_tree(path.path_join(d))
-	for f in DirAccess.get_files_at(path):
+	for f in da.get_files():
 		DirAccess.remove_absolute(path.path_join(f))
 	DirAccess.remove_absolute(path)
 
@@ -306,6 +308,10 @@ static func search_dirs() -> PackedStringArray:
 	if bundle != "":  # the editor's own toolchains first: they're the ones it was tested with
 		for sub in ["zig", "djgpp/bin", "dosbox-x", "emscripten"]:
 			dirs.append(bundle.path_join(sub))
+	var installed := ToolchainManager.installed_root()  # (what the Toolchains window installed)
+	if DirAccess.dir_exists_absolute(installed):
+		for sub in ["zig", "djgpp/bin", "dosbox-x", "cmake/bin", "cmake/CMake.app/Contents/bin", "emsdk/upstream/emscripten"]:
+			dirs.append(installed.path_join(sub))
 	for d in OS.get_environment("PATH").split(sep, false):
 		if d not in dirs:
 			dirs.append(d)

@@ -1,4 +1,6 @@
-# Toolchains shipped with the C-Bricks editor
+# Toolchains of the C-Bricks editor
+
+Since 2026-11-10 the editor is slim and its Toolchains window downloads these (`toolchains_manifest.json`: URL, size and sha256 per kind of computer; DJGPP and DOSBox-X from this project's GitHub release `toolchains-1`, made by `tools/make_toolchain_release.py`; zig from ziglang.org, CMake from Kitware, Emscripten from emsdk's tag). `./export.sh --with-toolchains` still embeds zig, DJGPP and DOSBox-X, as described below.
 
 The editor carries (inside its executable; unpacked into its user folder on first use, or a `toolchains/` folder beside it) holds the programs C-Bricks calls to turn the generated C into programs.
 The editor looks here first, then on PATH and the usual folders. Nothing here is modified.

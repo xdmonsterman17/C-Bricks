@@ -122,6 +122,8 @@ var _example_list: ItemList = null  # Example Projects
 var _start_filter: LineEdit = null
 var _file_dialog: FileDialog = null
 var _settings_dialog: AcceptDialog = null
+var _tc_manager: ToolchainManager = null  # (the Toolchains window's downloads)
+var _tc_rows := {}  # tool id -> its row's widgets
 var _project_dialog: AcceptDialog = null
 var _new_dialog: ConfirmationDialog = null
 
@@ -1942,15 +1944,169 @@ func _save_settings() -> void:
 func _open_settings() -> void:
 	Toolchains.clear_cache()
 	for c in _settings_dialog.get_children():
-		if c is ScrollContainer:
+		if c is TabContainer:
 			_settings_dialog.remove_child(c)
 			c.queue_free()
+	var tabs := TabContainer.new()
+	tabs.name = "Tabs"
+	tabs.custom_minimum_size = Vector2(940, 520)
+	_settings_dialog.add_child(tabs)
+	tabs.add_child(_toolchains_tab())
+	tabs.add_child(_commands_tab())
+	tabs.set_tab_title(0, "Toolchains")
+	tabs.set_tab_title(1, "Commands")
+	_settings_dialog.popup_centered(Vector2i(980, 620))
+
+
+## The first tab: every toolchain that can be installed from here, with its state and a progress bar.
+func _toolchains_tab() -> Control:
 	var sc := ScrollContainer.new()
+	sc.name = "Toolchains"
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var vb := VBoxContainer.new()
+	vb.size_flags_horizontal = SIZE_EXPAND_FILL
+	vb.add_theme_constant_override("separation", 8)
+	sc.add_child(vb)
+	var help := Label.new()
+	help.text = "The programs C-Bricks calls to turn your C into programs. Install one here (it is downloaded, checked against its published sha256 and unpacked into the editor's own folder) or let the editor find one already on this computer. Installing and removing take effect at once; the Commands tab holds each target's compile command."
+	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	help.modulate.a = 0.7
+	vb.add_child(help)
+	_tc_rows.clear()
+	for t in ToolchainManager.TOOLS:
+		var pc := PanelContainer.new()
+		var box := VBoxContainer.new()
+		pc.add_child(box)
+		var top := HBoxContainer.new()
+		box.add_child(top)
+		var icon := TextureRect.new()
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+		top.add_child(icon)
+		var name_l := Label.new()
+		name_l.text = str(t.name)
+		name_l.add_theme_font_size_override("font_size", 16)
+		top.add_child(name_l)
+		var state := Label.new()
+		state.size_flags_horizontal = SIZE_EXPAND_FILL
+		state.clip_text = true
+		state.modulate.a = 0.75
+		top.add_child(state)
+		var install := Button.new()
+		install.text = "Install"
+		install.pressed.connect(func() -> void: _tc_install(str(t.id)))
+		top.add_child(install)
+		var remove := Button.new()
+		remove.text = "Remove"
+		remove.pressed.connect(func() -> void: _tc_manager.remove(str(t.id)))
+		top.add_child(remove)
+		var cancel := Button.new()
+		cancel.text = "Cancel"
+		cancel.pressed.connect(func() -> void: _tc_manager.cancel())
+		top.add_child(cancel)
+		var what := Label.new()
+		what.text = str(t.enables)
+		what.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		box.add_child(what)
+		var meta := HBoxContainer.new()
+		box.add_child(meta)
+		var info := Label.new()
+		info.name = "Info"
+		info.modulate.a = 0.6
+		meta.add_child(info)
+		var link := LinkButton.new()
+		link.text = "Website"
+		link.uri = str(t.source)
+		meta.add_child(link)
+		var bar_row := HBoxContainer.new()
+		box.add_child(bar_row)
+		var bar := ProgressBar.new()
+		bar.size_flags_horizontal = SIZE_EXPAND_FILL
+		bar.custom_minimum_size.y = 18
+		bar.show_percentage = false
+		bar_row.add_child(bar)
+		var bar_l := Label.new()
+		bar_l.custom_minimum_size.x = 330
+		bar_l.clip_text = true
+		bar_row.add_child(bar_l)
+		vb.add_child(pc)
+		_tc_rows[str(t.id)] = {"icon": icon, "state": state, "install": install, "remove": remove, "cancel": cancel, "info": info, "bar_row": bar_row, "bar": bar, "bar_l": bar_l}
+		_tc_refresh(str(t.id))
+	return sc
+
+
+## One row's state: what's installed / found / missing, which buttons, whether a bar shows.
+func _tc_refresh(id: String) -> void:
+	if not _tc_rows.has(id) or not is_instance_valid(_tc_rows[id].state):
+		return
+	var r: Dictionary = _tc_rows[id]
+	var st := ToolchainManager.status(id)
+	var e := ToolchainManager.entry(id)
+	var working: bool = _tc_manager.busy()
+	var mine: bool = working and _tc_manager.current() == id
+	var good: bool = st.state != "missing"
+	(r.icon as TextureRect).texture = context.brick_theme.icon("status_success" if good else "status_error")
+	match st.state:
+		"installed":
+			(r.state as Label).text = "Installed" + ((" " + str(st.version)) if str(st.version) != "" else "") + "  ·  " + str(st.path)
+		"found":
+			(r.state as Label).text = "Found on this computer  ·  " + str(st.path)
+		_:
+			(r.state as Label).text = "Not installed" + ("" if not e.is_empty() else "  ·  no download for " + ToolchainManager.platform())
+	(r.state as Label).tooltip_text = (r.state as Label).text
+	(r.info as Label).text = (("Download " + ("about 1 GB (emsdk fetches the compiler)" if e.has("emsdk") else String.humanize_size(int(e.get("size", 0)))) + "  ·  ") if not e.is_empty() else "") + "Licence: " + str(ToolchainManager.tool_info(id).licence) + "  ·  "
+	(r.install as Button).visible = st.state != "installed" and not mine
+	(r.install as Button).text = "Install" if st.state == "missing" else "Install here"
+	(r.install as Button).disabled = working or e.is_empty()
+	(r.remove as Button).visible = st.state == "installed" and not mine
+	(r.remove as Button).disabled = working
+	(r.cancel as Button).visible = mine
+	(r.bar_row as Control).visible = mine
+	if not mine:
+		(r.bar as ProgressBar).value = 0
+
+
+func _tc_install(id: String) -> void:
+	_tc_manager.install(id)
+	for k in _tc_rows:
+		_tc_refresh(k)
+
+
+func _tc_progress(id: String, done: int, total: int, what: String) -> void:
+	if not _tc_rows.has(id) or not is_instance_valid(_tc_rows[id].bar):
+		return
+	var r: Dictionary = _tc_rows[id]
+	var bar := r.bar as ProgressBar
+	bar.indeterminate = total <= 0
+	bar.max_value = maxf(total, 1)
+	bar.value = done
+	(r.bar_l as Label).text = what if total <= 0 else "%s  %s of %s" % [what, String.humanize_size(done), String.humanize_size(total)]
+	(r.cancel as Button).disabled = what != "Downloading"
+	(r.bar_row as Control).visible = true
+
+
+func _tc_finished(id: String, err: String) -> void:
+	for k in _tc_rows:
+		_tc_refresh(k)
+	_update_target_state()
+	if err != "":
+		_set_status("status_error", "%s: %s" % [id, err])
+		_log_info("Toolchain %s: %s" % [id, err])
+		if _tc_rows.has(id) and is_instance_valid(_tc_rows[id].state):
+			(_tc_rows[id].state as Label).text = err
+			(_tc_rows[id].state as Label).tooltip_text = err
+	else:
+		_set_status("status_success", "%s: done." % id)
+
+
+## The second tab: each target's compile command (the old window).
+func _commands_tab() -> Control:
+	var sc := ScrollContainer.new()
+	sc.name = "Commands"
 	var vb := VBoxContainer.new()
 	vb.size_flags_horizontal = SIZE_EXPAND_FILL
 	sc.add_child(vb)
 	var help := Label.new()
-	help.text = "Each target's compile command. Leave a box empty to use the toolchain found (shown greyed). Placeholders: {src} (every .c file) {out} {dir}. zig (ziglang.org) covers almost every target."
+	help.text = "Each target's compile command. Leave a box empty to use the toolchain found (shown greyed). Placeholders: {src} (every .c file) {out} {dir}. zig (ziglang.org) covers almost every target. Save keeps these."
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help.modulate.a = 0.7
 	vb.add_child(help)
@@ -1979,19 +2135,14 @@ func _open_settings() -> void:
 		le.custom_minimum_size.x = 520
 		le.size_flags_horizontal = SIZE_EXPAND_FILL
 		grid.add_child(le)
-	_settings_dialog.add_child(sc)
-	_settings_dialog.popup_centered(Vector2i(980, 560))
+	return sc
 
 
 func _save_settings_from_dialog() -> void:
-	var sc: ScrollContainer = null
-	for c in _settings_dialog.get_children():
-		if c is ScrollContainer:
-			sc = c
-	if sc == null:
+	var grid := _settings_dialog.find_child("Grid", true, false)
+	if grid == null:
 		return
 	Toolchains.overrides.clear()
-	var grid := sc.find_child("Grid", true, false)
 	for t in Toolchains.TARGETS:
 		var v := (grid.get_node(t.id) as LineEdit).text.strip_edges()
 		if v != "":
@@ -2108,7 +2259,7 @@ func _build_toolbar(parent: Control) -> void:
 			_ask_file("save_c"))
 	tools.add_child(export_menu)
 	_graph_tools.append_array([_build_btn, _run_btn, _trace_btn, _all_btn, _stop_btn, export_menu])
-	_tool_button(tools, "", "settings", _open_settings, "Toolchains: each target's compiler")
+	_tool_button(tools, "", "settings", _open_settings, "Toolchains: install compilers, each target's compile command")
 	if not Toolchains.can_execute():
 		for b in [_build_btn, _run_btn, _all_btn, _stop_btn, _trace_btn]:
 			b.disabled = true
@@ -2281,6 +2432,10 @@ func _build_dialogs() -> void:
 	_settings_dialog.add_cancel_button("Cancel")
 	_settings_dialog.confirmed.connect(_save_settings_from_dialog)
 	add_child(_settings_dialog)
+	_tc_manager = ToolchainManager.new()
+	_tc_manager.progress.connect(_tc_progress)
+	_tc_manager.finished.connect(_tc_finished)
+	add_child(_tc_manager)
 	_new_dialog = ConfirmationDialog.new()
 	_new_dialog.title = "New Project"
 	_new_dialog.ok_button_text = "Create & Open"

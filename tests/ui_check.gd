@@ -908,7 +908,38 @@ func _examples_are_scratch() -> void:
 		_remove_dir(parent)
 		_panel.open_project(back_to)
 		_panel.switch_screen("Script")
-		_finish()
+		_toolchains_window()
+
+
+## The Toolchains window (user, 2026-11-10): two tabs, the first one the installable tools with state and buttons.
+func _toolchains_window() -> void:
+	_panel._open_settings()
+	var dlg: AcceptDialog = _panel._settings_dialog
+	var tabs: TabContainer = dlg.get_node("Tabs")
+	_check(dlg.visible and tabs.get_tab_count() == 2 and tabs.get_tab_title(0) == "Toolchains" and tabs.get_tab_title(1) == "Commands" and tabs.current_tab == 0, "the Toolchains window opens on its Toolchains tab; Commands is the second")
+	var ids: Array = ToolchainManager.TOOLS.map(func(t): return t.id)
+	_check(_panel._tc_rows.keys() == ids, "a row per tool: %s" % str(_panel._tc_rows.keys()))
+	var zig_row: Dictionary = _panel._tc_rows.zig
+	var st: String = ToolchainManager.status("zig").state
+	_check((zig_row.install as Button).visible == (st != "installed") and (zig_row.remove as Button).visible == (st == "installed") and not (zig_row.bar_row as Control).visible, "zig's row shows %s with the right buttons and no progress bar" % st)
+	_check(tabs.get_child(1).find_child("Grid", true, false) != null, "the Commands tab holds each target's compile command")
+	_panel._tc_progress("zig", 5 * 1048576, 20 * 1048576, "Downloading")
+	_check((zig_row.bar_row as Control).visible and (zig_row.bar as ProgressBar).value == 5 * 1048576 and (zig_row.bar_l as Label).text.contains("5.00 MiB of 20.00 MiB"), "a download shows its bar and 'N of M' (%s)" % (zig_row.bar_l as Label).text)
+	var at := _frame
+	_wait_for = func() -> bool: return _frame > at + 10
+	_then = func() -> void:
+		dlg.get_texture().get_image().save_png("res://tests/reports/ui_toolchains.png")
+		_panel._tc_progress("zig", 0, 0, "Unpacking")
+		_check((zig_row.bar as ProgressBar).indeterminate, "unpacking shows a bar without an end")
+		_panel._tc_finished("zig", "")
+		_check(not (zig_row.bar_row as Control).visible, "when it finishes the bar goes")
+		tabs.current_tab = 1
+		var at2 := _frame
+		_wait_for = func() -> bool: return _frame > at2 + 6
+		_then = func() -> void:
+			dlg.get_texture().get_image().save_png("res://tests/reports/ui_toolchain_commands.png")
+			dlg.hide()
+			_finish()
 
 
 static func _remove_dir(path: String) -> void:
