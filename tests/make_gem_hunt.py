@@ -7,6 +7,9 @@ import json, sys, os
 out_dir = sys.argv[1]
 test = len(sys.argv) > 2
 auto = len(sys.argv) > 3
+# DOS=1: the MS-DOS example (tests/make_dos_examples.py): a 320 x 200 window, 30 frames a second, a small HUD
+dos = os.environ.get("DOS") == "1"
+W, H = (320, 200) if dos else (960, 540)
 V=lambda v:{"var":v}; I=lambda x:{"type":"int","value":str(x)}; F=lambda x:{"type":"float","value":str(x)}
 S=lambda x:{"type":"string","value":x}; B=lambda x:{"type":"bool","value":x}; V3=lambda x:{"type":"vector3","value":x}
 
@@ -101,7 +104,7 @@ g.dump(os.path.join(out_dir,"scripts/gem.cbricks"))
 # ---- main: the window, the gems, the Game loop (the world runs itself)
 m=G()
 st=m.add("start")
-main=[m.add("window",{},{"width":I(960),"height":I(540),"title":S("Gem Hunt"),"fps":I(60)})]
+main=[m.add("window",{},{"width":I(W),"height":I(H),"title":S("Gem Hunt"),"fps":I(30 if dos else 60)})]
 loop=m.add("for",{},{"from":I(0),"to":I(8),"step":I(1)},{"index":"i"},note="Eight gems, each somewhere random")
 gem=m.add("new_object",{"of":"Gem","world":True},{},{"object":"gem"})
 if auto:
@@ -141,8 +144,8 @@ world={"format":"c-bricks-scene","version":4,"next_id":20,"objects":[
  {"id":7,"class":"Shape3D","name":"West wall","parent":4,"fields":{"position":"-10.3, 0.6, 0","size":"0.6, 1.6, 20","color":"#a1887f"}},
  {"id":8,"class":"Shape3D","name":"East wall","parent":4,"fields":{"position":"10.3, 0.6, 0","size":"0.6, 1.6, 20","color":"#a1887f"}},
  {"id":9,"class":"Player","name":"Player","parent":0,"fields":{"position":"0, 0.8, 0","size":"0.8, 1.6, 0.8","shape":"Cylinder","color":"#1e88e5"}},
- {"id":15,"class":"Panel","name":"HudBack","parent":0,"fields":{"anchor":"top_left","offset":"12, 12","size":"520, 46","radius":"8","color":"#ffffffc0"}},
- {"id":10,"class":"Label","name":"Hud","parent":15,"fields":{"anchor":"left","offset":"12, 0","size":"500, 30","font_size":"30","color":"#1b1b1b"}},
+ {"id":15,"class":"Panel","name":"HudBack","parent":0,"fields":{"anchor":"top_left","offset":"6, 6" if dos else "12, 12","size":"170, 20" if dos else "520, 46","radius":"4" if dos else "8","color":"#ffffffc0"}},
+ {"id":10,"class":"Label","name":"Hud","parent":15,"fields":{"anchor":"left","offset":"6, 0" if dos else "12, 0","size":"160, 16" if dos else "500, 30","font_size":"14" if dos else "30","color":"#1b1b1b"}},
 ]}
 world["format"] = "c-bricks-scene"
 world["objects"] = rooted(world["objects"])

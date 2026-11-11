@@ -1,0 +1,12 @@
+[project]
+
+name="Hello World (MS-DOS)"
+version="1.0"
+
+[run]
+
+args=""
+
+[build]
+
+target="dos"

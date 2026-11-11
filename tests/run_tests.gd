@@ -1221,6 +1221,23 @@ func _check_dos() -> void:
 			problems.append("%s in DOSBox-X: expected its output to contain %s, got:\n%s" % [c[0], JSON.stringify(c[2]), got.left(2000)])
 		else:
 			notes.append("%s: built (%s, %d bytes), ran in DOSBox-X" % [c[0], b.out.get_file(), FileAccess.get_file_as_bytes(b.out).size()])
+	# the MS-DOS examples (tests/make_dos_examples.py): each has Target MS-DOS, no target problems, and builds
+	for e in DirAccess.get_directories_at("res://examples"):
+		if not str(e).begins_with("dos_"):
+			continue
+		var edir: String = root.path_join(str(e))
+		_remove_tree(edir)
+		CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/" + str(e)), edir)
+		var er := ProjectBuild.generate(edir, {}, "dos")
+		if not ProjectBuild.target_problems(er, "dos").is_empty() or not er.errors.is_empty():
+			problems.append("example %s: no problems expected for MS-DOS" % e)
+			continue
+		var esrcs := ProjectBuild.write(er, edir.path_join(".build/src"))
+		var eb := Toolchains.cached_build("dos", esrcs, edir.path_join(".build/dos"), CBProject.program_name(edir), "", bool(er.get("graphics", false)))
+		if not eb.ok:
+			problems.append("example %s didn't build for MS-DOS:\n%s" % [e, str(eb.output).strip_edges().left(2000)])
+		else:
+			notes.append("example %s: built for MS-DOS (%d bytes)" % [e, FileAccess.get_file_as_bytes(eb.out).size()])
 	# the frame loop, the clock, Pause, time scale and Wait on MS-DOS: the same cases as here, the same lines
 	for c in ["pause", "time_effects"]:
 		var dir: String = root.path_join(c)

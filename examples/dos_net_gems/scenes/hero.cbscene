@@ -1,0 +1,22 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 3,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Runner",
+			"name": "Runner",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "LocalScript",
+			"name": "Welcome",
+			"parent": 1,
+			"script": "scripts/welcome.cbricks",
+			"fields": {}
+		}
+	]
+}

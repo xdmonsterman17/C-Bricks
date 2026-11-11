@@ -40,6 +40,9 @@ const DOS_SCREEN_NAMES := ["Auto (fits the window's size)", "VGA 320 x 200", "VE
 var _compile_problems: Array = []    # [{script, node, msg, kind}] from the C compiler
 var _target_problems: Array = []     # [{script, node, world_id, msg}]: what the Target can't do (Build stops; Build All skips that target)
 var _recent: PackedStringArray = []
+## MS-DOS is an extra, not an everyday target (user, 2026-11-10): off, the Target list, the examples and the Toolchains window leave it out.
+var _show_dos := false
+var _dos_open := false  # the open project targets MS-DOS: shown while it's open, without changing the setting
 var _thread: Thread = null
 var _proc: Dictionary = {}
 var _stderr_tail: String = ""
@@ -110,6 +113,9 @@ var _scene_hist := {}
 ## a recent project); Save asks for a name and a folder and continues there; leaving it with
 ## changes asks first.
 const EXAMPLE_SCRATCH := "user://example"
+## The start page's example groups (an example with Target MS-DOS goes under MS-DOS).
+const EXAMPLE_GROUP_ORDER := ["Text programs", "2D and 3D graphics", "Networking", "MS-DOS"]
+const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "gem_hunt": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
 const NEW_HINT := "Makes a folder with project.cbproj and assets/ (no scripts yet: add nodes to the Main scene; running it runs that scene)."
 var _saving_example := false
 var _progress_dialog: AcceptDialog = null
@@ -355,9 +361,11 @@ func open_project(dir: String) -> void:
 	project_dir = dir
 	var cf := CBProject.load_config(dir)
 	var tid := str(cf.get_value("build", "target", "native"))
+	_dos_open = tid == "dos"  # a project that targets MS-DOS keeps working: the target shows for as long as it's open
+	_fill_targets()
 	for i in Toolchains.TARGETS.size():
 		if Toolchains.TARGETS[i].id == tid:
-			_target.select(i)
+			_target.select(_target.get_item_index(i))
 	_trace_btn.set_pressed_no_signal(bool(cf.get_value("run", "trace", false)))
 	_watches = PackedStringArray(cf.get_value("debug", "watches", PackedStringArray()))
 	# An old project's world.cnworld becomes main.cbscene (the Main scene).
@@ -845,8 +853,33 @@ func _program_name() -> String:
 	return CBProject.program_name(project_dir)
 
 
+## The Target list: every target, MS-DOS only when it's switched on (Project menu). Item ids are the TARGETS indexes.
+func _fill_targets() -> void:
+	var keep := _target.get_selected_id() if _target.item_count > 0 else 0
+	_target.clear()
+	for i in Toolchains.TARGETS.size():
+		if Toolchains.TARGETS[i].id != "dos" or _show_dos or _dos_open:
+			_target.add_item(Toolchains.TARGETS[i].name, i)
+	var at := _target.get_item_index(keep)
+	_target.select(maxi(at, 0))
+	_update_target_state()
+
+
+## Project menu: shows / hides everything MS-DOS (the target, its examples, DJGPP and DOSBox-X in Toolchains).
+func _set_show_dos(on: bool) -> void:
+	if on == _show_dos:
+		return
+	_show_dos = on
+	var was := _current_target()
+	_fill_targets()
+	if was == "dos" and not on and has_project():
+		_set_project_value("build", "target", _current_target())  # (it fell back to the first target)
+	_save_settings()
+	refresh_start()
+
+
 func _current_target() -> String:
-	return Toolchains.TARGETS[_target.selected].id
+	return Toolchains.TARGETS[_target.get_selected_id()].id
 
 
 func _busy() -> bool:
@@ -1631,8 +1664,11 @@ func _update_target_state() -> void:
 	if not Toolchains.can_execute() or _target == null:
 		return
 	for i in Toolchains.TARGETS.size():
+		var at := _target.get_item_index(i)
+		if at < 0:
+			continue
 		var ok := Toolchains.resolve_command(Toolchains.TARGETS[i].id) != ""
-		_target.set_item_text(i, Toolchains.TARGETS[i].name + ("" if ok else "  (not installed)"))
+		_target.set_item_text(at, Toolchains.TARGETS[i].name + ("" if ok else "  (not installed)"))
 	var id := _current_target()
 	_run_btn.visible = Toolchains.resolve_runner(id) != ""
 	_target.tooltip_text = "Compiles with: %s" % (Toolchains.resolve_command(id) if Toolchains.resolve_command(id) != "" else "nothing found (see Toolchains)")
@@ -1801,6 +1837,7 @@ func _open_project_settings() -> void:
 	(_project_dialog.find_child("PArgs", true, false) as LineEdit).text = str(cf.get_value("run", "args", ""))
 	(_project_dialog.find_child("PDosScreen", true, false) as OptionButton).select(maxi(0, DOS_SCREENS.find(int(cf.get_value("dos", "screen", 0)))))
 	(_project_dialog.find_child("PBackend", true, false) as OptionButton).select(maxi(0, BACKEND_IDS.find(str(cf.get_value("graphics", "backend", "auto")))))
+	(_project_dialog.find_child("PShowDos", true, false) as CheckBox).button_pressed = _show_dos
 	_refresh_backend_rows()
 	_project_dialog.popup_centered(Vector2i(760, 0))
 
@@ -1813,6 +1850,7 @@ func _save_project_settings() -> void:
 	cf.set_value("graphics", "backend", BACKEND_IDS[(_project_dialog.find_child("PBackend", true, false) as OptionButton).selected])
 	cf.set_value("dos", "screen", DOS_SCREENS[(_project_dialog.find_child("PDosScreen", true, false) as OptionButton).selected])
 	CBProject.save_config(project_dir, cf)
+	_set_show_dos((_project_dialog.find_child("PShowDos", true, false) as CheckBox).button_pressed)
 	_dock.refresh()
 	_recompile()
 	_update_title()
@@ -1917,6 +1955,7 @@ func _load_settings() -> void:
 	cf.load(SETTINGS)
 	_recent = PackedStringArray(cf.get_value("projects", "recent", []))
 	_screen = str(cf.get_value("ui", "main_screen", "Script"))
+	_show_dos = bool(cf.get_value("ui", "show_dos", false))
 	for k in _panel_sizes:
 		_panel_sizes[k] = int(cf.get_value("ui", k + "_size", _panel_sizes[k]))
 	for t in Toolchains.TARGETS:
@@ -1930,6 +1969,7 @@ func _save_settings() -> void:
 	cf.load(SETTINGS)
 	cf.set_value("projects", "recent", Array(_recent))
 	cf.set_value("ui", "main_screen", _screen)
+	cf.set_value("ui", "show_dos", _show_dos)
 	if cf.has_section_key("ui", "preview_sky"):
 		cf.erase_section_key("ui", "preview_sky")  # (the Sky toggle is gone: the Environment decides)
 	for k in _panel_sizes:
@@ -1974,6 +2014,8 @@ func _toolchains_tab() -> Control:
 	vb.add_child(help)
 	_tc_rows.clear()
 	for t in ToolchainManager.TOOLS:
+		if not (_show_dos or _dos_open) and str(t.id) in ["djgpp", "dosbox-x"]:
+			continue
 		var pc := PanelContainer.new()
 		var box := VBoxContainer.new()
 		pc.add_child(box)
@@ -2216,8 +2258,7 @@ func _build_toolbar(parent: Control) -> void:
 	_target.custom_minimum_size.x = 130
 	_target.fit_to_longest_item = false
 	_target.clip_text = true
-	for i in Toolchains.TARGETS.size():
-		_target.add_item(Toolchains.TARGETS[i].name, i)
+	_fill_targets()
 	_target.item_selected.connect(func(_i: int) -> void:
 		_set_project_value("build", "target", _current_target())
 		_recompile()  # (what the target can't do: Problems naming those bricks)
@@ -2534,6 +2575,10 @@ func _build_dialogs() -> void:
 		dos_pick.add_item(DOS_SCREEN_NAMES[i], i)
 	dos_pick.tooltip_text = "The screen an MS-DOS build opens: VGA 320 x 200 runs on every PC and emulator; the VESA modes need a card with VESA 2.0 (and say so if it hasn't). Auto: the smallest that fits the Open window's size."
 	drow.add_child(dos_pick)
+	var show_dos := CheckBox.new()
+	show_dos.name = "PShowDos"
+	show_dos.text = "Show MS-DOS (experimental): the target, its examples, DJGPP and DOSBox-X (all projects)"
+	pv.add_child(show_dos)
 	_project_dialog.add_child(pv)
 	_project_dialog.confirmed.connect(_save_project_settings)
 	add_child(_project_dialog)
@@ -2669,11 +2714,31 @@ func refresh_start() -> void:
 			_start_list.set_item_custom_fg_color(i, Color(BrickTheme.LOCAL_COLOR, 0.75) if copy else BrickTheme.LOCAL_COLOR)
 	if _start_list.item_count == 0:
 		_start_list.add_item("(no projects yet: New Project, or an example)" if words.is_empty() else "(none match the filter)", null, false)
-	var names := Array(DirAccess.get_directories_at("res://examples"))
-	names.sort_custom(func(a, b): return CBProject.project_name("res://examples/" + a) < CBProject.project_name("res://examples/" + b))
-	for d in names:
+	# (user, 2026-11-10: "split up the example projects panel ... some examples are for MS-DOS")
+	# headed groups in the one list: by Target first (an example whose project.cbproj says
+	# MS-DOS), then by what the program is (EXAMPLE_GROUPS, else Text programs)
+	var groups := {}
+	for d in DirAccess.get_directories_at("res://examples"):
 		var res := "res://examples/" + str(d)
-		if CBProject.is_project(res) and fits.call(str(d) + " " + CBProject.project_name(res)):
+		if not (CBProject.is_project(res) and fits.call(str(d) + " " + CBProject.project_name(res))):
+			continue
+		var cf := ConfigFile.new()
+		cf.load(res.path_join("project.cbproj"))
+		var is_dos := str(cf.get_value("build", "target", "native")) == "dos"
+		if is_dos and not _show_dos:  # (not _dos_open: no project is open on the start page)
+			continue
+		var g: String = "MS-DOS" if is_dos else str(EXAMPLE_GROUPS.get(str(d), "Text programs"))
+		if not groups.has(g):
+			groups[g] = []
+		groups[g].append(res)
+	for g in EXAMPLE_GROUP_ORDER:
+		if not groups.has(g):
+			continue
+		var list: Array = groups[g]
+		list.sort_custom(func(a, b): return CBProject.project_name(a) < CBProject.project_name(b))
+		var h := _example_list.add_item(g, null, false)
+		_example_list.set_item_custom_fg_color(h, Color(BrickTheme.LOCAL_COLOR, 0.6))
+		for res: String in list:
 			var i := _example_list.add_item(CBProject.project_name(res), context.brick_theme.icon("script"))
 			_example_list.set_item_metadata(i, ["example", res])
 			_example_list.set_item_tooltip(i, "Opens a new copy of %s (then in Recent Projects)." % CBProject.project_name(res))
@@ -2698,6 +2763,8 @@ func _open_start_pick() -> void:
 	for list: ItemList in [_start_list, _example_list]:
 		var picked := list.get_selected_items()
 		var i: int = picked[0] if not picked.is_empty() else 0
+		while picked.is_empty() and i < list.item_count and not list.is_item_selectable(i):
+			i += 1  # (past the group headings)
 		if i < list.item_count and list.is_item_selectable(i):
 			_open_start_item(list, i)
 			return

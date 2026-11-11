@@ -296,8 +296,9 @@ func _after_remote_brick() -> void:
 	# Target capabilities (2026-11-08): MS-DOS can't do the scene (graphics, 3D) yet: Problems
 	# name the object; Build stops; back to this computer, they're gone.
 	var dos_i := Toolchains.TARGETS.map(func(t): return t.id).find("linux-riscv64")  # (no raylib there: no graphics, no 3D; MS-DOS can do them all now)
-	_panel._target.select(dos_i)
-	_panel._target.item_selected.emit(dos_i)
+	var dos_at: int = _panel._target.get_item_index(dos_i)
+	_panel._target.select(dos_at)
+	_panel._target.item_selected.emit(dos_at)
 	var texts := []
 	for i in _panel._problems.get_root().get_child_count():
 		texts.append(_panel.problem_text(i))
@@ -917,8 +918,8 @@ func _toolchains_window() -> void:
 	var dlg: AcceptDialog = _panel._settings_dialog
 	var tabs: TabContainer = dlg.get_node("Tabs")
 	_check(dlg.visible and tabs.get_tab_count() == 2 and tabs.get_tab_title(0) == "Toolchains" and tabs.get_tab_title(1) == "Commands" and tabs.current_tab == 0, "the Toolchains window opens on its Toolchains tab; Commands is the second")
-	var ids: Array = ToolchainManager.TOOLS.map(func(t): return t.id)
-	_check(_panel._tc_rows.keys() == ids, "a row per tool: %s" % str(_panel._tc_rows.keys()))
+	var ids: Array = ToolchainManager.TOOLS.map(func(t): return t.id).filter(func(id): return id != "djgpp" and id != "dosbox-x")
+	_check(_panel._tc_rows.keys() == ids, "a row per tool, MS-DOS's two left out until it's switched on: %s" % str(_panel._tc_rows.keys()))
 	var zig_row: Dictionary = _panel._tc_rows.zig
 	var st: String = ToolchainManager.status("zig").state
 	_check((zig_row.install as Button).visible == (st != "installed") and (zig_row.remove as Button).visible == (st == "installed") and not (zig_row.bar_row as Control).visible, "zig's row shows %s with the right buttons and no progress bar" % st)

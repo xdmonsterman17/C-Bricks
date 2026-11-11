@@ -56,6 +56,9 @@ static unsigned char *cb_dos_back = NULL;   /* what's drawn: w x h palette index
 static unsigned char *cb_dos_vram = NULL;   /* the screen (through the near-pointer trick) */
 static uclock_t cb_dos_t0 = 0, cb_dos_frame_start = 0;
 static double cb_dos_dt = 1.0 / 60.0;
+static long cb_dos_frames = 0;
+static uclock_t cb_dos_tlast = 0;   /* when the last frame ended */
+static uclock_t cb_dos_t10 = 0;   /* when frame 10 ended (the stats' steady part: loading is over) */
 static int cb_dos_cursor = 0;               /* 0 visible, 1 hidden, 2 captured */
 static unsigned char cb_dos_font[256 * 16];
 static void cb_dos_audio_start(void);
@@ -386,13 +389,57 @@ Vector2 cb_be_text_size(const char *text, double size) {
     return cb_v2((double)strlen(text) * 8 * s, 16 * s);
 }
 
+/* unturned text: which glyph and which column of it each screen column shows is worked out once for the line (the
+   general path asks a division and an fmod per pixel) */
+static void cb_dos_text_flat(cb_aff m, double w, double h, const cb_dos_text_ud *t) {
+    int x0 = (int)floor(m.tx), x1 = (int)ceil(m.a * w + m.tx), y0 = (int)floor(m.ty), y1 = (int)ceil(m.d * h + m.ty), x, y;
+    short gcol[1024];
+    signed char gpx[1024];
+    double gw = 8 * t->scale, ia = 1.0 / m.a, id = 1.0 / m.d;
+    unsigned char q = cb_dos_quant(t->c.r, t->c.g, t->c.b);
+    if (x0 < 0) x0 = 0;
+    if (y0 < 0) y0 = 0;
+    if (x1 > cb_dos_w) x1 = cb_dos_w;
+    if (y1 > cb_dos_h) y1 = cb_dos_h;
+    if (x1 - x0 > 1024) x1 = x0 + 1024;
+    for (x = x0; x < x1; x++) {
+        double u = (x + 0.5 - m.tx) * ia;
+        int col;
+        if (u < 0 || u >= w) { gcol[x - x0] = -1; continue; }
+        col = (int)(u / gw);
+        gcol[x - x0] = (short)col;
+        gpx[x - x0] = (signed char)(int)((u - col * gw) / t->scale);
+    }
+    for (y = y0; y < y1; y++) {
+        double v = (y + 0.5 - m.ty) * id;
+        int row;
+        if (v < 0 || v >= h) continue;
+        row = (int)(v / t->scale);
+        if (row < 0 || row >= 16) continue;
+        for (x = x0; x < x1; x++) {
+            int col = gcol[x - x0], px;
+            unsigned char ch;
+            if (col < 0 || col >= t->len) continue;
+            ch = (unsigned char)t->text[col];
+            if (ch >= 0x80) ch = '?';
+            px = gpx[x - x0];
+            if (px < 0 || px > 7 || !(cb_dos_font[ch * 16 + (unsigned)row] & (0x80 >> px))) continue;
+            if (t->c.a == 255) cb_dos_back[(size_t)y * (size_t)cb_dos_w + (size_t)x] = q;
+            else cb_dos_plot(x, y, t->c);
+        }
+    }
+}
+
 void cb_be_text(const char *text, Vector2 at, Vector2 origin, double rotation, double size, cb_rgba c) {
     cb_dos_text_ud t;
     Vector2 m = cb_be_text_size(text, size);
+    cb_aff la;
     t.text = text; t.scale = size / 16.0; t.c = c; t.len = (int)strlen(text);
     if (t.len == 0 || size <= 0)
         return;
-    cb_dos_raster(cb_dos_local(at, origin, rotation), m.x, m.y, cb_dos_s_text, &t);
+    la = cb_dos_local(at, origin, rotation);
+    if (la.b == 0 && la.c == 0 && la.a > 0 && la.d > 0) { cb_dos_text_flat(la, m.x, m.y, &t); return; }
+    cb_dos_raster(la, m.x, m.y, cb_dos_s_text, &t);
 }
 
 static void cb_dos_load_font(void) {
@@ -647,6 +694,11 @@ static bool cb_dos_vesa(int mode, int w, int h) {
 static void cb_dos_close_all(void) {
     if (cb_dos_open) {
         cb_dos_fm_close();
+        if (cb_verbose && cb_dos_frames > 0) {
+            double secs = (double)(uclock() - cb_dos_t0) / UCLOCKS_PER_SEC;
+            double steady = cb_dos_frames > 10 ? (double)(cb_dos_frames - 10) / ((double)(cb_dos_tlast - cb_dos_t10) / UCLOCKS_PER_SEC) : 0;
+            printf("[video] %ld frames in %.1f s: %.1f fps after the first 10, at %d x %d\n", cb_dos_frames, secs, steady, cb_dos_w, cb_dos_h);
+        }
         cb_dos_audio_stop();
         cb_dos_kb_stop();
         cb_dos_text_mode();
@@ -733,6 +785,8 @@ void cb_be_end_frame(void) {
     } while ((double)(now - cb_dos_frame_start) / UCLOCKS_PER_SEC < 1.0 / cb_dos_fps);
     cb_dos_dt = (double)(now - cb_dos_frame_start) / UCLOCKS_PER_SEC;
     cb_dos_frame_start = now;
+    cb_dos_tlast = now;
+    if (++cb_dos_frames == 10) cb_dos_t10 = now;
 }
 
 int cb_be_width(void) { return cb_dos_w; }
@@ -1720,8 +1774,12 @@ static int cb_m_top = 0;
 static cb_m4 cb_m_view, cb_m_cur;
 static bool cb_3d_on = false, cb_3d_ortho = false;
 static double cb_3d_f = 1, cb_3d_aspect = 1, cb_3d_top = 1;   /* the projection: 1 / tan(fov / 2); width / height; the orthographic half height */
-static float *cb_zbuf = NULL;   /* the depth key per pixel: bigger is nearer (1 / depth; orthographic: 1 - depth / 1000) */
+static int *cb_zbuf = NULL;   /* the depth key per pixel, in whole numbers (integer compares are cheap): bigger is nearer (1 / depth; orthographic: 1 - depth / 1000) times CB_ZSCALE */
+#define CB_ZSCALE 67108864.0
+static int cb_zkey(double k) { return k <= 0 ? 0 : (k >= 31.9 ? 2140000000 : (int)(k * CB_ZSCALE)); }
 static bool cb_zdirty = true;
+static bool cb_rt_on;           /* (drawing into a render target: the smooth renderer's job) */
+static bool cb_3d_fast = false; /* this 3D view is drawn by the fast renderer (flat triangles, painter's order) */
 #define CB_NEAR 0.05
 #define CB_ORTHO_FAR 1000.0
 
@@ -1729,9 +1787,13 @@ static bool cb_zdirty = true;
 static Vector3 cb_sun = {-0.3714, -0.9285, -0.5571};
 static double cb_amb = 0.38, cb_fog_density = 0, cb_fog_start = 0;
 static double cb_sun_col[3] = {1, 1, 1}, cb_amb_col[3] = {1, 1, 1}, cb_fog_col[3] = {1, 1, 1};
-static float cb_fog_lut[4096];   /* "seen" by depth, in steps of 1/16 */
+static float cb_fog_lut[4096];
+static int cb_fog_lut16[4096], cb_fog_col16[3];   /* the same in 16.16 */   /* "seen" by depth, in steps of 1/16 */
 static bool cb_fog_dirty = true;
 
+static cb_m4 cb_vc;                 /* view * current matrix (cb_vc_get) */
+static bool cb_vc_dirty = true;
+static double cb_pk_x, cb_pk_y, cb_pk_cx, cb_pk_cy, cb_fr_tx, cb_fr_ty, cb_fr_hx, cb_fr_hy;   /* + the view cone: tan of the half angles, and sqrt(1 + tan^2) */   /* the projection's constants: x = vx / z * pk_x + cx ... */
 static cb_m4 cb_m4_id(void) { cb_m4 r; int i; for (i = 0; i < 16; i++) r.m[i] = (i % 5 == 0) ? 1.0 : 0.0; return r; }
 static cb_m4 cb_m4_mul(const cb_m4 *a, const cb_m4 *b) {   /* a * b */
     cb_m4 r;
@@ -1744,14 +1806,28 @@ static cb_m4 cb_m4_mul(const cb_m4 *a, const cb_m4 *b) {   /* a * b */
         }
     return r;
 }
+static cb_m4 cb_m4_mul_aff(const cb_m4 *a, const cb_m4 *b) {   /* a * b of two affine matrices (36 products, not 64) */
+    cb_m4 r;
+    int c, row;
+    for (c = 0; c < 4; c++) {
+        for (row = 0; row < 3; row++)
+            r.m[c * 4 + row] = a->m[row] * b->m[c * 4] + a->m[4 + row] * b->m[c * 4 + 1] + a->m[8 + row] * b->m[c * 4 + 2] + (c == 3 ? a->m[12 + row] : 0.0);
+        r.m[c * 4 + 3] = c == 3 ? 1.0 : 0.0;
+    }
+    return r;
+}
+static const cb_m4 *cb_vc_get(void) {
+    if (cb_vc_dirty) { cb_vc = cb_m4_mul_aff(&cb_m_view, &cb_m_cur); cb_vc_dirty = false; }
+    return &cb_vc;
+}
 static Vector3 cb_m4_pt(const cb_m4 *a, Vector3 p) {
     return cb_v3(a->m[0] * p.x + a->m[4] * p.y + a->m[8] * p.z + a->m[12], a->m[1] * p.x + a->m[5] * p.y + a->m[9] * p.z + a->m[13], a->m[2] * p.x + a->m[6] * p.y + a->m[10] * p.z + a->m[14]);
 }
 
 void cb_be_push(void) { if (cb_m_top < 31) cb_m_stack[cb_m_top++] = cb_m_cur; }
-void cb_be_pop(void) { if (cb_m_top > 0) cb_m_cur = cb_m_stack[--cb_m_top]; }
-void cb_be_translate(double x, double y, double z) { cb_m4 t = cb_m4_id(); t.m[12] = x; t.m[13] = y; t.m[14] = z; cb_m_cur = cb_m4_mul(&cb_m_cur, &t); }
-void cb_be_scale(double x, double y, double z) { cb_m4 t = cb_m4_id(); t.m[0] = x; t.m[5] = y; t.m[10] = z; cb_m_cur = cb_m4_mul(&cb_m_cur, &t); }
+void cb_be_pop(void) { if (cb_m_top > 0) { cb_m_cur = cb_m_stack[--cb_m_top]; cb_vc_dirty = true; } }
+void cb_be_translate(double x, double y, double z) { cb_m4 t = cb_m4_id(); t.m[12] = x; t.m[13] = y; t.m[14] = z; cb_m_cur = cb_m4_mul(&cb_m_cur, &t); cb_vc_dirty = true; }
+void cb_be_scale(double x, double y, double z) { cb_m4 t = cb_m4_id(); t.m[0] = x; t.m[5] = y; t.m[10] = z; cb_m_cur = cb_m4_mul(&cb_m_cur, &t); cb_vc_dirty = true; }
 void cb_be_rotate(double degrees, double x, double y, double z) {   /* about an axis, counter-clockwise looking down it (glRotatef) */
     double len = sqrt(x * x + y * y + z * z), a = degrees * 3.14159265358979323846 / 180.0, c = cos(a), s = sin(a), t;
     cb_m4 r = cb_m4_id();
@@ -1761,8 +1837,12 @@ void cb_be_rotate(double degrees, double x, double y, double z) {   /* about an 
     r.m[1] = t * x * y + s * z; r.m[5] = t * y * y + c;     r.m[9] = t * y * z - s * x;
     r.m[2] = t * x * z - s * y; r.m[6] = t * y * z + s * x;  r.m[10] = t * z * z + c;
     cb_m_cur = cb_m4_mul(&cb_m_cur, &r);
+    cb_vc_dirty = true;
 }
 
+static bool cb_fast_wanted(void);
+static void cb_fast_flush(void);
+static size_t cb_fn = 0;
 void cb_be_begin_3d(Vector3 position, Vector3 target, double fov, bool ortho) {
     Vector3 f = cb_v3_normalize(cb_v3_sub(target, position)), up = cb_v3(0, 1, 0), s, u;
     cb_m4 v = cb_m4_id();
@@ -1782,11 +1862,20 @@ void cb_be_begin_3d(Vector3 position, Vector3 target, double fov, bool ortho) {
     cb_3d_top = (fov > 0.01 ? fov : 0.01) / 2.0;
     cb_m_cur = cb_m4_id();
     cb_m_top = 0;
+    cb_vc_dirty = true;
+    cb_pk_x = cb_3d_f / cb_3d_aspect * 0.5 * cb_dos_w; cb_pk_y = cb_3d_f * 0.5 * cb_dos_h; cb_pk_cx = 0.5 * cb_dos_w; cb_pk_cy = 0.5 * cb_dos_h;
+    cb_fr_tx = cb_3d_aspect / cb_3d_f; cb_fr_ty = 1.0 / cb_3d_f; cb_fr_hx = sqrt(1.0 + cb_fr_tx * cb_fr_tx); cb_fr_hy = sqrt(1.0 + cb_fr_ty * cb_fr_ty);
     cb_3d_on = true;
-    if (!cb_zbuf) cb_zbuf = (float *)calloc((size_t)cb_dos_w * (size_t)cb_dos_h, sizeof(float));
-    if (cb_zbuf && cb_zdirty) memset(cb_zbuf, 0, (size_t)cb_dos_w * (size_t)cb_dos_h * sizeof(float));
+    cb_3d_fast = cb_fast_wanted() && !cb_rt_on;
+    cb_fn = 0;
+    if (cb_3d_fast) return;   /* no depth buffer: the triangles are sorted instead */
+    if (!cb_zbuf) cb_zbuf = (int *)calloc((size_t)cb_dos_w * (size_t)cb_dos_h, sizeof(int));
+    if (cb_zbuf && cb_zdirty) memset(cb_zbuf, 0, (size_t)cb_dos_w * (size_t)cb_dos_h * sizeof(int));
 }
-void cb_be_end_3d(void) { cb_3d_on = false; cb_zdirty = true; }
+void cb_be_end_3d(void) {
+    if (cb_3d_on && cb_3d_fast) cb_fast_flush();
+    cb_3d_on = false; cb_3d_fast = false; cb_zdirty = true;
+}
 
 /* ---- lighting state ---- */
 void cb_set_light(Vector3 direction, double ambient) { cb_sun = cb_v3_normalize(direction); cb_amb = ambient; }
@@ -1799,7 +1888,9 @@ static void cb_fog_build(void) {
     for (i = 0; i < 4096; i++) {
         double d = i / 16.0 - cb_fog_start;
         cb_fog_lut[i] = (float)exp(-cb_fog_density * (d > 0 ? d : 0));
+        cb_fog_lut16[i] = (int)(cb_fog_lut[i] * 65536.0f);
     }
+    for (i = 0; i < 3; i++) cb_fog_col16[i] = (int)(cb_fog_col[i] * 65536.0);
     cb_fog_dirty = false;
 }
 
@@ -1822,6 +1913,38 @@ static unsigned char cb_dither(int x, int y, float r, float g, float b) {
     }
 }
 
+/* The common pixel (opaque, no fog) in whole numbers: colours in 16.16, the dither the same as cb_dither's
+   (its threshold table in 16.16). The emulated FPU is the slow part on the machines that run DOS programs
+   today (a Raspberry Pi running DOSBox-X: floating point per pixel took 3 s a frame at 800 x 600). */
+static const int cb_thr16[16] = {2048, 34816, 10240, 43008, 51200, 18432, 59392, 26624, 14336, 47104, 6144, 38912, 63488, 30720, 55296, 22528};   /* (bayer + 0.5) / 16 in 16.16 */
+
+static void cb_span_fast(int y, int x0, int x1, double xa, const cb_sv *a, const cb_sv *b, double inv) {
+    double t0 = (x0 + 0.5) - xa, dkd = (b->k - a->k) * inv;
+    int k = cb_zkey(a->k + dkd * t0), dk = (int)(dkd * CB_ZSCALE);
+    int r = (int)((a->r + (b->r - a->r) * inv * t0) * 65536.0), g = (int)((a->g + (b->g - a->g) * inv * t0) * 65536.0), bl = (int)((a->b + (b->b - a->b) * inv * t0) * 65536.0);
+    int dr = (int)((b->r - a->r) * inv * 65536.0), dg = (int)((b->g - a->g) * inv * 65536.0), db = (int)((b->b - a->b) * inv * 65536.0);
+    int *zp = cb_zbuf + (size_t)y * (size_t)cb_dos_w + (size_t)x0;
+    unsigned char *bp = cb_dos_back + (size_t)y * (size_t)cb_dos_w + (size_t)x0;
+    const int *thr = cb_thr16 + (y & 3) * 4;
+    int x;
+    for (x = x0; x < x1; x++, k += dk, r += dr, g += dg, bl += db, zp++, bp++) {
+        int rr, gg, bb, mx, mn, t;
+        if (k <= *zp)
+            continue;
+        *zp = k;
+        rr = r < 0 ? 0 : (r > 65536 ? 65536 : r); gg = g < 0 ? 0 : (g > 65536 ? 65536 : g); bb = bl < 0 ? 0 : (bl > 65536 ? 65536 : bl);
+        mx = rr > gg ? (rr > bb ? rr : bb) : (gg > bb ? gg : bb); mn = rr < gg ? (rr < bb ? rr : bb) : (gg < bb ? gg : bb);
+        t = thr[x & 3];
+        if (mx - mn < 3604) {   /* (near) grey: the 40 greys */
+            int v = (((rr + gg + bb) / 3) * 39 + t) >> 16;
+            *bp = (unsigned char)(216 + (v > 39 ? 39 : v));
+        } else {
+            int ri = (rr * 5 + t) >> 16, gi = (gg * 5 + t) >> 16, bi = (bb * 5 + t) >> 16;
+            *bp = (unsigned char)((ri > 5 ? 5 : ri) * 36 + (gi > 5 ? 5 : gi) * 6 + (bi > 5 ? 5 : bi));
+        }
+    }
+}
+
 static void cb_span(int y, double xa, double xb, const cb_sv *a, const cb_sv *b) {   /* a, b: the edge's attributes at xa, xb */
     int x0 = (int)ceil(xa - 0.5), x1 = (int)ceil(xb - 0.5), x;
     double len = xb - xa, inv = len > 1e-9 ? 1.0 / len : 0;
@@ -1830,13 +1953,18 @@ static void cb_span(int y, double xa, double xb, const cb_sv *a, const cb_sv *b)
     if (x0 < 0) x0 = 0;
     if (x1 > cb_dos_w) x1 = cb_dos_w;
     if (x1 <= x0) return;
+    if (cb_fog_density <= 0 && a->a >= 0.98f && b->a >= 0.98f) {
+        cb_span_fast(y, x0, x1, xa, a, b, inv);
+        return;
+    }
     dk = (b->k - a->k) * inv; dr = (b->r - a->r) * inv; dg = (b->g - a->g) * inv; db = (b->b - a->b) * inv; da = (b->a - a->a) * inv;
     t0 = (x0 + 0.5) - xa;
     k = a->k + dk * t0; r = a->r + dr * t0; g = a->g + dg * t0; bl = a->b + db * t0; al = a->a + da * t0;
     for (x = x0; x < x1; x++, k += dk, r += dr, g += dg, bl += db, al += da) {
-        float *zp = cb_zbuf + (size_t)y * (size_t)cb_dos_w + (size_t)x;
+        int *zp = cb_zbuf + (size_t)y * (size_t)cb_dos_w + (size_t)x;
         float rr = (float)r, gg = (float)g, bb = (float)bl;
-        if ((float)k <= *zp)
+        int zk = cb_zkey(k);
+        if (zk <= *zp)
             continue;
         if (al < 0.5) continue;
         if (cb_fog_density > 0) {
@@ -1847,7 +1975,7 @@ static void cb_span(int y, double xa, double xb, const cb_sv *a, const cb_sv *b)
             gg = (float)(cb_fog_col[1] + (gg - cb_fog_col[1]) * seen);
             bb = (float)(cb_fog_col[2] + (bb - cb_fog_col[2]) * seen);
         }
-        *zp = (float)k;
+        *zp = zk;
         if (al < 0.98) {   /* see-through: over what's there */
             const unsigned char *o = cb_dos_pal[cb_dos_back[(size_t)y * (size_t)cb_dos_w + (size_t)x]];
             rr = (float)(rr * al + o[0] / 255.0 * (1 - al)); gg = (float)(gg * al + o[1] / 255.0 * (1 - al)); bb = (float)(bb * al + o[2] / 255.0 * (1 - al));
@@ -1887,6 +2015,362 @@ static void cb_tri_screen(const cb_sv *p0, const cb_sv *p1, const cb_sv *p2) {
     }
 }
 
+
+/* ---- the fast renderer (the default on MS-DOS) ----
+   The smooth renderer's per-pixel work (depth test, colour steps, dither) is what an emulated Pentium chokes on
+   (0.3 frames a second at 800 x 600 on a Raspberry Pi). This one does almost nothing per pixel: each triangle is
+   lit once (its three corners' average, fogged by its depth), turned into the palette's colours with the dither
+   worked out once per triangle (a 4 x 4 pattern: one 32-bit word per row), and filled with word stores. The
+   triangles are collected during the 3D view, sorted far to near (a radix sort: no depth buffer to clear) and
+   drawn at its end (the painter's algorithm: a very long triangle can sort wrongly against what stands on it).
+   Lines (Grid, Wire box) are sorted with them. See-through triangles are drawn as every other pixel.
+   CBRICKS_3D=smooth in the environment (or -DCB_DOS_3D_SMOOTH) brings the per-pixel renderer back. */
+typedef struct { float x[3], y[3]; int ix[3], iy[3]; unsigned w[4]; unsigned short key; unsigned char kind, stipple; } cb_fi;   /* kind 0: a triangle (floats), 1: a line, 3: a triangle in 16.16 */
+static cb_fi *cb_fitems = NULL;
+static size_t cb_fcap = 0;
+#define CB_FAST_MAX 60000
+
+static bool cb_fast_wanted(void) {
+#ifdef CB_DOS_3D_SMOOTH
+    return false;
+#else
+    static int pref = -1;
+    if (pref < 0) { const char *e = getenv("CBRICKS_3D"); pref = !(e && e[0] == 's'); }
+    return pref != 0;
+#endif
+}
+
+static unsigned char cb_quant16(int rr, int gg, int bb, int t) {   /* the palette's colour for 16.16 colours at a dither threshold */
+    int mx, mn;
+    rr = rr < 0 ? 0 : (rr > 65536 ? 65536 : rr); gg = gg < 0 ? 0 : (gg > 65536 ? 65536 : gg); bb = bb < 0 ? 0 : (bb > 65536 ? 65536 : bb);
+    mx = rr > gg ? (rr > bb ? rr : bb) : (gg > bb ? gg : bb); mn = rr < gg ? (rr < bb ? rr : bb) : (gg < bb ? gg : bb);
+    if (mx - mn < 3604) {
+        int v = (((rr + gg + bb) / 3) * 39 + t) >> 16;
+        return (unsigned char)(216 + (v > 39 ? 39 : v));
+    } else {
+        int ri = (rr * 5 + t) >> 16, gi = (gg * 5 + t) >> 16, bi = (bb * 5 + t) >> 16;
+        return (unsigned char)((ri > 5 ? 5 : ri) * 36 + (gi > 5 ? 5 : gi) * 6 + (bi > 5 ? 5 : bi));
+    }
+}
+
+/* the four words of a triangle's colour: a 4 x 4 dither pattern, one word per row (a small triangle: one colour) */
+static void cb_fast_words(int rr, int gg, int bb, int big, unsigned w[4]) {
+    int mx, mn, grey, base, r5, g5, b5, n = big ? 16 : 1, j, i;
+    unsigned char q[16];
+    rr = rr < 0 ? 0 : (rr > 65536 ? 65536 : rr); gg = gg < 0 ? 0 : (gg > 65536 ? 65536 : gg); bb = bb < 0 ? 0 : (bb > 65536 ? 65536 : bb);
+    mx = rr > gg ? (rr > bb ? rr : bb) : (gg > bb ? gg : bb); mn = rr < gg ? (rr < bb ? rr : bb) : (gg < bb ? gg : bb);
+    grey = mx - mn < 3604; base = ((rr + gg + bb) / 3) * 39; r5 = rr * 5; g5 = gg * 5; b5 = bb * 5;
+    for (j = 0; j < n; j++) {
+        int t = big ? cb_thr16[j] : 32768;
+        if (grey) { int v = (base + t) >> 16; q[j] = (unsigned char)(216 + (v > 39 ? 39 : v)); }
+        else {
+            int ri = (r5 + t) >> 16, gi = (g5 + t) >> 16, bi = (b5 + t) >> 16;
+            q[j] = (unsigned char)((ri > 5 ? 5 : ri) * 36 + (gi > 5 ? 5 : gi) * 6 + (bi > 5 ? 5 : bi));
+        }
+    }
+    for (i = 0; i < 4; i++)
+        w[i] = big ? (unsigned)q[i * 4] | ((unsigned)q[i * 4 + 1] << 8) | ((unsigned)q[i * 4 + 2] << 16) | ((unsigned)q[i * 4 + 3] << 24) : q[0] * 0x01010101u;
+}
+
+static cb_fi *cb_fast_item(void) {
+    if (cb_fn >= CB_FAST_MAX) return NULL;
+    if (cb_fn >= cb_fcap) {
+        size_t cap = cb_fcap ? cb_fcap * 2 : 1024;
+        cb_fi *n = (cb_fi *)realloc(cb_fitems, cap * sizeof *n);
+        if (!n) return NULL;
+        cb_fitems = n; cb_fcap = cap;
+    }
+    return &cb_fitems[cb_fn++];
+}
+
+static unsigned short cb_fast_key(double z) {   /* farther = bigger, 1 / 64 of a unit apart */
+    double k = z * 64.0;
+    return (unsigned short)(k < 0 ? 0 : (k > 65535 ? 65535 : (int)k));
+}
+
+static void cb_fast_push_d(const cb_sv *a, const cb_sv *b, const cb_sv *c, int depth);
+static cb_sv cb_fast_mid(const cb_sv *a, const cb_sv *b) {   /* the middle of an edge on screen (perspective: 1 / depth is what's linear) */
+    cb_sv m = *a;
+    m.x = (a->x + b->x) * 0.5; m.y = (a->y + b->y) * 0.5; m.k = (a->k + b->k) * 0.5;
+    m.z = cb_3d_ortho ? (a->z + b->z) * 0.5 : (m.k > 1e-9 ? 1.0 / m.k : a->z);
+    return m;
+}
+static void cb_fast_push(const cb_sv *a, const cb_sv *b, const cb_sv *c) { cb_fast_push_d(a, b, c, 0); }
+
+static void cb_fast_push_d(const cb_sv *a, const cb_sv *b, const cb_sv *c, int depth) {
+    double minx = a->x, maxx = a->x, miny = a->y, maxy = a->y, r, g, bl, al, z;
+    cb_fi *it;
+    int rr, gg, bb, i;
+    const cb_sv *v[3];
+    v[0] = a; v[1] = b; v[2] = c;
+    for (i = 1; i < 3; i++) {
+        if (v[i]->x < minx) minx = v[i]->x;
+        if (v[i]->x > maxx) maxx = v[i]->x;
+        if (v[i]->y < miny) miny = v[i]->y;
+        if (v[i]->y > maxy) maxy = v[i]->y;
+    }
+    if (maxx < 0 || minx > cb_dos_w || maxy < 0 || miny > cb_dos_h) return;
+    if (depth < 3 && (maxx - minx) * (maxy - miny) > 1200) {   /* a big triangle across a lot of depth sorts wrongly as one: cut it in four */
+        double zlo = a->z < b->z ? (a->z < c->z ? a->z : c->z) : (b->z < c->z ? b->z : c->z), zhi = a->z > b->z ? (a->z > c->z ? a->z : c->z) : (b->z > c->z ? b->z : c->z);
+        if (zhi > zlo * 1.3 + 0.5) {
+            cb_sv ab = cb_fast_mid(a, b), bc = cb_fast_mid(b, c), ca = cb_fast_mid(c, a);
+            cb_fast_push_d(a, &ab, &ca, depth + 1); cb_fast_push_d(&ab, b, &bc, depth + 1);
+            cb_fast_push_d(&ca, &bc, c, depth + 1); cb_fast_push_d(&ab, &bc, &ca, depth + 1);
+            return;
+        }
+    }
+    al = (a->a + b->a + c->a) / 3.0;
+    if (al < 0.5) return;
+    r = (a->r + b->r + c->r) / 3.0; g = (a->g + b->g + c->g) / 3.0; bl = (a->b + b->b + c->b) / 3.0;
+    z = (a->z + b->z + c->z) / 3.0;
+    if (cb_fog_density > 0) {
+        int li = (int)(z * 16.0);
+        double seen = cb_fog_lut[li < 0 ? 0 : (li > 4095 ? 4095 : li)];
+        r = cb_fog_col[0] + (r - cb_fog_col[0]) * seen; g = cb_fog_col[1] + (g - cb_fog_col[1]) * seen; bl = cb_fog_col[2] + (bl - cb_fog_col[2]) * seen;
+    }
+    it = cb_fast_item();
+    if (!it) return;
+    for (i = 0; i < 3; i++) { it->x[i] = (float)v[i]->x; it->y[i] = (float)v[i]->y; }
+    it->kind = 0; it->stipple = al < 0.98; it->key = cb_fast_key(z);
+    rr = (int)(r * 65536.0); gg = (int)(g * 65536.0); bb = (int)(bl * 65536.0);
+    cb_fast_words(rr, gg, bb, (maxx - minx) * (maxy - miny) > 40, it->w);
+}
+
+static void cb_fast_line(const cb_sv *a, const cb_sv *b, unsigned char q) {
+    cb_fi *it = cb_fast_item();
+    if (!it) return;
+    it->x[0] = (float)a->x; it->y[0] = (float)a->y; it->x[1] = (float)b->x; it->y[1] = (float)b->y;
+    it->kind = 1; it->stipple = 0; it->key = cb_fast_key((a->z + b->z) / 2.0 - 0.1);
+    it->w[0] = q;
+}
+
+static void cb_fast_row(int y, int x0, int x1, unsigned w) {
+    unsigned char *d = cb_dos_back + (size_t)y * (size_t)cb_dos_w + (size_t)x0;
+    int n = x1 - x0;
+    while (n > 0 && (x0 & 3)) { *d++ = (unsigned char)(w >> (8 * (x0 & 3))); x0++; n--; }
+    for (; n >= 4; n -= 4, d += 4) *(unsigned *)d = w;
+    for (x0 = 0; n > 0; n--, x0++) *d++ = (unsigned char)(w >> (8 * x0));
+}
+
+static int cb_fast_clampx(double x) { return x <= 0 ? 0 : (x >= cb_dos_w ? cb_dos_w : (int)(x + 0.5)); }
+
+static void cb_fast_tri_slow(const cb_fi *it) {
+    double vx[3], vy[3], t;
+    int i, j, y, y0, y1;
+    double sl, s1, s2, xa, xb;
+    for (i = 0; i < 3; i++) { vx[i] = it->x[i]; vy[i] = it->y[i]; }
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2 - i; j++)
+            if (vy[j] > vy[j + 1]) { t = vy[j]; vy[j] = vy[j + 1]; vy[j + 1] = t; t = vx[j]; vx[j] = vx[j + 1]; vx[j + 1] = t; }
+    y0 = vy[0] <= 0 ? 0 : (int)(vy[0] + 0.5);
+    y1 = vy[2] >= cb_dos_h ? cb_dos_h : (vy[2] <= 0 ? 0 : (int)(vy[2] + 0.5));
+    if (y1 <= y0) return;
+    sl = vy[2] > vy[0] ? (vx[2] - vx[0]) / (vy[2] - vy[0]) : 0;
+    s1 = vy[1] > vy[0] ? (vx[1] - vx[0]) / (vy[1] - vy[0]) : 0;
+    s2 = vy[2] > vy[1] ? (vx[2] - vx[1]) / (vy[2] - vy[1]) : 0;
+    xa = vx[0] + sl * (y0 + 0.5 - vy[0]);
+    for (y = y0; y < y1; y++, xa += sl) {
+        double py = y + 0.5;
+        int ix0, ix1;
+        xb = py < vy[1] ? vx[0] + s1 * (py - vy[0]) : vx[1] + s2 * (py - vy[1]);
+        if (xa <= xb) { ix0 = cb_fast_clampx(xa); ix1 = cb_fast_clampx(xb); }
+        else { ix0 = cb_fast_clampx(xb); ix1 = cb_fast_clampx(xa); }
+        if (ix1 <= ix0) continue;
+        if (it->stipple) {
+            unsigned w = it->w[y & 3];
+            unsigned char *d = cb_dos_back + (size_t)y * (size_t)cb_dos_w;
+            int x;
+            for (x = ix0; x < ix1; x++) if (((x + y) & 1) == 0) d[x] = (unsigned char)(w >> (8 * (x & 3)));
+        } else
+            cb_fast_row(y, ix0, ix1, it->w[y & 3]);
+    }
+}
+
+/* the same in whole numbers (16.16 edges: no floating point per row), when the corners are within reach of them */
+static void cb_fast_tri(const cb_fi *it) {
+    double vx[3], vy[3], t, sl, s1, s2;
+    int i, j, y, y0, y1, ym, xa, xb, da, db, db2;
+    for (i = 0; i < 3; i++) { vx[i] = it->x[i]; vy[i] = it->y[i]; if (vx[i] < -30000 || vx[i] > 30000) { cb_fast_tri_slow(it); return; } }
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2 - i; j++)
+            if (vy[j] > vy[j + 1]) { t = vy[j]; vy[j] = vy[j + 1]; vy[j + 1] = t; t = vx[j]; vx[j] = vx[j + 1]; vx[j + 1] = t; }
+    y0 = vy[0] <= 0 ? 0 : (int)(vy[0] + 0.5);
+    y1 = vy[2] >= cb_dos_h ? cb_dos_h : (vy[2] <= 0 ? 0 : (int)(vy[2] + 0.5));
+    if (y1 <= y0) return;
+    sl = vy[2] > vy[0] ? (vx[2] - vx[0]) / (vy[2] - vy[0]) : 0;
+    s1 = vy[1] > vy[0] ? (vx[1] - vx[0]) / (vy[1] - vy[0]) : 0;
+    s2 = vy[2] > vy[1] ? (vx[2] - vx[1]) / (vy[2] - vy[1]) : 0;
+    if (fabs(sl) > 30000 || fabs(s1) > 30000 || fabs(s2) > 30000) { cb_fast_tri_slow(it); return; }
+    ym = vy[1] <= 0 ? 0 : (int)(vy[1] + 0.5);
+    if (ym < y0) ym = y0;
+    if (ym > y1) ym = y1;
+    xa = (int)((vx[0] + sl * (y0 + 0.5 - vy[0])) * 65536.0); da = (int)(sl * 65536.0);
+    xb = (int)((vx[0] + s1 * (y0 + 0.5 - vy[0])) * 65536.0); db = (int)(s1 * 65536.0);
+    db2 = (int)(s2 * 65536.0);
+    for (y = y0; y < y1; y++, xa += da, xb += db) {
+        int ix0, ix1;
+        if (y == ym) { xb = (int)((vx[1] + s2 * (y + 0.5 - vy[1])) * 65536.0); db = db2; }
+        if (xa <= xb) { ix0 = (xa + 32768) >> 16; ix1 = (xb + 32768) >> 16; }
+        else { ix0 = (xb + 32768) >> 16; ix1 = (xa + 32768) >> 16; }
+        if (ix0 < 0) ix0 = 0;
+        if (ix1 > cb_dos_w) ix1 = cb_dos_w;
+        if (ix1 <= ix0) continue;
+        if (it->stipple) {
+            unsigned w = it->w[y & 3];
+            unsigned char *d = cb_dos_back + (size_t)y * (size_t)cb_dos_w;
+            int x;
+            for (x = ix0; x < ix1; x++) if (((x + y) & 1) == 0) d[x] = (unsigned char)(w >> (8 * (x & 3)));
+        } else
+            cb_fast_row(y, ix0, ix1, it->w[y & 3]);
+    }
+}
+
+/* ---- the same in whole numbers (16.16): the emulated floating point is what costs; 32 x 32 -> 64 bit products and
+   the CPU's own divide are single instructions there ---- */
+typedef long long cb_ll;
+#define CB_FXM(a, b) ((int)(((cb_ll)(a) * (cb_ll)(b)) >> 16))
+static int cb_fxdiv(int a, int b) {   /* a / b in 16.16; the quotient must fit (|a| < 32768 * |b|) */
+    int q, rem;
+    __asm__("idivl %4" : "=a"(q), "=d"(rem) : "a"((int)((unsigned)a << 16)), "d"(a >> 16), "r"(b) : "cc");
+    (void)rem;
+    return q;
+}
+typedef struct { int x, y, z; } cb_fxv;   /* a corner: the screen position and the view depth, 16.16 */
+#define CB_FX_REACH (16000 << 16)           /* corners farther off the screen than this go the floating way */
+
+static void cb_fast_push_fx(const cb_fxv *a, const cb_fxv *b, const cb_fxv *c, int rr, int gg, int bb, int al, int depth) {
+    int minx = a->x, maxx = a->x, miny = a->y, maxy = a->y, zlo = a->z, zhi = a->z;
+    cb_ll area;
+    cb_fi *it;
+    if (b->x < minx) minx = b->x;
+    if (c->x < minx) minx = c->x;
+    if (b->x > maxx) maxx = b->x;
+    if (c->x > maxx) maxx = c->x;
+    if (b->y < miny) miny = b->y;
+    if (c->y < miny) miny = c->y;
+    if (b->y > maxy) maxy = b->y;
+    if (c->y > maxy) maxy = c->y;
+    if (maxx < 0 || minx > (cb_dos_w << 16) || maxy < 0 || miny > (cb_dos_h << 16)) return;
+    area = (cb_ll)((maxx - minx) >> 16) * (cb_ll)((maxy - miny) >> 16);
+    if (b->z < zlo) zlo = b->z;
+    if (c->z < zlo) zlo = c->z;
+    if (b->z > zhi) zhi = b->z;
+    if (c->z > zhi) zhi = c->z;
+    if (depth < 3 && area > 1200 && (cb_ll)zhi * 10 > (cb_ll)zlo * 13 + 327680) {   /* a big triangle across a lot of depth sorts wrongly as one: cut it in four */
+        cb_fxv ab, bc, ca;
+        ab.x = a->x + ((b->x - a->x) >> 1); ab.y = a->y + ((b->y - a->y) >> 1); ab.z = a->z + ((b->z - a->z) >> 1);
+        bc.x = b->x + ((c->x - b->x) >> 1); bc.y = b->y + ((c->y - b->y) >> 1); bc.z = b->z + ((c->z - b->z) >> 1);
+        ca.x = c->x + ((a->x - c->x) >> 1); ca.y = c->y + ((a->y - c->y) >> 1); ca.z = c->z + ((a->z - c->z) >> 1);
+        cb_fast_push_fx(a, &ab, &ca, rr, gg, bb, al, depth + 1); cb_fast_push_fx(&ab, b, &bc, rr, gg, bb, al, depth + 1);
+        cb_fast_push_fx(&ca, &bc, c, rr, gg, bb, al, depth + 1); cb_fast_push_fx(&ab, &bc, &ca, rr, gg, bb, al, depth + 1);
+        return;
+    }
+    if (al < 32768) return;
+    it = cb_fast_item();
+    if (!it) return;
+    it->ix[0] = a->x; it->ix[1] = b->x; it->ix[2] = c->x; it->iy[0] = a->y; it->iy[1] = b->y; it->iy[2] = c->y;
+    it->kind = 3; it->stipple = al < 64225;
+    {
+        int key = (int)(((((cb_ll)a->z + b->z + c->z) * 21845) >> 16) >> 10);
+        it->key = (unsigned short)(key < 0 ? 0 : (key > 65535 ? 65535 : key));
+    }
+    cb_fast_words(rr, gg, bb, area > 40, it->w);
+}
+
+static void cb_fast_tri_fx(const cb_fi *it) {
+    int vx[3], vy[3], i, j, t, y, y0, y1, ym, xa, xb, da, db, sl, s1, s2, yc, dy, dx;
+    for (i = 0; i < 3; i++) { vx[i] = it->ix[i]; vy[i] = it->iy[i]; }
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2 - i; j++)
+            if (vy[j] > vy[j + 1]) { t = vy[j]; vy[j] = vy[j + 1]; vy[j + 1] = t; t = vx[j]; vx[j] = vx[j + 1]; vx[j + 1] = t; }
+    y0 = (vy[0] + 32768) >> 16; if (y0 < 0) y0 = 0;
+    y1 = (vy[2] + 32768) >> 16; if (y1 > cb_dos_h) y1 = cb_dos_h;
+    if (y1 <= y0) return;
+    ym = (vy[1] + 32768) >> 16;
+    if (ym < y0) ym = y0;
+    if (ym > y1) ym = y1;
+    dy = vy[2] - vy[0]; dx = vx[2] - vx[0];
+    sl = 0; s1 = 0; s2 = 0;
+    if (dy > 0) { if ((cb_ll)(dx < 0 ? -dx : dx) >= ((cb_ll)dy << 15)) goto slow; sl = cb_fxdiv(dx, dy); }
+    dy = vy[1] - vy[0]; dx = vx[1] - vx[0];
+    if (dy > 0) { if ((cb_ll)(dx < 0 ? -dx : dx) >= ((cb_ll)dy << 15)) goto slow; s1 = cb_fxdiv(dx, dy); }
+    dy = vy[2] - vy[1]; dx = vx[2] - vx[1];
+    if (dy > 0) { if ((cb_ll)(dx < 0 ? -dx : dx) >= ((cb_ll)dy << 15)) goto slow; s2 = cb_fxdiv(dx, dy); }
+    yc = (y0 << 16) + 32768 - vy[0];
+    xa = vx[0] + CB_FXM(sl, yc); da = sl;
+    xb = vx[0] + CB_FXM(s1, yc); db = s1;
+    for (y = y0; y < y1; y++, xa += da, xb += db) {
+        int ix0, ix1;
+        if (y == ym) { xb = vx[1] + CB_FXM(s2, (y << 16) + 32768 - vy[1]); db = s2; }
+        if (xa <= xb) { ix0 = (xa + 32768) >> 16; ix1 = (xb + 32768) >> 16; }
+        else { ix0 = (xb + 32768) >> 16; ix1 = (xa + 32768) >> 16; }
+        if (ix0 < 0) ix0 = 0;
+        if (ix1 > cb_dos_w) ix1 = cb_dos_w;
+        if (ix1 <= ix0) continue;
+        if (it->stipple) {
+            unsigned w = it->w[y & 3];
+            unsigned char *d = cb_dos_back + (size_t)y * (size_t)cb_dos_w;
+            int x;
+            for (x = ix0; x < ix1; x++) if (((x + y) & 1) == 0) d[x] = (unsigned char)(w >> (8 * (x & 3)));
+        } else {
+            unsigned w = it->w[y & 3];
+            unsigned char *d = cb_dos_back + (size_t)y * (size_t)cb_dos_w + (size_t)ix0;
+            int n = ix1 - ix0, head = (4 - (ix0 & 3)) & 3, k;
+            if (head > n) head = n;
+            for (k = 0; k < head; k++) *d++ = (unsigned char)(w >> (8 * ((ix0 + k) & 3)));
+            for (n -= head; n >= 4; n -= 4, d += 4) *(unsigned *)d = w;
+            for (k = 0; k < n; k++) *d++ = (unsigned char)(w >> (8 * k));
+        }
+    }
+    return;
+slow:   /* (an edge nearly flat across a wide span) */
+    {
+        cb_fi f = *it;
+        for (i = 0; i < 3; i++) { f.x[i] = (float)(it->ix[i] / 65536.0); f.y[i] = (float)(it->iy[i] / 65536.0); }
+        cb_fast_tri_slow(&f);
+    }
+}
+
+static void cb_fast_draw_line(const cb_fi *it) {
+    int x0 = (int)floor(it->x[0]), y0 = (int)floor(it->y[0]), x1 = (int)floor(it->x[1]), y1 = (int)floor(it->y[1]);
+    int dx = abs(x1 - x0), dy = -abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx + dy, steps = 0;
+    unsigned char q = (unsigned char)it->w[0];
+    for (;;) {
+        int e2;
+        if (x0 >= 0 && y0 >= 0 && x0 < cb_dos_w && y0 < cb_dos_h) cb_dos_back[(size_t)y0 * (size_t)cb_dos_w + (size_t)x0] = q;
+        if ((x0 == x1 && y0 == y1) || steps > 5000) break;
+        e2 = 2 * err; steps++;
+        if (e2 >= dy) { err += dy; x0 += sx; }
+        if (e2 <= dx) { err += dx; y0 += sy; }
+    }
+}
+
+static void cb_fast_flush(void) {
+    size_t n = cb_fn, i;
+    unsigned *a, *b;
+    unsigned cnt[256];
+    int pass;
+    if (n == 0) return;
+    a = (unsigned *)malloc(n * sizeof *a); b = (unsigned *)malloc(n * sizeof *b);
+    if (!a || !b) { free(a); free(b); cb_fn = 0; return; }
+    for (i = 0; i < n; i++) a[i] = (unsigned)i;
+    for (pass = 0; pass < 2; pass++) {   /* least significant byte first: the order stays stable */
+        unsigned *t;
+        int sh = pass * 8, k;
+        memset(cnt, 0, sizeof cnt);
+        for (i = 0; i < n; i++) cnt[(cb_fitems[a[i]].key >> sh) & 255]++;
+        { unsigned sum = 0; for (k = 0; k < 256; k++) { unsigned c = cnt[k]; cnt[k] = sum; sum += c; } }
+        for (i = 0; i < n; i++) b[cnt[(cb_fitems[a[i]].key >> sh) & 255]++] = a[i];
+        t = a; a = b; b = t;
+    }
+    for (i = n; i-- > 0;) {   /* far to near */
+        const cb_fi *it = &cb_fitems[a[i]];
+        if (it->kind == 3) cb_fast_tri_fx(it); else if (it->kind) cb_fast_draw_line(it); else cb_fast_tri(it);
+    }
+    free(a); free(b);
+    cb_fn = 0;
+}
+
 /* a view-space vertex (with its lit colour) -> the screen */
 static cb_sv cb_project(Vector3 v, float r, float g, float b, float a) {
     cb_sv s;
@@ -1896,9 +2380,10 @@ static cb_sv cb_project(Vector3 v, float r, float g, float b, float a) {
         s.y = (1.0 - (v.y / cb_3d_top * 0.5 + 0.5)) * cb_dos_h;
         s.k = 1.0 - z / CB_ORTHO_FAR;
     } else {
-        s.x = (v.x * cb_3d_f / cb_3d_aspect / z * 0.5 + 0.5) * cb_dos_w;
-        s.y = (1.0 - (v.y * cb_3d_f / z * 0.5 + 0.5)) * cb_dos_h;
-        s.k = 1.0 / z;
+        double rz = 1.0 / z;
+        s.x = v.x * rz * cb_pk_x + cb_pk_cx;
+        s.y = cb_pk_cy - v.y * rz * cb_pk_y;
+        s.k = rz;
     }
     s.z = z; s.r = r; s.g = g; s.b = b; s.a = a;
     return s;
@@ -1924,11 +2409,16 @@ static void cb_tri_draw(const cb_cv *c0, const cb_cv *c1, const cb_cv *c2) {
             out[n++] = m;
         }
     }
-    if (n < 3 || !cb_zbuf)
+    if (n < 3 || (!cb_3d_fast && !cb_zbuf))
         return;
     {
         cb_sv s[4];
         for (i = 0; i < n; i++) s[i] = cb_project(out[i].v, out[i].r, out[i].g, out[i].b, out[i].a);
+        if (cb_3d_fast) {
+            cb_fast_push(&s[0], &s[1], &s[2]);
+            if (n == 4) cb_fast_push(&s[0], &s[2], &s[3]);
+            return;
+        }
         cb_tri_screen(&s[0], &s[1], &s[2]);
         if (n == 4) cb_tri_screen(&s[0], &s[2], &s[3]);
     }
@@ -1957,46 +2447,290 @@ static void cb_normal_matrix(const cb_m4 *m, double out[9]) {
 }
 
 /* a triangle list (3 corners each) under `model` (on top of the current matrix): positions, normals, colours (0..255 + alpha) */
-static void cb_draw_tris(const float *pos, const float *nrm, const unsigned char *col, const unsigned short *idx, int tri_count, const cb_m4 *model, cb_rgba tint, bool both) {
-    cb_m4 world = cb_m4_mul(&cb_m_cur, model), mv = cb_m4_mul(&cb_m_view, &world);
+/* a mesh's vertices are shared by its triangles: each is moved into view and lit once per draw (as if seen from the
+   front), the triangles pick them up by index (floating point is what's slow on an emulated PC) */
+static cb_cv *cb_vcache = NULL;
+static unsigned *cb_vstamp = NULL;
+static size_t cb_vcap = 0;
+static unsigned cb_vtick = 0;
+
+static void cb_vertex_lit(const float *nrm, const unsigned char *col, int vi, const double nm[9], cb_rgba tint, bool front, cb_cv *c) {
+    double nx = nrm[vi * 3], ny = nrm[vi * 3 + 1], nz = nrm[vi * 3 + 2];
+    Vector3 n = cb_v3(nm[0] * nx + nm[3] * ny + nm[6] * nz, nm[1] * nx + nm[4] * ny + nm[7] * nz, nm[2] * nx + nm[5] * ny + nm[8] * nz);
+    n = cb_v3_normalize(n);
+    if (!front) n = cb_v3(-n.x, -n.y, -n.z);
+    cb_light_rgb(n, col[vi * 4] * tint.r / 65025.0f, col[vi * 4 + 1] * tint.g / 65025.0f, col[vi * 4 + 2] * tint.b / 65025.0f, col[vi * 4 + 3] * tint.a / 65025.0f, &c->r, &c->g, &c->b, &c->a);
+}
+
+/* the fast renderer's triangles: a mesh's corners are moved into view once per draw; each triangle is lit once from its
+   own (view space) normal, which is also what the back-face test needs. A draw whose bounding sphere is behind the eye
+   or off the screen costs nothing more than the test. Most triangles go through cb_draw_tris_fx (whole numbers, see
+   cb_fast_push_fx); the floating-point version is for what doesn't fit it: a draw far from the origin or very large,
+   orthographic views, and triangles that cross the near plane. */
+static int *cb_vfx = NULL;   /* per vertex: its view-space x, y, z in 16.16 (stamped like cb_vcache) */
+static bool cb_vcache_room(int vi) {
+    if ((size_t)vi >= cb_vcap) {
+        size_t cap = cb_vcap ? cb_vcap : 256;
+        cb_cv *nc;
+        unsigned *ns;
+        int *nf;
+        while (cap <= (size_t)vi) cap *= 2;
+        nc = (cb_cv *)realloc(cb_vcache, cap * sizeof *nc);
+        ns = (unsigned *)realloc(cb_vstamp, cap * sizeof *ns);
+        nf = (int *)realloc(cb_vfx, cap * 3 * sizeof *nf);
+        if (nc) cb_vcache = nc;
+        if (ns) cb_vstamp = ns;
+        if (nf) cb_vfx = nf;
+        if (!nc || !ns || !nf) return false;
+        memset(cb_vstamp + cb_vcap, 0, (cap - cb_vcap) * sizeof *ns);
+        cb_vcap = cap;
+    }
+    return true;
+}
+
+static void cb_draw_tris_fast(const float *pos, const unsigned char *col, const unsigned short *idx, int tri_count, const cb_m4 *mv, const Vector3 *sv, cb_rgba tint, bool both) {
+    double ar = cb_amb * cb_amb_col[0], ag = cb_amb * cb_amb_col[1], ab = cb_amb * cb_amb_col[2];
+    double sr = (1.0 - cb_amb) * cb_sun_col[0], sg = (1.0 - cb_amb) * cb_sun_col[1], sb = (1.0 - cb_amb) * cb_sun_col[2];
+    double tr = tint.r / (3.0 * 65025.0), tg = tint.g / (3.0 * 65025.0), tb = tint.b / (3.0 * 65025.0), ta = tint.a / (3.0 * 65025.0);
+    int t, k;
+    if (cb_fog_dirty) cb_fog_build();
+    if (++cb_vtick == 0) { memset(cb_vstamp, 0, cb_vcap * sizeof *cb_vstamp); cb_vtick = 1; }
+    for (t = 0; t < tri_count; t++) {
+        cb_cv c[3];
+        int vi[3];
+        Vector3 nv;
+        double facing, d, len, lr, lg, lb;
+        float cr, cg, cb2, ca;
+        for (k = 0; k < 3; k++) {
+            vi[k] = idx ? idx[t * 3 + k] : t * 3 + k;
+            if (!cb_vcache_room(vi[k])) return;
+            if (cb_vstamp[vi[k]] != cb_vtick) {
+                cb_vcache[vi[k]].v = cb_m4_pt(mv, cb_v3(pos[vi[k] * 3], pos[vi[k] * 3 + 1], pos[vi[k] * 3 + 2]));
+                cb_vstamp[vi[k]] = cb_vtick;
+            }
+            c[k].v = cb_vcache[vi[k]].v;
+        }
+        nv = cb_v3_cross(cb_v3_sub(c[1].v, c[0].v), cb_v3_sub(c[2].v, c[0].v));
+        facing = cb_3d_ortho ? nv.z : -(nv.x * c[0].v.x + nv.y * c[0].v.y + nv.z * c[0].v.z);   /* > 0: its front faces the eye */
+        if (facing <= 0 && !both)
+            continue;
+        if (c[0].v.z > -CB_NEAR && c[1].v.z > -CB_NEAR && c[2].v.z > -CB_NEAR)
+            continue;   /* wholly behind the eye */
+        len = sqrt(nv.x * nv.x + nv.y * nv.y + nv.z * nv.z);
+        d = len > 1e-12 ? -(nv.x * sv->x + nv.y * sv->y + nv.z * sv->z) / len : 0;
+        if (facing <= 0) d = -d;
+        if (d < 0) d = 0;
+        lr = ar + d * sr; lg = ag + d * sg; lb = ab + d * sb;
+        {
+            const unsigned char *p0 = col + vi[0] * 4, *p1 = col + vi[1] * 4, *p2 = col + vi[2] * 4;
+            cr = (float)((p0[0] + p1[0] + p2[0]) * tr * lr); cg = (float)((p0[1] + p1[1] + p2[1]) * tg * lg);
+            cb2 = (float)((p0[2] + p1[2] + p2[2]) * tb * lb); ca = (float)((p0[3] + p1[3] + p2[3]) * ta);
+        }
+        for (k = 0; k < 3; k++) { c[k].r = cr; c[k].g = cg; c[k].b = cb2; c[k].a = ca; }
+        cb_tri_draw(&c[0], &c[1], &c[2]);
+    }
+}
+
+/* a triangle (corners as 16.16 view-space numbers) the floating-point way: near-plane clipping, wild coordinates */
+static void cb_fx_float_tri(const int *a, const int *b, const int *c, int rr, int gg, int bb, int al) {
+    cb_cv v[3];
+    const int *p[3];
+    int k;
+    p[0] = a; p[1] = b; p[2] = c;
+    for (k = 0; k < 3; k++) {
+        v[k].v = cb_v3(p[k][0] / 65536.0, p[k][1] / 65536.0, p[k][2] / 65536.0);
+        v[k].r = (float)(rr / 65536.0); v[k].g = (float)(gg / 65536.0); v[k].b = (float)(bb / 65536.0); v[k].a = (float)(al / 65536.0);
+    }
+    cb_tri_draw(&v[0], &v[1], &v[2]);
+}
+
+static void cb_draw_tris_fx(const int *fpos, const unsigned char *col, const unsigned short *idx, int tri_count, const cb_m4 *mv, const Vector3 *svf, cb_rgba tint, bool both) {
+    int mm[12], sv[3], ar[3], sr[3], pkx = (int)(cb_pk_x * 65536.0), pky = (int)(cb_pk_y * 65536.0), cx = (int)(cb_pk_cx * 65536.0), cy = (int)(cb_pk_cy * 65536.0);
+    int t, k;
+    static const int pick[12] = {0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14};
+    for (k = 0; k < 12; k++) mm[k] = (int)(mv->m[pick[k]] * 65536.0);
+    sv[0] = (int)(svf->x * 65536.0); sv[1] = (int)(svf->y * 65536.0); sv[2] = (int)(svf->z * 65536.0);
+    for (k = 0; k < 3; k++) { ar[k] = (int)(cb_amb * cb_amb_col[k] * 65536.0); sr[k] = (int)((1.0 - cb_amb) * cb_sun_col[k] * 65536.0); }
+    if (cb_fog_dirty) cb_fog_build();
+    if (++cb_vtick == 0) { memset(cb_vstamp, 0, cb_vcap * sizeof *cb_vstamp); cb_vtick = 1; }
+    for (t = 0; t < tri_count; t++) {
+        int vi[3];
+        const int *a, *b, *c;
+        int e1x, e1y, e1z, e2x, e2y, e2z, n0, n1, n2, sh = 0, d16, rr, gg, bb, al, front, lr, lg, lb, c16;
+        cb_ll nx, ny, nz, am, facing, dotv;
+        unsigned R, G, B, A;
+        const unsigned char *p0, *p1, *p2;
+        for (k = 0; k < 3; k++) {
+            vi[k] = idx ? idx[t * 3 + k] : t * 3 + k;
+            if (!cb_vcache_room(vi[k])) return;
+            if (cb_vstamp[vi[k]] != cb_vtick) {
+                const int *p = fpos + vi[k] * 3;
+                int *o = cb_vfx + vi[k] * 3;
+                o[0] = (int)(((cb_ll)mm[0] * p[0] + (cb_ll)mm[1] * p[1] + (cb_ll)mm[2] * p[2]) >> 16) + mm[3];
+                o[1] = (int)(((cb_ll)mm[4] * p[0] + (cb_ll)mm[5] * p[1] + (cb_ll)mm[6] * p[2]) >> 16) + mm[7];
+                o[2] = (int)(((cb_ll)mm[8] * p[0] + (cb_ll)mm[9] * p[1] + (cb_ll)mm[10] * p[2]) >> 16) + mm[11];
+                cb_vstamp[vi[k]] = cb_vtick;
+            }
+        }
+        a = cb_vfx + vi[0] * 3; b = cb_vfx + vi[1] * 3; c = cb_vfx + vi[2] * 3;
+        e1x = b[0] - a[0]; e1y = b[1] - a[1]; e1z = b[2] - a[2];
+        e2x = c[0] - a[0]; e2y = c[1] - a[1]; e2z = c[2] - a[2];
+        nx = (cb_ll)e1y * e2z - (cb_ll)e1z * e2y; ny = (cb_ll)e1z * e2x - (cb_ll)e1x * e2z; nz = (cb_ll)e1x * e2y - (cb_ll)e1y * e2x;
+        am = nx < 0 ? -nx : nx;
+        if ((ny < 0 ? -ny : ny) > am) am = ny < 0 ? -ny : ny;
+        if ((nz < 0 ? -nz : nz) > am) am = nz < 0 ? -nz : nz;
+        if (am == 0) continue;
+        while (am > 0x3FFFFFFFLL) { am >>= 3; sh += 3; }
+        n0 = (int)(nx >> sh); n1 = (int)(ny >> sh); n2 = (int)(nz >> sh);
+        facing = -((cb_ll)n0 * a[0] + (cb_ll)n1 * a[1] + (cb_ll)n2 * a[2]);   /* > 0: its front faces the eye */
+        if (facing <= 0 && !both) continue;
+        front = (a[2] < -3277) + (b[2] < -3277) + (c[2] < -3277);   /* corners in front of the near plane (0.05) */
+        if (front == 0) continue;
+        {
+            cb_ll sq = (cb_ll)n0 * n0 + (cb_ll)n1 * n1 + (cb_ll)n2 * n2;
+            dotv = -((cb_ll)n0 * sv[0] + (cb_ll)n1 * sv[1] + (cb_ll)n2 * sv[2]);
+            d16 = sq > 0 ? (int)((double)dotv / sqrt((double)sq)) : 0;
+        }
+        if (facing <= 0) d16 = -d16;
+        if (d16 < 0) d16 = 0;
+        if (d16 > 65536) d16 = 65536;
+        lr = ar[0] + CB_FXM(d16, sr[0]); lg = ar[1] + CB_FXM(d16, sr[1]); lb = ar[2] + CB_FXM(d16, sr[2]);
+        p0 = col + vi[0] * 4; p1 = col + vi[1] * 4; p2 = col + vi[2] * 4;
+        R = (unsigned)(p0[0] + p1[0] + p2[0]) * (unsigned)tint.r; G = (unsigned)(p0[1] + p1[1] + p2[1]) * (unsigned)tint.g;
+        B = (unsigned)(p0[2] + p1[2] + p2[2]) * (unsigned)tint.b; A = (unsigned)(p0[3] + p1[3] + p2[3]) * (unsigned)tint.a;
+        c16 = (int)((R * 22017u) >> 16); rr = CB_FXM(c16, lr);   /* (22017 / 65536 = 65536 / (3 * 255 * 255)) */
+        c16 = (int)((G * 22017u) >> 16); gg = CB_FXM(c16, lg);
+        c16 = (int)((B * 22017u) >> 16); bb = CB_FXM(c16, lb);
+        al = (int)((A * 22017u) >> 16);
+        if (cb_fog_density > 0) {
+            int li = (int)(((cb_ll)(-a[2]) - b[2] - c[2]) / 3) >> 12, seen;
+            seen = cb_fog_lut16[li < 0 ? 0 : (li > 4095 ? 4095 : li)];
+            rr = cb_fog_col16[0] + CB_FXM(rr - cb_fog_col16[0], seen); gg = cb_fog_col16[1] + CB_FXM(gg - cb_fog_col16[1], seen); bb = cb_fog_col16[2] + CB_FXM(bb - cb_fog_col16[2], seen);
+        }
+        if (front < 3) { cb_fx_float_tri(a, b, c, rr, gg, bb, al); continue; }
+        {
+            cb_fxv s[3];
+            const int *pv[3];
+            bool wild = false;
+            pv[0] = a; pv[1] = b; pv[2] = c;
+            for (k = 0; k < 3; k++) {
+                int zd = -pv[k][2], ax = pv[k][0] < 0 ? -pv[k][0] : pv[k][0], ay = pv[k][1] < 0 ? -pv[k][1] : pv[k][1];
+                cb_ll sx, sy;
+                if ((ax >> 14) >= zd || (ay >> 14) >= zd) { wild = true; break; }
+                sx = (cb_ll)cx + (((cb_ll)cb_fxdiv(pv[k][0], zd) * pkx) >> 16);
+                sy = (cb_ll)cy - (((cb_ll)cb_fxdiv(pv[k][1], zd) * pky) >> 16);
+                if (sx > CB_FX_REACH || sx < -CB_FX_REACH || sy > CB_FX_REACH || sy < -CB_FX_REACH) { wild = true; break; }
+                s[k].x = (int)sx; s[k].y = (int)sy; s[k].z = zd;
+            }
+            if (wild) { cb_fx_float_tri(a, b, c, rr, gg, bb, al); continue; }
+            cb_fast_push_fx(&s[0], &s[1], &s[2], rr, gg, bb, al, 0);
+        }
+    }
+}
+
+/* a draw in the fast renderer: bounding-sphere test first, then the whole-number or the floating-point triangles */
+static void cb_draw_fast(const float *pos, const int *fpos, const float *bound, const unsigned char *col, const unsigned short *idx, int tri_count, const cb_m4 *model, cb_rgba tint, bool both) {
+    cb_m4 mv = cb_m4_mul_aff(cb_vc_get(), model);
+    Vector3 c = cb_m4_pt(&mv, cb_v3(bound[0], bound[1], bound[2])), sv;
+    double s0 = mv.m[0] * mv.m[0] + mv.m[1] * mv.m[1] + mv.m[2] * mv.m[2], s1 = mv.m[4] * mv.m[4] + mv.m[5] * mv.m[5] + mv.m[6] * mv.m[6], s2 = mv.m[8] * mv.m[8] + mv.m[9] * mv.m[9] + mv.m[10] * mv.m[10];
+    double rs, zc = -c.z;
+    if (s1 > s0) s0 = s1;
+    if (s2 > s0) s0 = s2;
+    rs = bound[3] * sqrt(s0);
+    if (zc + rs < CB_NEAR) return;   /* behind the eye */
+    if (cb_3d_ortho) {
+        if (fabs(c.x) - rs > cb_3d_top * cb_3d_aspect || fabs(c.y) - rs > cb_3d_top) return;
+    } else {
+        if (c.x - cb_fr_tx * zc > rs * cb_fr_hx || -c.x - cb_fr_tx * zc > rs * cb_fr_hx) return;   /* off to a side */
+        if (c.y - cb_fr_ty * zc > rs * cb_fr_hy || -c.y - cb_fr_ty * zc > rs * cb_fr_hy) return;
+    }
+    sv = cb_v3(cb_m_view.m[0] * cb_sun.x + cb_m_view.m[4] * cb_sun.y + cb_m_view.m[8] * cb_sun.z,
+               cb_m_view.m[1] * cb_sun.x + cb_m_view.m[5] * cb_sun.y + cb_m_view.m[9] * cb_sun.z,
+               cb_m_view.m[2] * cb_sun.x + cb_m_view.m[6] * cb_sun.y + cb_m_view.m[10] * cb_sun.z);
+    /* whole numbers when everything stays within 16.16 (and the view is perspective) */
+    if (fpos && !cb_3d_ortho && fabs(c.x) + rs < 16000 && fabs(c.y) + rs < 16000 && fabs(c.z) + rs < 16000 && s0 < 1e6 && cb_pk_x < 30000 && cb_pk_y < 30000
+        && fabs(mv.m[12]) < 16000 && fabs(mv.m[13]) < 16000 && fabs(mv.m[14]) < 16000)
+        cb_draw_tris_fx(fpos, col, idx, tri_count, &mv, &sv, tint, both);
+    else
+        cb_draw_tris_fast(pos, col, idx, tri_count, &mv, &sv, tint, both);
+}
+
+static void cb_draw_tris(const float *pos, const int *fpos, const float *bound, const float *nrm, const unsigned char *col, const unsigned short *idx, int tri_count, const cb_m4 *model, cb_rgba tint, bool both) {
+    cb_m4 world, mv;
     double nm[9];
     int t, k;
     if (!cb_3d_on)
         return;
+    if (cb_3d_fast) { cb_draw_fast(pos, fpos, bound, col, idx, tri_count, model, tint, both); return; }
+    world = cb_m4_mul(&cb_m_cur, model); mv = cb_m4_mul(&cb_m_view, &world);
     cb_normal_matrix(&world, nm);
     if (cb_fog_dirty) cb_fog_build();
+    if (++cb_vtick == 0) { memset(cb_vstamp, 0, cb_vcap * sizeof *cb_vstamp); cb_vtick = 1; }
     for (t = 0; t < tri_count; t++) {
         cb_cv c[3];
-        Vector3 vp[3];
+        int vis[3];
         Vector3 e1, e2, nv;
         double facing;
         bool front;
         for (k = 0; k < 3; k++) {
             int vi = idx ? idx[t * 3 + k] : t * 3 + k;
-            vp[k] = cb_m4_pt(&mv, cb_v3(pos[vi * 3], pos[vi * 3 + 1], pos[vi * 3 + 2]));
+            vis[k] = vi;
+            if ((size_t)vi >= cb_vcap) {
+                size_t cap = cb_vcap ? cb_vcap : 256;
+                cb_cv *nc;
+                unsigned *ns;
+                while (cap <= (size_t)vi) cap *= 2;
+                nc = (cb_cv *)realloc(cb_vcache, cap * sizeof *nc);
+                ns = (unsigned *)realloc(cb_vstamp, cap * sizeof *ns);
+                if (!nc || !ns) return;
+                cb_vcache = nc; cb_vstamp = ns;
+                memset(cb_vstamp + cb_vcap, 0, (cap - cb_vcap) * sizeof *ns);
+                cb_vcap = cap;
+            }
+            if (cb_vstamp[vi] != cb_vtick) {
+                cb_vcache[vi].v = cb_m4_pt(&mv, cb_v3(pos[vi * 3], pos[vi * 3 + 1], pos[vi * 3 + 2]));
+                cb_vertex_lit(nrm, col, vi, nm, tint, true, &cb_vcache[vi]);
+                cb_vstamp[vi] = cb_vtick;
+            }
+            c[k] = cb_vcache[vi];
         }
-        e1 = cb_v3_sub(vp[1], vp[0]); e2 = cb_v3_sub(vp[2], vp[0]);
+        e1 = cb_v3_sub(c[1].v, c[0].v); e2 = cb_v3_sub(c[2].v, c[0].v);
         nv = cb_v3_cross(e1, e2);
-        facing = cb_3d_ortho ? nv.z : -(nv.x * vp[0].x + nv.y * vp[0].y + nv.z * vp[0].z);   /* > 0: its front faces the eye */
+        facing = cb_3d_ortho ? nv.z : -(nv.x * c[0].v.x + nv.y * c[0].v.y + nv.z * c[0].v.z);   /* > 0: its front faces the eye */
         front = facing > 0;
         if (!front && !both)
             continue;
-        for (k = 0; k < 3; k++) {
-            int vi = idx ? idx[t * 3 + k] : t * 3 + k;
-            double nx = nrm[vi * 3], ny = nrm[vi * 3 + 1], nz = nrm[vi * 3 + 2];
-            Vector3 n = cb_v3(nm[0] * nx + nm[3] * ny + nm[6] * nz, nm[1] * nx + nm[4] * ny + nm[7] * nz, nm[2] * nx + nm[5] * ny + nm[8] * nz);
-            float r, g, b, a;
-            n = cb_v3_normalize(n);
-            if (!front) n = cb_v3(-n.x, -n.y, -n.z);
-            cb_light_rgb(n, col[vi * 4] * tint.r / 65025.0f, col[vi * 4 + 1] * tint.g / 65025.0f, col[vi * 4 + 2] * tint.b / 65025.0f, col[vi * 4 + 3] * tint.a / 65025.0f, &r, &g, &b, &a);
-            c[k].v = vp[k]; c[k].r = r; c[k].g = g; c[k].b = b; c[k].a = a;
-        }
+        if (!front)
+            for (k = 0; k < 3; k++)
+                cb_vertex_lit(nrm, col, vis[k], nm, tint, false, &c[k]);
         cb_tri_draw(&c[0], &c[1], &c[2]);
     }
 }
 
 /* ---- shapes: a cube, a sphere, a cylinder and a plane, 1 across, their middle at the origin ---- */
-typedef struct { float *pos, *nrm; unsigned char *col; int tris; } cb_dshape;
+typedef struct { float *pos, *nrm; unsigned char *col; int tris; int *fpos; float bound[4]; } cb_dshape;
+/* fixed-point copies of a mesh's points, and the sphere around them (centre of the box, farthest point) */
+static int *cb_fix_points(const float *pos, int n, float bound[4]) {
+    int *f = (int *)malloc((size_t)(n > 0 ? n : 1) * 3 * sizeof(int));
+    float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f}, r2 = 0;
+    int i, k;
+    for (i = 0; i < n; i++)
+        for (k = 0; k < 3; k++) {
+            float v = pos[i * 3 + k];
+            if (v < lo[k]) lo[k] = v;
+            if (v > hi[k]) hi[k] = v;
+            if (f) f[i * 3 + k] = (int)(v * 65536.0f);
+        }
+    for (k = 0; k < 3; k++) bound[k] = n > 0 ? (lo[k] + hi[k]) * 0.5f : 0;
+    for (i = 0; i < n; i++) {
+        float dx = pos[i * 3] - bound[0], dy = pos[i * 3 + 1] - bound[1], dz = pos[i * 3 + 2] - bound[2], d = dx * dx + dy * dy + dz * dz;
+        if (d > r2) r2 = d;
+    }
+    bound[3] = (float)sqrt((double)r2) * 1.001f + 0.001f;
+    for (i = 0; i < n * 3; i++) if (f && (pos[i] > 30000.0f || pos[i] < -30000.0f)) { free(f); return NULL; }
+    return f;
+}
+
 static cb_dshape cb_dshapes[4];
 static bool cb_dshapes_ready = false;
 
@@ -2080,20 +2814,21 @@ static void cb_dshapes_make(void) {
         cb_gen g;
         cb_gen_shape(k, &g);
         cb_dshapes[k].pos = g.pos; cb_dshapes[k].nrm = g.nrm; cb_dshapes[k].tris = g.n / 3;
+        cb_dshapes[k].fpos = cb_fix_points(g.pos, g.n, cb_dshapes[k].bound);
         cb_dshapes[k].col = (unsigned char *)malloc((size_t)g.n * 4);
         for (i = 0; i < g.n * 4; i++) cb_dshapes[k].col[i] = 255;
     }
     cb_dshapes_ready = true;
 }
 
-static cb_m4 cb_model(Vector3 at, Vector3 size, double turn) {
-    cb_m4 m = cb_m4_id(), r = cb_m4_id();
+static cb_m4 cb_model(Vector3 at, Vector3 size, double turn) {   /* translate * turn about Y * scale */
+    cb_m4 m = cb_m4_id();
     double a = turn * 3.14159265358979323846 / 180.0, c = cos(a), s = sin(a);
-    r.m[0] = c; r.m[8] = s; r.m[2] = -s; r.m[10] = c;   /* about Y */
+    m.m[0] = c * size.x; m.m[2] = -s * size.x;
+    m.m[5] = size.y;
+    m.m[8] = s * size.z; m.m[10] = c * size.z;
     m.m[12] = at.x; m.m[13] = at.y; m.m[14] = at.z;
-    m = cb_m4_mul(&m, &r);
-    r = cb_m4_id(); r.m[0] = size.x; r.m[5] = size.y; r.m[10] = size.z;
-    return cb_m4_mul(&m, &r);
+    return m;
 }
 
 void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba color) {
@@ -2101,12 +2836,12 @@ void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba colo
     cb_dshapes_make();
     if (kind < 0 || kind > 3) kind = 0;
     m = cb_model(at, size, turn);
-    cb_draw_tris(cb_dshapes[kind].pos, cb_dshapes[kind].nrm, cb_dshapes[kind].col, NULL, cb_dshapes[kind].tris, &m, color, false);
+    cb_draw_tris(cb_dshapes[kind].pos, cb_dshapes[kind].fpos, cb_dshapes[kind].bound, cb_dshapes[kind].nrm, cb_dshapes[kind].col, NULL, cb_dshapes[kind].tris, &m, color, false);
 }
 
 /* ---- meshes (the mesh bricks): triangles collected, then built (Finish): the same rules as the raylib backend ---- */
 typedef struct cb_tri { Vector3 p[3]; Vector3 n[3]; cb_rgba c; int own; } cb_tri;
-struct cb_mesh { cb_list *tris; float *pos, *nrm; unsigned char *col; unsigned short *idx; int vcount, tcount; bool built, both, smooth; };
+struct cb_mesh { cb_list *tris; float *pos, *nrm; unsigned char *col; unsigned short *idx; int vcount, tcount; bool built, both, smooth; int *fpos; float bound[4]; bool prepared; };
 
 cb_mesh *cb_mesh_new(void) {
     cb_mesh *m = (cb_mesh *)cb_alloc(sizeof(cb_mesh));
@@ -2236,7 +2971,7 @@ void cb_mesh_finish(cb_mesh *m, bool smooth, bool both_sides, int file, int bric
         }
     cb_mesh_normals(m, true, m->tris);
     m->built = nv > 0 || m->built;
-    m->both = both_sides; m->smooth = smooth;
+    m->both = both_sides; m->smooth = smooth; m->prepared = false;
     cb_list_clear(m->tris);
 }
 
@@ -2244,7 +2979,8 @@ void cb_draw_mesh(cb_mesh *m, Vector3 at, Vector3 size, double turn, cb_rgba tin
     cb_m4 mm;
     if (!m || !m->built || m->vcount == 0) return;
     mm = cb_model(at, size, turn);
-    cb_draw_tris(m->pos, m->nrm, m->col, m->idx, m->tcount, &mm, tint, m->both);
+    if (!m->prepared) { free(m->fpos); m->fpos = cb_fix_points(m->pos, m->vcount, m->bound); m->prepared = true; }
+    cb_draw_tris(m->pos, m->fpos, m->bound, m->nrm, m->col, m->idx, m->tcount, &mm, tint, m->both);
 }
 
 cb_list *cb_mesh_points(const cb_mesh *m) {
@@ -2264,6 +3000,7 @@ void cb_mesh_set_points(cb_mesh *m, const cb_list *points, int file, int brick) 
         m->pos[i * 3] = (float)p->x; m->pos[i * 3 + 1] = (float)p->y; m->pos[i * 3 + 2] = (float)p->z;
     }
     cb_mesh_normals(m, false, NULL);
+    m->prepared = false;
 }
 
 void cb_show_mesh(FILE *f, const void *value) {
@@ -2285,6 +3022,7 @@ static void cb_line3d_view(Vector3 a, Vector3 b, cb_rgba c) {   /* view-space en
     else if (zb < CB_NEAR) { double t = (-CB_NEAR - b.z) / (a.z - b.z); b = cb_v3(b.x + (a.x - b.x) * t, b.y + (a.y - b.y) * t, -CB_NEAR); }
     s0 = cb_project(a, 1, 1, 1, 1); s1 = cb_project(b, 1, 1, 1, 1);
     if (fabs(s0.x) > 1e6 || fabs(s0.y) > 1e6 || fabs(s1.x) > 1e6 || fabs(s1.y) > 1e6) return;
+    if (cb_3d_fast) { cb_fast_line(&s0, &s1, q); return; }
     x0 = (int)floor(s0.x); y0 = (int)floor(s0.y); x1 = (int)floor(s1.x); y1 = (int)floor(s1.y);
     dx = abs(x1 - x0); dy = -abs(y1 - y0); sx = x0 < x1 ? 1 : -1; sy = y0 < y1 ? 1 : -1; err = dx + dy;
     total = dx > -dy ? dx : -dy;
@@ -2292,8 +3030,8 @@ static void cb_line3d_view(Vector3 a, Vector3 b, cb_rgba c) {   /* view-space en
         int e2;
         if (x0 >= 0 && y0 >= 0 && x0 < cb_dos_w && y0 < cb_dos_h) {
             double t = total > 0 ? (double)steps / total : 0, k = s0.k + (s1.k - s0.k) * t;
-            float *zp = cb_zbuf + (size_t)y0 * (size_t)cb_dos_w + (size_t)x0;
-            if ((float)k > *zp) { *zp = (float)k; cb_dos_back[(size_t)y0 * (size_t)cb_dos_w + (size_t)x0] = q; }
+            int *zp = cb_zbuf + (size_t)y0 * (size_t)cb_dos_w + (size_t)x0, zk = cb_zkey(k);
+            if (zk > *zp) { *zp = zk; cb_dos_back[(size_t)y0 * (size_t)cb_dos_w + (size_t)x0] = q; }
         }
         if ((x0 == x1 && y0 == y1) || steps > 5000) break;
         e2 = 2 * err; steps++;
@@ -2304,7 +3042,7 @@ static void cb_line3d_view(Vector3 a, Vector3 b, cb_rgba c) {   /* view-space en
 
 void cb_be_line3d(Vector3 a, Vector3 b, cb_rgba c) {
     cb_m4 mv;
-    if (!cb_3d_on || !cb_zbuf) return;
+    if (!cb_3d_on || (!cb_3d_fast && !cb_zbuf)) return;
     mv = cb_m4_mul(&cb_m_view, &cb_m_cur);
     cb_line3d_view(cb_m4_pt(&mv, a), cb_m4_pt(&mv, b), c);
 }
@@ -2329,10 +3067,10 @@ void cb_be_wire_box(Vector3 at, Vector3 size, cb_rgba c) {
 
 /* ---- render targets (Snapshot): the picture is drawn into a buffer of its own, then saved or made a texture ---- */
 static unsigned char *cb_rt_saved_back = NULL;
-static float *cb_rt_saved_z = NULL;
+static int *cb_rt_saved_z = NULL;
 static int cb_rt_saved_w = 0, cb_rt_saved_h = 0;
 static unsigned char *cb_rt_back = NULL;
-static float *cb_rt_z = NULL;
+static int *cb_rt_z = NULL;
 static int cb_rt_w = 0, cb_rt_h = 0;
 static bool cb_rt_transparent = false, cb_rt_on = false;
 
@@ -2340,7 +3078,7 @@ void cb_be_target_begin(int width, int height) {
     cb_rt_saved_back = cb_dos_back; cb_rt_saved_z = cb_zbuf; cb_rt_saved_w = cb_dos_w; cb_rt_saved_h = cb_dos_h;
     free(cb_rt_back); free(cb_rt_z);
     cb_rt_back = (unsigned char *)calloc((size_t)width * (size_t)height, 1);
-    cb_rt_z = (float *)calloc((size_t)width * (size_t)height, sizeof(float));
+    cb_rt_z = (int *)calloc((size_t)width * (size_t)height, sizeof(int));
     cb_rt_w = width; cb_rt_h = height; cb_rt_transparent = false; cb_rt_on = true;
     cb_dos_back = cb_rt_back; cb_zbuf = cb_rt_z; cb_dos_w = width; cb_dos_h = height;
     cb_zdirty = true;

@@ -17,6 +17,8 @@ func _init() -> void:
 		var copy := OS.get_user_data_dir().path_join("prebuild").path_join(name)
 		_remove_tree(copy)
 		CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/" + name), copy)
+		if _target_of(copy) != "native":
+			continue  # (an MS-DOS example: built for its Target when run)
 		var r := ProjectBuild.generate(copy)
 		if not r.errors.is_empty():
 			printerr("%s: problems, not prebuilt: %s" % [name, r.errors.map(func(e): return e.msg)])
@@ -38,6 +40,12 @@ func _init() -> void:
 		built += 1
 	print("%d example(s) prebuilt, %d failed" % [built, failed])
 	quit(failed)
+
+
+static func _target_of(dir: String) -> String:
+	var cf := ConfigFile.new()
+	cf.load(dir.path_join("project.cbproj"))
+	return str(cf.get_value("build", "target", "native"))
 
 
 static func _remove_tree(path: String) -> void:

@@ -1,0 +1,12 @@
+[project]
+
+name="Net Gems (MS-DOS)"
+version="1.0"
+
+[run]
+
+args=""
+
+[build]
+
+target="dos"

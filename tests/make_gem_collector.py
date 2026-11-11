@@ -6,6 +6,10 @@ import json, sys, os
 out_dir = sys.argv[1]
 test_shot = len(sys.argv) > 2  # a test copy: screenshot at frame 40, then quit
 auto = len(sys.argv) > 3  # holds D, 2 s rounds, screenshot at frame 150 (game over)
+# DOS=1: the MS-DOS example (tests/make_dos_examples.py): a 320 x 200 window (VGA), 30 frames a second, a coarser
+# ground (software 3D on an emulated PC is slow: pixels and triangles are what cost)
+dos = os.environ.get("DOS") == "1"
+W, H, Q = (320, 200, 2) if dos else (960, 540, 1)
 nodes=[]; nid=[0]
 def node(t,fields=None,args=None,outs=None,links=None,note=None):
     nid[0]+=1; i=nid[0]
@@ -53,12 +57,12 @@ link(fg,"out",[g1,g2,g3,g4,g5])
 
 # ---- When program starts: window, meshes, the round
 main=[]
-main.append(node("window",{},{"width":I(960),"height":I(540),"title":S("Gem Collector"),"fps":I(60)}))
+main.append(node("window",{},{"width":I(W),"height":I(H),"title":S("Gem Collector"),"fps":I(30 if dos else 60)}))
 # the ground: a 20 x 20 grid of quads, Smooth, then bent into hills with Mesh vertices
 main.append(node("begin_mesh",{},{},{"mesh":"ground"},note="The arena floor: a flat grid first"))
-fx=node("for",{},{"from":I(-10),"to":I(10),"step":I(1)},{"index":"gx"})
-fz=node("for",{},{"from":I(-10),"to":I(10),"step":I(1)},{"index":"gz"})
-q=node("add_mesh",{"kind":"Quad"},{"mesh":V("ground"),"a":V3("gx, 0, gz"),"b":V3("gx + 1, 0, gz"),"c":V3("gx + 1, 0, gz + 1"),"d":V3("gx, 0, gz + 1"),"color":S("#5aa846")})
+fx=node("for",{},{"from":I(-10),"to":I(8 if dos else 10),"step":I(Q)},{"index":"gx"})
+fz=node("for",{},{"from":I(-10),"to":I(8 if dos else 10),"step":I(Q)},{"index":"gz"})
+q=node("add_mesh",{"kind":"Quad"},{"mesh":V("ground"),"a":V3("gx, 0, gz"),"b":V3("gx + %d, 0, gz" % Q),"c":V3("gx + %d, 0, gz + %d" % (Q, Q)),"d":V3("gx, 0, gz + %d" % Q),"color":S("#5aa846")})
 link(fx,"loop",[fz]); link(fz,"loop",[q])
 main.append(fx)
 main.append(node("finish_mesh",{"shading":"Smooth","sides":"One side"},{"mesh":V("ground")}))
@@ -162,13 +166,17 @@ link(d3,"draw",dl)
 fr.append(d3)
 fr.append(formula("time_left > 0 ? (int)ceil(time_left) : 0","secs","int"))
 fr.append(node("text",{"op":"Format","format":"Gems: {}     Time: {}     Best: {}"},{"first":V("score"),"second":V("secs"),"third":V("best")},{"result":"hud"}))
-fr.append(text(18,14,30,"#1b1b1b",V("hud")))
-fr.append(text(18,52,18,"#37474f",S("WASD to move. Collect the gems before the time runs out!")))
+if dos:
+    fr.append(text(4,2,16,"#1b1b1b",V("hud")))
+    fr.append(text(4,20,16,"#37474f",S("WASD: move")))
+else:
+    fr.append(text(18,14,30,"#1b1b1b",V("hud")))
+    fr.append(text(18,52,18,"#37474f",S("WASD to move. Collect the gems before the time runs out!")))
 over=cond("is true",V("over"))
-link(over,"true",[node("draw",{"shape":"Rectangle"},{"x":I(0),"y":I(190),"width":I(960),"height":I(150),"color":S("#000000aa")}),
+link(over,"true",[node("draw",{"shape":"Rectangle"},{"x":I(0),"y":I(60 if dos else 190),"width":I(W),"height":I(60 if dos else 150),"color":S("#000000aa")}),
                   node("text",{"op":"Format","format":"Time's up! Gems collected: {}"},{"first":V("score")},{"result":"msg"}),
-                  text(270,220,36,"WHITE",V("msg")),
-                  text(355,280,26,"GOLD",S("Press R to play again"))])
+                  text(12 if dos else 270,70 if dos else 220,16 if dos else 36,"WHITE",V("msg")),
+                  text(60 if dos else 355,96 if dos else 280,16 if dos else 26,"GOLD",S("Press R to play again"))])
 fr.append(over)
 if test_shot:
     fr.append(addv("frames",I(1)))
