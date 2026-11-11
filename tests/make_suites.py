@@ -509,6 +509,14 @@ def graphics():
     for m in ["Captured", "Hidden", "Visible"]:
         s.b("mouse_mode", {"mode": m})
     s.say("mouse_mode", "Captured, Hidden, Visible")
+    # Graphics setting (2026-11-11, round 3): every setting changed and put back (what they look like: cases gfx_runtime)
+    for sh in ["toon", "unlit", "wire", "lit"]:
+        s.b("look", {"what": "Shading", "shading": sh})
+    for sp in ["mixed", "full", "off"]:
+        s.b("look", {"what": "Splatting", "splat": sp})
+    s.b("look", {"what": "Pixel size"}, {"pixel": I(2)})
+    s.b("look", {"what": "Pixel size"}, {"pixel": I(1)})
+    s.say("look", "shading toon / unlit / wire / lit, splatting mixed / full / off, pixel size 2 then 1")
     # Pause game (2026-11-08): every mode (what pausing does: case pause)
     s.b("pause", {"do": "Pause"})
     s.b("pause", {"do": "Is paused"}, {}, {"result": "p1"})

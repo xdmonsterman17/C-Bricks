@@ -1046,7 +1046,7 @@ func build_all() -> void:
 	# Each target gets its own generated C (MS-DOS draws with its own backend, the rest with raylib's).
 	var srcs_by := {}
 	for t in Toolchains.TARGETS:
-		if t.id == "native" or Toolchains.resolve_command(t.id) == "" or not ProjectBuild.target_problems(_build, t.id).is_empty():
+		if t.id == "native" or (t.id == "dos" and not (_show_dos or _dos_open)) or Toolchains.resolve_command(t.id) == "" or not ProjectBuild.target_problems(_build, t.id).is_empty():
 			continue
 		var kind := "dos" if t.id == "dos" else "native"
 		if not srcs_by.has(kind):
@@ -1670,7 +1670,8 @@ func _update_target_state() -> void:
 		var ok := Toolchains.resolve_command(Toolchains.TARGETS[i].id) != ""
 		_target.set_item_text(at, Toolchains.TARGETS[i].name + ("" if ok else "  (not installed)"))
 	var id := _current_target()
-	_run_btn.visible = Toolchains.resolve_runner(id) != ""
+	if _run_btn != null:  # (the first fill runs while the toolbar is still being built)
+		_run_btn.visible = Toolchains.resolve_runner(id) != ""
 	_target.tooltip_text = "Compiles with: %s" % (Toolchains.resolve_command(id) if Toolchains.resolve_command(id) != "" else "nothing found (see Toolchains)")
 
 
@@ -1838,7 +1839,19 @@ func _open_project_settings() -> void:
 	(_project_dialog.find_child("PDosScreen", true, false) as OptionButton).select(maxi(0, DOS_SCREENS.find(int(cf.get_value("dos", "screen", 0)))))
 	(_project_dialog.find_child("PBackend", true, false) as OptionButton).select(maxi(0, BACKEND_IDS.find(str(cf.get_value("graphics", "backend", "auto")))))
 	(_project_dialog.find_child("PShowDos", true, false) as CheckBox).button_pressed = _show_dos
+	var gfx := CBProject.graphics_settings(cf)
+	(_project_dialog.find_child("PShading", true, false) as OptionButton).select(CBProject.SHADINGS.find(gfx.shading))
+	(_project_dialog.find_child("PSplat", true, false) as OptionButton).select(CBProject.SPLATS.find(gfx.splat))
+	(_project_dialog.find_child("PSplatSize", true, false) as SpinBox).value = gfx.splat_size
+	(_project_dialog.find_child("PSplatDensity", true, false) as SpinBox).value = gfx.splat_density
+	(_project_dialog.find_child("PSplatShape", true, false) as OptionButton).select(CBProject.SPLAT_SHAPES.find(gfx.splat_shape))
+	(_project_dialog.find_child("PPixel", true, false) as OptionButton).select(CBProject.PIXELS.find(gfx.pixel))
+	(_project_dialog.find_child("PWindow", true, false) as OptionButton).select(CBProject.WINDOWS.find(gfx.window))
+	(_project_dialog.find_child("PMsaa", true, false) as CheckBox).button_pressed = gfx.msaa
+	(_project_dialog.find_child("PVsync", true, false) as CheckBox).button_pressed = gfx.vsync
+	_refresh_look_rows()
 	_refresh_backend_rows()
+	_refresh_dos_options()
 	_project_dialog.popup_centered(Vector2i(760, 0))
 
 
@@ -1848,6 +1861,15 @@ func _save_project_settings() -> void:
 	cf.set_value("project", "version", (_project_dialog.find_child("PVersion", true, false) as LineEdit).text.strip_edges())
 	cf.set_value("run", "args", (_project_dialog.find_child("PArgs", true, false) as LineEdit).text.strip_edges())
 	cf.set_value("graphics", "backend", BACKEND_IDS[(_project_dialog.find_child("PBackend", true, false) as OptionButton).selected])
+	cf.set_value("graphics", "shading", CBProject.SHADINGS[(_project_dialog.find_child("PShading", true, false) as OptionButton).selected])
+	cf.set_value("graphics", "splat", CBProject.SPLATS[(_project_dialog.find_child("PSplat", true, false) as OptionButton).selected])
+	cf.set_value("graphics", "splat_size", (_project_dialog.find_child("PSplatSize", true, false) as SpinBox).value)
+	cf.set_value("graphics", "splat_density", (_project_dialog.find_child("PSplatDensity", true, false) as SpinBox).value)
+	cf.set_value("graphics", "splat_shape", CBProject.SPLAT_SHAPES[(_project_dialog.find_child("PSplatShape", true, false) as OptionButton).selected])
+	cf.set_value("graphics", "pixel", CBProject.PIXELS[(_project_dialog.find_child("PPixel", true, false) as OptionButton).selected])
+	cf.set_value("graphics", "window", CBProject.WINDOWS[(_project_dialog.find_child("PWindow", true, false) as OptionButton).selected])
+	cf.set_value("graphics", "msaa", (_project_dialog.find_child("PMsaa", true, false) as CheckBox).button_pressed)
+	cf.set_value("graphics", "vsync", (_project_dialog.find_child("PVsync", true, false) as CheckBox).button_pressed)
 	cf.set_value("dos", "screen", DOS_SCREENS[(_project_dialog.find_child("PDosScreen", true, false) as OptionButton).selected])
 	CBProject.save_config(project_dir, cf)
 	_set_show_dos((_project_dialog.find_child("PShowDos", true, false) as CheckBox).button_pressed)
@@ -2436,6 +2458,24 @@ func _row(parent: Control, label: String) -> HBoxContainer:
 	return row
 
 
+## The splat size / density / shape row shows only while splatting is on.
+func _refresh_look_rows() -> void:
+	(_project_dialog.find_child("PSplatRow", true, false) as Control).visible = (_project_dialog.find_child("PSplat", true, false) as OptionButton).selected > 0
+	_project_dialog.reset_size()
+
+
+## MS-DOS backend entry (and its wording) only while MS-DOS is shown: the dialog's checkbox, or a project that targets it.
+func _refresh_dos_options() -> void:
+	var on := (_project_dialog.find_child("PShowDos", true, false) as CheckBox).button_pressed or _dos_open
+	var pick := _project_dialog.find_child("PBackend", true, false) as OptionButton
+	var i := BACKEND_IDS.find("dos")
+	pick.set_item_disabled(i, not on)
+	if not on and pick.selected == i:
+		pick.select(0)
+		_refresh_backend_rows()
+	pick.tooltip_text = "What draws and plays a graphics project. Automatic follows the Target%s. A backend the Target can't use is a problem." % (" (MS-DOS: its own software renderer; everything else: raylib)" if on else " (raylib)")
+
+
 ## Shows the MS-DOS screen only when the project builds with the MS-DOS backend, and says which backend a build will use.
 func _refresh_backend_rows() -> void:
 	var pick: String = BACKEND_IDS[(_project_dialog.find_child("PBackend", true, false) as OptionButton).selected]
@@ -2567,6 +2607,67 @@ func _build_dialogs() -> void:
 	binfo.add_theme_font_size_override(&"font_size", 12)
 	binfo.modulate.a = 0.75
 	pv.add_child(binfo)
+	# Graphics settings (2026-11-11): how the raylib backend draws and opens its window; written to project.cbproj's
+	# [graphics] and into cbricks.h as CB_* defines (ProjectBuild.gfx_defines)
+	_section(pv, "Look")
+	var shade_pick := OptionButton.new()
+	shade_pick.name = "PShading"
+	for n in CBProject.SHADING_NAMES:
+		shade_pick.add_item(n)
+	shade_pick.tooltip_text = "How 3D shapes and meshes are lit: Lit (the sun, ambient light and fog), Toon (the light in three steps), Unlit (flat colours) or Wireframe."
+	_row(pv, "Shading").add_child(shade_pick)
+	var splat_pick := OptionButton.new()
+	splat_pick.name = "PSplat"
+	for n in CBProject.SPLAT_NAMES:
+		splat_pick.add_item(n)
+	splat_pick.tooltip_text = "Point splatting: a shape or mesh drawn as a cloud of small discs over its surface instead of filled triangles. Mixed adds a Splat checkbox to every Shape3D and Mesh3D (Properties); Full splats them all."
+	splat_pick.item_selected.connect(func(_i: int) -> void: _refresh_look_rows())
+	_row(pv, "Splatting").add_child(splat_pick)
+	var srow := _row(pv, "Splats")
+	srow.name = "PSplatRow"
+	var ssize := SpinBox.new()
+	ssize.name = "PSplatSize"
+	ssize.min_value = 0.005
+	ssize.max_value = 2.0
+	ssize.step = 0.005
+	ssize.suffix = "units wide"
+	ssize.tooltip_text = "How wide one splat is, in world units (it shrinks with distance)."
+	srow.add_child(ssize)
+	var sdens := SpinBox.new()
+	sdens.name = "PSplatDensity"
+	sdens.min_value = 1
+	sdens.max_value = 2000
+	sdens.step = 1
+	sdens.suffix = "per unit²"
+	sdens.tooltip_text = "How many splats per square world unit of surface. Splat width and density together make it solid or sparse; more points cost more to draw."
+	srow.add_child(sdens)
+	var sshape := OptionButton.new()
+	sshape.name = "PSplatShape"
+	sshape.add_item("Round")
+	sshape.add_item("Square")
+	srow.add_child(sshape)
+	var pix_pick := OptionButton.new()
+	pix_pick.name = "PPixel"
+	for n in CBProject.PIXEL_NAMES:
+		pix_pick.add_item(n)
+	pix_pick.tooltip_text = "Low-res look: the game draws into a frame this many times smaller than the window and stretches it up with hard pixels. The window can then be resized."
+	_row(pv, "Pixel size").add_child(pix_pick)
+	var win_pick := OptionButton.new()
+	win_pick.name = "PWindow"
+	for n in CBProject.WINDOW_NAMES:
+		win_pick.add_item(n)
+	_row(pv, "Window").add_child(win_pick)
+	var qrow := _row(pv, "Quality")
+	var msaa := CheckBox.new()
+	msaa.name = "PMsaa"
+	msaa.text = "Smooth edges (MSAA 4x)"
+	msaa.tooltip_text = "Antialiasing. Not used with a Pixel size (those are meant to be hard)."
+	qrow.add_child(msaa)
+	var vsync := CheckBox.new()
+	vsync.name = "PVsync"
+	vsync.text = "VSync"
+	vsync.tooltip_text = "Wait for the screen's refresh (no tearing)."
+	qrow.add_child(vsync)
 	var drow := _row(pv, "MS-DOS screen")
 	drow.name = "PDosRow"
 	var dos_pick := OptionButton.new()
@@ -2579,6 +2680,7 @@ func _build_dialogs() -> void:
 	show_dos.name = "PShowDos"
 	show_dos.text = "Show MS-DOS (experimental): the target, its examples, DJGPP and DOSBox-X (all projects)"
 	pv.add_child(show_dos)
+	show_dos.toggled.connect(func(_on: bool) -> void: _refresh_dos_options())
 	_project_dialog.add_child(pv)
 	_project_dialog.confirmed.connect(_save_project_settings)
 	add_child(_project_dialog)

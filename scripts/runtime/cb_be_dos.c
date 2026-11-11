@@ -772,6 +772,9 @@ void cb_be_begin_frame(void) {
 }
 
 void cb_be_flush(void) { }
+void cb_be_post(double vignette, double scanlines, double grain, double posterize, double bloom, double curve, double outline, double dither, double snap) { (void)vignette; (void)scanlines; (void)grain; (void)posterize; (void)bloom; (void)curve; (void)outline; (void)dither; (void)snap; }
+void cb_be_set_look(int what, int value) { (void)what; (void)value; }
+int cb_be_splat_mode(void) { return 0; }
 
 void cb_be_end_frame(void) {
     uclock_t now;
@@ -1872,6 +1875,7 @@ void cb_be_begin_3d(Vector3 position, Vector3 target, double fov, bool ortho) {
     if (!cb_zbuf) cb_zbuf = (int *)calloc((size_t)cb_dos_w * (size_t)cb_dos_h, sizeof(int));
     if (cb_zbuf && cb_zdirty) memset(cb_zbuf, 0, (size_t)cb_dos_w * (size_t)cb_dos_h * sizeof(int));
 }
+void cb_be_splat(bool on) { (void)on; }  /* (no point splatting in the software renderer) */
 void cb_be_end_3d(void) {
     if (cb_3d_on && cb_3d_fast) cb_fast_flush();
     cb_3d_on = false; cb_3d_fast = false; cb_zdirty = true;

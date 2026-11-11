@@ -133,6 +133,46 @@ static func load_config(dir: String) -> ConfigFile:
 	return cf
 
 
+## Project Settings > Graphics (2026-11-11), in project.cbproj's [graphics]: id lists for the dropdowns, then
+## the defaults. They become CB_* defines in cbricks.h (`ProjectBuild.gfx_defines`).
+const SHADINGS := ["lit", "toon", "unlit", "wire"]
+const SHADING_NAMES := ["Lit", "Toon (stepped light)", "Unlit", "Wireframe"]
+const SPLATS := ["off", "mixed", "full"]
+const SPLAT_NAMES := ["No splatting", "Mixed (a checkbox on each object)", "Full splatting (every object)"]
+const PIXELS := [1, 2, 3, 4, 6, 8]
+const PIXEL_NAMES := ["Off (full resolution)", "2 x 2", "3 x 3", "4 x 4", "6 x 6", "8 x 8"]
+const WINDOWS := ["fixed", "resizable", "fullscreen", "borderless"]
+const WINDOW_NAMES := ["Fixed size", "Resizable", "Fullscreen", "Borderless window"]
+const SPLAT_SHAPES := ["round", "square"]
+
+
+static func graphics_settings(cf: ConfigFile) -> Dictionary:
+	var g := {
+		"shading": str(cf.get_value("graphics", "shading", "lit")),
+		"splat": str(cf.get_value("graphics", "splat", "off")),
+		"splat_size": float(cf.get_value("graphics", "splat_size", 0.08)),
+		"splat_density": float(cf.get_value("graphics", "splat_density", 200.0)),
+		"splat_shape": str(cf.get_value("graphics", "splat_shape", "round")),
+		"pixel": int(cf.get_value("graphics", "pixel", 1)),
+		"msaa": bool(cf.get_value("graphics", "msaa", false)),
+		"vsync": bool(cf.get_value("graphics", "vsync", false)),
+		"window": str(cf.get_value("graphics", "window", "fixed")),
+	}
+	if g.shading not in SHADINGS:
+		g.shading = "lit"
+	if g.splat not in SPLATS:
+		g.splat = "off"
+	if g.splat_shape not in SPLAT_SHAPES:
+		g.splat_shape = "round"
+	if g.window not in WINDOWS:
+		g.window = "fixed"
+	if g.pixel not in PIXELS:
+		g.pixel = 1
+	g.splat_size = clampf(g.splat_size, 0.002, 5.0)
+	g.splat_density = clampf(g.splat_density, 0.1, 5000.0)
+	return g
+
+
 static func save_config(dir: String, cf: ConfigFile) -> Error:
 	return cf.save(dir.path_join(FILE))
 

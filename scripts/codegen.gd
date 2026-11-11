@@ -1419,7 +1419,7 @@ func _list(id: int, d: int, ctx: Dictionary) -> String:
 
 ## Bricks that draw, read the keyboard / mouse or load media: a dedicated server
 ## (--server: no window) skips them (their outputs keep their values).
-const WINDOW_ONLY := ["clear", "draw", "input", "mouse", "mouse_mode", "key_direction", "load_texture", "camera3d", "draw3d", "shape3d", "snapshot", "finish_mesh", "mesh_vertices", "sound", "music", "view2d"]
+const WINDOW_ONLY := ["look", "clear", "draw", "input", "mouse", "mouse_mode", "key_direction", "load_texture", "camera3d", "draw3d", "shape3d", "snapshot", "finish_mesh", "mesh_vertices", "sound", "music", "view2d"]
 
 
 ## Graphics bricks (they call cbricks_gfx.c, which calls the target's backend). Colors are names or #rrggbb, read by cb_color() (cbricks_gfx.c).
@@ -1448,6 +1448,11 @@ func _graphics_brick(id: int, d: int, ctx: Dictionary) -> String:
 			s += ind + "    cb_frame_end();%s\n" % (MARK % id)
 			s += ind + "}%s\n" % (MARK % id)
 			return s + _lines(id, d, "if (!cb_headless) cb_window_end();")
+		"look":
+			match str(f.get("what", "Shading")):
+				"Splatting": return _lines(id, d, "cb_graphics_setting(1, %d);" % maxi(CBProject.SPLATS.find(str(f.get("splat", "off"))), 0))
+				"Pixel size": return _lines(id, d, "cb_graphics_setting(2, (int)(%s));" % a.call("pixel"))
+			return _lines(id, d, "cb_graphics_setting(0, %d);" % maxi(CBProject.SHADINGS.find(str(f.get("shading", "lit"))), 0))
 		"close_window":
 			return _lines(id, d, "cb_close_window();  /* the Game loop ends after this frame */")
 		"pause":

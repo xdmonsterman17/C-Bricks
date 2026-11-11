@@ -4,7 +4,7 @@ official download (DJGPP, DOSBox-X: built here), their archives for a GitHub rel
 
     python3 tools/make_toolchain_release.py [--tag toolchains-1] [--no-archives]
 
-Archives go to build/release/ (from build/toolchains, which export.sh gathers: djgpp/, dosbox-x/); upload them to the
+Archives go to build/release/ (from build/toolchains, which export-editor.sh gathers: djgpp/, dosbox-x/); upload them to the
 release named by --tag (the manifest's URLs point there):  gh release create toolchains-1 build/release/*
 zig (ziglang.org), CMake (Kitware's releases) and Emscripten (emsdk's tag) are downloaded from their own sites: the
 manifest only records their URLs, sizes and sha256. Needs the network (zig's index.json, CMake's SHA-256 file)."""

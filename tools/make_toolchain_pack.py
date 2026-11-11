@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Packs the bundled toolchains (a staging folder) for export.sh, which puts the result inside the editor's
+"""Packs the bundled toolchains (a staging folder) for export-editor.sh, which puts the result inside the editor's
 executable (res://toolchains_pack/). The editor unpacks it on first use (Toolchains.unpack).
 Files: toolchains.pak (every file zlib-compressed on its own, one after another: a zip's by-name lookup is too slow
 for 20,000 files in Godot's reader), toolchains.idx (one line per file: offset, compressed size, size,

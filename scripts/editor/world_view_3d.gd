@@ -2,7 +2,8 @@ class_name WorldView3D
 extends SubViewportContainer
 ## The 3D screen (Godot's 3D viewport): the scene's objects (copies of other scenes opened out) drawn with Godot's
 ## own 3D as the program will draw them (Shape3Ds' shapes, sizes, colors, placed under
-## their parent Spatial3Ds; Camera3Ds and Light3Ds as small markers), a grid, and
+## their parent Spatial3Ds; Camera3Ds and Light3Ds as screen-sized icons at their place), the
+## Environment's fog, sky and post effects (PostFx), a grid, and
 ## an editor camera: right-drag orbits, middle-drag (or Shift + right-drag) pans,
 ## the wheel zooms, F frames the selected object. Left-click selects (the Scene tree
 ## and Properties follow); the selected object's X / Y / Z arrows drag its position
@@ -14,6 +15,14 @@ const AXES := [Vector3.RIGHT, Vector3.UP, Vector3.BACK]
 const NO_ENVIRONMENT := "#30343c"
 const AXIS_COLORS := [Color(0.95, 0.3, 0.3), Color(0.4, 0.9, 0.35), Color(0.35, 0.55, 1.0)]
 const ARROW := 1.5
+## A Camera3D's and a Light3D's place is an icon (screen-sized, always facing the view, drawn on top), not a model.
+const ICON_PX := 30.0   # how big an icon is on the screen
+const ICON_HIT := 16.0  # how near (px) a click has to be to pick it
+const ICON_SVGS := {
+	"camera": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="1.5" y="5" width="9" height="7" rx="1.2" fill="#8ec5ff"/><path d="M10.5 7.4 14.5 5v7l-4-2.4z" fill="#8ec5ff" fill-opacity=".75"/><circle cx="4" cy="3.4" r="1.6" fill="#8ec5ff"/><circle cx="8" cy="3.4" r="1.6" fill="#8ec5ff"/></svg>',
+	"light": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3.2" fill="#ffd54f"/><g stroke="#ffd54f" stroke-width="1.6" stroke-linecap="round"><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6 13 13M3 13l1.4-1.4M11.6 4.4 13 3"/></g></svg>',
+}
+static var _icon_textures := {}
 
 var context: Context = null
 var _vp: SubViewport = null
@@ -23,6 +32,11 @@ var _overlay: Node3D = null
 var _cam: Camera3D = null
 var _env: Environment = null
 var _sun: DirectionalLight3D = null
+var _post: ColorRect = null      # the Environment's post effects (PostFx)
+var _post_btn: CheckBox = null   # "Effects": the preview of them on / off (they tint the grid and gizmos too)
+var _look: Dictionary = {}       # the lighting() of the last rebuild
+var show_post := true
+var _icons := {}                 # object id -> its icon (Sprite3D)
 var _yaw := 0.6
 var _pitch := -0.55
 var _dist := 18.0
@@ -68,7 +82,20 @@ func _init() -> void:
 	_root.add_child(_objects)
 	_overlay = Node3D.new()
 	_root.add_child(_overlay)
+	_post = PostFx.make()
+	add_child(_post)
+	_post_btn = CheckBox.new()
+	_post_btn.text = "Effects"
+	_post_btn.tooltip_text = "Preview the Environment's post effects (vignette, bloom...) over this view. They also tint the grid and the gizmos: turn them off to work."
+	_post_btn.button_pressed = true
+	_post_btn.visible = false
+	_post_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 8)
+	_post_btn.toggled.connect(func(on: bool) -> void:
+		show_post = on
+		_apply_post())
+	add_child(_post_btn)
 	_place_camera()
+	resized.connect(_scale_icons)
 
 
 func _ready() -> void:
@@ -106,6 +133,8 @@ static func _unshaded(on_top := false) -> StandardMaterial3D:
 ## focus. W / S along where the camera looks, A / D sideways, Q / E down / up; Shift: 3x.
 ## Speed grows with the zoom (far out: faster).
 func _process(delta: float) -> void:
+	if _post.visible:
+		PostFx.update_rect(_post)  # (the view may have moved with its panels)
 	if _looking and (not Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) or not is_visible_in_tree()):
 		_looking = false  # (the release went elsewhere: let the pointer go anyway)
 		_end_look()
@@ -150,6 +179,7 @@ func _place_camera() -> void:
 	var dir := Vector3(cos(_pitch) * sin(_yaw), -sin(_pitch), cos(_pitch) * cos(_yaw))
 	var at := _pivot + dir * _dist
 	_cam.transform = Transform3D(Basis.looking_at(_pivot - at, Vector3.UP), at)  # (works before it's in the tree)
+	_scale_icons()
 
 
 ## Draws the world file again (after it changed, or a project opened).
@@ -159,6 +189,7 @@ func rebuild() -> void:
 	_picks.clear()
 	var world: Dictionary = context.world_flat  # (copies of other scenes opened out)
 	build_parts(_objects, world, {}, _picks)
+	_icons.clear()
 	var l := lighting(world)
 	var ids := WorldValues.by_id(world)
 	for o in world.get("objects", []):
@@ -166,23 +197,33 @@ func rebuild() -> void:
 		if CBTypes.is_subclass(cls, "Camera3D"):
 			var at := WorldValues.world_transform(o, ids).origin
 			var target := WorldValues.vec(WorldValues.field(o, "target"))
-			_add_marker(int(o.id), at, Color(0.2, 0.2, 0.25), 0.45)
-			_add_line(at, target, Color(0.2, 0.2, 0.25, 0.8))
+			_add_icon(int(o.id), at, "camera")
+			_add_line(at, target, Color(0.55, 0.78, 1.0, 0.8))
 		elif CBTypes.is_subclass(cls, "Light3D"):
 			var at := WorldValues.world_transform(o, ids).origin
 			if at.length() < 0.001:
-				at = Vector3(0, 6, 0)  # (a light at the middle: its marker up out of the way)
-			_add_marker(int(o.id), at, Color(1.0, 0.85, 0.2), 0.35)
+				at = Vector3(0, 6, 0)  # (a light at the middle: its icon up out of the way)
+			_add_icon(int(o.id), at, "light")
 			_add_line(at, at + (l.direction as Vector3).normalized() * 2.5, Color(1.0, 0.85, 0.2))
+	_scale_icons()
+	_look = l
+	_apply_post()  # (the Environment's vignette, scanlines, grain, posterize, bloom, curve, outline, dither)
 	apply_lighting(_env, _sun, l)  # (the scene's Environment, as the game draws it; none: neutral grey)
 	_draw_selection()
+
+
+func _apply_post() -> void:
+	PostFx.apply(_post, _look)
+	_post_btn.visible = _post.visible  # (the toggle shows only while an effect is on)
+	if not show_post:
+		_post.visible = false
 
 
 ## The world's sky, ambient light and fog (its first Environment's; none: the runtime's
 ## grey, no fog) and the sun (its first Light3D: it shines along its -Z in its color and
 ## energy), as cb_gfx.c's cb_look().
 static func lighting(world: Dictionary) -> Dictionary:
-	var out := {"sky": NO_ENVIRONMENT, "direction": Vector3(-0.4, -1, -0.6), "ambient": 0.38, "light_color": "WHITE", "energy": 1.0, "fog": 0.0, "fog_color": "", "horizon": "", "ambient_color": "WHITE", "fog_start": 0.0}
+	var out := {"sky": NO_ENVIRONMENT, "direction": Vector3(-0.4, -1, -0.6), "ambient": 0.38, "light_color": "WHITE", "energy": 1.0, "fog": 0.0, "fog_color": "", "horizon": "", "ambient_color": "WHITE", "fog_start": 0.0, "vignette": 0.0, "scanlines": 0.0, "grain": 0.0, "posterize": 0.0, "bloom": 0.0, "curve": 0.0, "outline": 0.0, "dither": 0.0, "snap": 0.0}
 	var have_env := false
 	var have_light := false
 	var ids := WorldValues.by_id(world)
@@ -196,6 +237,8 @@ static func lighting(world: Dictionary) -> Dictionary:
 			out.horizon = WorldValues.field(o, "horizon")
 			out.ambient_color = WorldValues.field(o, "ambient_color")
 			out.fog_start = WorldValues.number(WorldValues.field(o, "fog_start"), 0.0)
+			for k in ["vignette", "scanlines", "grain", "posterize", "bloom", "curve", "outline", "dither", "snap"]:
+				out[k] = WorldValues.number(WorldValues.field(o, k), 0.0)
 			have_env = true
 		elif CBTypes.is_subclass(cls, "Light3D") and not have_light:
 			out.direction = -WorldValues.world_transform(o, ids).basis.z
@@ -317,17 +360,36 @@ static func _nonzero(v: Vector3) -> Vector3:
 	return Vector3(v.x if absf(v.x) > 0.001 else 0.001, v.y if absf(v.y) > 0.001 else 0.001, v.z if absf(v.z) > 0.001 else 0.001)
 
 
-func _add_marker(id: int, at: Vector3, col: Color, size: float) -> void:
-	var mi := MeshInstance3D.new()
-	var m := BoxMesh.new()
-	m.size = Vector3.ONE * size
-	mi.mesh = m
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = col
-	mi.material_override = mat
-	mi.position = at
-	_objects.add_child(mi)
-	_picks.append([id, Transform3D(Basis.from_scale(Vector3.ONE * size), at)])
+func _add_icon(id: int, at: Vector3, kind: String) -> void:
+	if not _icon_textures.has(kind):
+		var img := Image.new()
+		img.load_svg_from_string(ICON_SVGS[kind], 4.0)  # (64 px: crisp when it is drawn at 30)
+		img.generate_mipmaps()
+		_icon_textures[kind] = ImageTexture.create_from_image(img)
+	var sp := Sprite3D.new()
+	sp.texture = _icon_textures[kind]
+	sp.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sp.shaded = false
+	sp.no_depth_test = true
+	sp.render_priority = 5
+	sp.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	sp.position = at
+	_objects.add_child(sp)
+	_icons[id] = sp
+
+
+## Keeps every icon ICON_PX big on the screen, near or far (a Sprite3D's size is in world units).
+func _scale_icons() -> void:
+	if _icons.is_empty() or _cam == null or _vp == null:
+		return
+	var h := maxf(float(_vp.size.y), 1.0)
+	var back := -_cam.global_transform.basis.z if _cam.is_inside_tree() else -_cam.transform.basis.z
+	var from := _cam.global_position if _cam.is_inside_tree() else _cam.position
+	for id in _icons:
+		var sp: Sprite3D = _icons[id]
+		var d := maxf((sp.position - from).dot(back), 0.1)
+		var tex_px := float(sp.texture.get_height())
+		sp.pixel_size = 2.0 * d * tan(deg_to_rad(_cam.fov) / 2.0) / h * ICON_PX / tex_px
 
 
 func _add_line(a: Vector3, b: Vector3, col: Color, parent: Node3D = null) -> void:
@@ -354,6 +416,8 @@ func _draw_selection() -> void:
 	for c in _overlay.get_children():
 		c.queue_free()
 	var id := _selected_id()
+	for i in _icons:
+		(_icons[i] as Sprite3D).modulate = Color(1.0, 0.65, 0.2) if int(i) == id and id != 0 else Color.WHITE
 	if id == 0:
 		return
 	for p in _picks:
@@ -411,6 +475,18 @@ func _world_pos(o: Dictionary) -> Vector3:
 
 ## The object under a point of the view (0: none): the nearest box the ray enters.
 func pick_at(at: Vector2) -> int:
+	var near := ICON_HIT
+	var icon_id := 0
+	for id in _icons:  # an icon is picked by how near the click is to it on the screen
+		var pos: Vector3 = (_icons[id] as Sprite3D).position
+		if _cam.is_position_behind(pos):
+			continue
+		var dist := _cam.unproject_position(pos).distance_to(at)
+		if dist < near:
+			near = dist
+			icon_id = int(id)
+	if icon_id != 0:
+		return icon_id
 	var from := _cam.project_ray_origin(at)
 	var dir := _cam.project_ray_normal(at)
 	var best := INF

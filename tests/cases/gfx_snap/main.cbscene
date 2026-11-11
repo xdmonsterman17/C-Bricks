@@ -1,0 +1,145 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"objects": [
+		{
+			"id": 18,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 18,
+			"fields": {
+				"sky": "#5a7fb0",
+				"horizon": "#e8d8c8",
+				"ambient": "0.3",
+				"ambient_color": "#b0c0ff",
+				"fog": "0.09",
+				"fog_start": "6",
+				"fog_color": "#d8d0c8",
+				"snap": "4",
+				"dither": "0.6",
+				"posterize": "16"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 18,
+			"fields": {
+				"rotation": "-50, 30, 0",
+				"color": "#ffc070",
+				"energy": "1.4"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 18,
+			"fields": {
+				"position": "0, 2.5, 6",
+				"target": "0, 0.5, -10",
+				"fov": "55"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Shape3D",
+			"name": "Floor",
+			"parent": 18,
+			"fields": {
+				"size": "8, 0.2, 80",
+				"position": "0, -0.6, -30",
+				"color": "#5aa846"
+			}
+		},
+		{
+			"id": 10,
+			"class": "Shape3D",
+			"name": "Box0",
+			"parent": 18,
+			"fields": {
+				"position": "1, 0.5, 0",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 11,
+			"class": "Shape3D",
+			"name": "Box1",
+			"parent": 18,
+			"fields": {
+				"position": "-1, 0.5, -6",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 12,
+			"class": "Shape3D",
+			"name": "Box2",
+			"parent": 18,
+			"fields": {
+				"position": "1, 0.5, -12",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 13,
+			"class": "Shape3D",
+			"name": "Box3",
+			"parent": 18,
+			"fields": {
+				"position": "-1, 0.5, -18",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 14,
+			"class": "Shape3D",
+			"name": "Box4",
+			"parent": 18,
+			"fields": {
+				"position": "1, 0.5, -24",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 15,
+			"class": "Shape3D",
+			"name": "Box5",
+			"parent": 18,
+			"fields": {
+				"position": "-1, 0.5, -30",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 16,
+			"class": "Shape3D",
+			"name": "Box6",
+			"parent": 18,
+			"fields": {
+				"position": "1, 0.5, -36",
+				"color": "WHITE"
+			}
+		},
+		{
+			"id": 17,
+			"class": "Shape3D",
+			"name": "Box7",
+			"parent": 18,
+			"fields": {
+				"position": "-1, 0.5, -42",
+				"color": "WHITE"
+			}
+		}
+	],
+	"next_id": 19
+}

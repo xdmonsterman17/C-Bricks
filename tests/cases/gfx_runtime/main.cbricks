@@ -1,0 +1,738 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 40,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3,
+					4
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "light and fog"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					5,
+					30,
+					6
+				]
+			}
+		},
+		{
+			"id": 5,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "30"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					16,
+					17,
+					18,
+					19,
+					20,
+					21
+				]
+			}
+		},
+		{
+			"id": 7,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"world_light_fog.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Light3D"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Sun"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "sun",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "color"
+			},
+			"args": {
+				"record": {
+					"var": "sun"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "lcolor",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "energy"
+			},
+			"args": {
+				"record": {
+					"var": "sun"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "lenergy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Environment"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Environment"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "env",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "fog"
+			},
+			"args": {
+				"record": {
+					"var": "env"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "fog",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "fog_color"
+			},
+			"args": {
+				"record": {
+					"var": "env"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "fogc",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[light] {} x {}, fog {} '{}'"
+			},
+			"args": {
+				"first": {
+					"var": "lcolor"
+				},
+				"second": {
+					"var": "lenergy"
+				},
+				"third": {
+					"var": "fog"
+				},
+				"fourth": {
+					"var": "fogc"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 16,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "horizon"
+			},
+			"args": {
+				"record": {
+					"var": "env"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "hz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 17,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "ambient_color"
+			},
+			"args": {
+				"record": {
+					"var": "env"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "ac",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "fog_start"
+			},
+			"args": {
+				"record": {
+					"var": "env"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "fst",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 19,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[environment] horizon {}, ambient {}, fog from {}"
+			},
+			"args": {
+				"first": {
+					"var": "hz"
+				},
+				"second": {
+					"var": "ac"
+				},
+				"third": {
+					"var": "fst"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "5"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					31,
+					32,
+					33,
+					34,
+					35
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Shading",
+				"shading": "toon"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 32,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Pixel size"
+			},
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 33,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Environment"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Environment"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "env5",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 34,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "vignette"
+			},
+			"args": {
+				"record": {
+					"var": "env5"
+				},
+				"value": {
+					"type": "float",
+					"value": "0.6"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 35,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "outline"
+			},
+			"args": {
+				"record": {
+					"var": "env5"
+				},
+				"value": {
+					"type": "float",
+					"value": "0.7"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

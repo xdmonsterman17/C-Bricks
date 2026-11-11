@@ -34,8 +34,8 @@ const OBJECT := "Node"
 ## parent Spatial3D (Spatial2D: to its Spatial2D parent).
 const BUILTIN := {
 	"Spatial3D": {"extends": "Node", "fields": [["position", "vector3", "0, 0, 0"], ["rotation", "vector3", "0, 0, 0"], ["scale", "vector3", "1, 1, 1"]], "synced": ["position", "rotation", "scale"]},
-	"Shape3D": {"extends": "Spatial3D", "fields": [["shape", "string", "Box"], ["size", "vector3", "1, 1, 1"], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["solid", "bool", "false"]], "synced": ["shape", "size", "color", "visible", "solid"]},
-	"Mesh3D": {"extends": "Spatial3D", "fields": [["mesh", "mesh", ""], ["color", "string", "WHITE"], ["visible", "bool", "true"]], "synced": ["color", "visible"]},
+	"Shape3D": {"extends": "Spatial3D", "fields": [["shape", "string", "Box"], ["size", "vector3", "1, 1, 1"], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["solid", "bool", "false"], ["splat", "bool", "false"]], "synced": ["shape", "size", "color", "visible", "solid"]},
+	"Mesh3D": {"extends": "Spatial3D", "fields": [["mesh", "mesh", ""], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["splat", "bool", "false"]], "synced": ["color", "visible"]},
 	"Camera3D": {"extends": "Spatial3D", "fields": [["target", "vector3", "0, 0, 0"], ["fov", "float", "60"]], "synced": []},
 	"Light3D": {"extends": "Spatial3D", "fields": [["color", "string", "WHITE"], ["energy", "float", "1"]], "synced": ["color", "energy"]},
 	"Spatial2D": {"extends": "Node", "fields": [["position", "vector2", "0, 0"], ["rotation", "float", "0"], ["scale", "vector2", "1, 1"]], "synced": ["position", "rotation", "scale"]},
@@ -53,7 +53,7 @@ const BUILTIN := {
 	"VBox": {"extends": "Control", "fields": [["separation", "float", "4"], ["padding", "float", "0"], ["fill", "bool", "false"]], "synced": []},
 	"HBox": {"extends": "Control", "fields": [["separation", "float", "4"], ["padding", "float", "0"], ["fill", "bool", "false"]], "synced": []},
 	"Image": {"extends": "Control", "fields": [["texture", "string", ""], ["color", "string", "WHITE"]], "synced": []},
-	"Environment": {"extends": "Node", "fields": [["sky", "string", "#87ceeb"], ["ambient", "float", "0.38"], ["fog", "float", "0"], ["fog_color", "string", ""], ["horizon", "string", ""], ["ambient_color", "string", "WHITE"], ["fog_start", "float", "0"]], "synced": ["sky", "ambient", "fog", "fog_color", "horizon", "ambient_color", "fog_start"]},
+	"Environment": {"extends": "Node", "fields": [["sky", "string", "#87ceeb"], ["ambient", "float", "0.38"], ["fog", "float", "0"], ["fog_color", "string", ""], ["horizon", "string", ""], ["ambient_color", "string", "WHITE"], ["fog_start", "float", "0"], ["vignette", "float", "0"], ["scanlines", "float", "0"], ["grain", "float", "0"], ["posterize", "float", "0"], ["bloom", "float", "0"], ["curve", "float", "0"], ["outline", "float", "0"], ["dither", "float", "0"], ["snap", "float", "0"]], "synced": ["sky", "ambient", "fog", "fog_color", "horizon", "ambient_color", "fog_start", "vignette", "scanlines", "grain", "posterize", "bloom", "curve", "outline", "dither", "snap"]},
 }
 ## A UI field's choices (Properties shows a picker; the runtime reads the name).
 const UI_ANCHORS := ["top_left", "top", "top_right", "left", "center", "right", "bottom_left", "bottom", "bottom_right", "full"]

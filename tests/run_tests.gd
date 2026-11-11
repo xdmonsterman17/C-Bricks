@@ -308,6 +308,21 @@ func _run_case(name: String, res_dir: String) -> void:
 	for piece in cf.get_value("case", "expect_missing", []):
 		if combined.contains(str(piece)):
 			problems.append("output (stdout + stderr) has '%s', it shouldn't" % piece)
+	# expect_png = [["file.png", width, height, fewest colours]]: a screenshot the program saved in its folder
+	for want_png in cf.get_value("case", "expect_png", []):
+		var img := Image.load_from_file(run_dir.path_join(str(want_png[0])))
+		if img == null:
+			problems.append("%s wasn't saved" % want_png[0])
+			continue
+		if img.get_width() != int(want_png[1]) or img.get_height() != int(want_png[2]):
+			problems.append("%s is %d x %d, expected %d x %d" % [want_png[0], img.get_width(), img.get_height(), int(want_png[1]), int(want_png[2])])
+		var seen := {}
+		for y in img.get_height():
+			for x in img.get_width():
+				seen[img.get_pixel(x, y).to_html(false)] = true
+		if seen.size() < int(want_png[3]):
+			problems.append("%s has %d colours, expected at least %d (a blank frame?)" % [want_png[0], seen.size(), int(want_png[3])])
+		notes.append("%s: %d x %d, %d colours (look at %s)" % [want_png[0], img.get_width(), img.get_height(), seen.size(), run_dir.path_join(str(want_png[0]))])
 	if not problems.is_empty():
 		notes.append("output:\n" + combined.strip_edges().indent("    "))
 	_finish(name, problems, notes)
@@ -882,7 +897,10 @@ func _check_toolchain_install() -> void:
 	bad_sha.sha256 = "0".repeat(64)
 	var missing: Dictionary = good.duplicate()
 	missing.url = "http://127.0.0.1:%d/nothing.tar.xz" % port
+	var zip_ok := OS.execute("python3", ["-I", "-c", "import zipfile,sys; z=zipfile.ZipFile(sys.argv[1],'w'); z.writestr('top-1/sub/file.txt','x'); z.close()", served.path_join("tool.zip")], out, true) == 0
+	var zipped := {"url": "http://127.0.0.1:%d/tool.zip" % port, "sha256": FileAccess.get_sha256(served.path_join("tool.zip")), "size": 1, "strip": 1}
 	var manifest := {"format": 1, "tools": {
+		"emscripten": {"version": "1", "platforms": {plat: zipped}},
 		"zig": {"version": "9.9", "platforms": {plat: good}},
 		"djgpp": {"version": "1", "platforms": {plat: bad_sha}},
 		"dosbox-x": {"version": "1", "platforms": {plat: missing}},
@@ -928,6 +946,12 @@ func _check_toolchain_install() -> void:
 			problems.append("%s should fail mentioning '%s', got '%s'" % [c[0], c[1], f[1]])
 		if ToolchainManager.status(c[0]).state == "installed" or DirAccess.dir_exists_absolute(ToolchainManager.root_override.path_join(c[0])):
 			problems.append("%s must not be installed after failing" % c[0])
+	# 4. a zip (emsdk comes as one; GNU tar can't open it)
+	if zip_ok:
+		mgr.install("emscripten")
+		var zr: Array = await mgr.finished
+		if zr[1] != "" or not FileAccess.file_exists(ToolchainManager.root_override.path_join("emscripten/sub/file.txt")):
+			problems.append("a zip download should unpack with its top folder stripped: " + str(zr[1]))
 	mgr.queue_free()
 	OS.kill(server)
 	OS.set_environment("CBRICKS_TOOLCHAIN_MANIFEST", "")
@@ -1434,7 +1458,7 @@ func _check_build_cache() -> void:
 	if str(b4.get("cached", "")) != "":
 		problems.append("a changed project should compile again, got '%s'" % b4.get("cached"))
 	# what the prebuilt programs rely on: an example copied anywhere has the same fingerprint
-	# (no paths in it). (Whether res://prebuilt is current is the export's job: export.sh.)
+	# (no paths in it). (Whether res://prebuilt is current is the export's job: export-editor.sh.)
 	var keys := []
 	for where in ["fizz_one", "somewhere/else/fizz_two"]:
 		var c := root.path_join(where)

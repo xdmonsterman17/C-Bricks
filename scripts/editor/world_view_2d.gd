@@ -21,6 +21,7 @@ var _textures := {}  # Sprite2D paths -> Texture2D (or null: not found)
 var show_2d := true
 var show_ui := true
 var _drag_field := "position"  # (a UI node: offset)
+var _post: ColorRect = null  # the Environment's post effects over the game window's frame (PostFx)
 
 
 func _init() -> void:
@@ -29,6 +30,9 @@ func _init() -> void:
 	clip_contents = true
 	focus_mode = FOCUS_CLICK
 	resized.connect(queue_redraw)
+	_post = PostFx.make()
+	_post.set_anchors_and_offsets_preset(PRESET_TOP_LEFT)
+	add_child(_post)
 	var bar := HBoxContainer.new()
 	add_child(bar)
 	bar.set_anchors_and_offsets_preset(PRESET_TOP_RIGHT)
@@ -51,6 +55,11 @@ func _init() -> void:
 
 func _ready() -> void:
 	context.selection_changed.connect(func(_id: int) -> void: queue_redraw())
+
+
+func _process(_delta: float) -> void:
+	if _post.visible:
+		PostFx.update_rect(_post)  # (the view may have moved with its panels)
 
 
 ## Reads the window's size from the project's Open window brick, and redraws.
@@ -219,6 +228,9 @@ func _draw() -> void:
 	var ids := WorldValues.by_id(context.world_flat)
 	var look := WorldView3D.lighting(context.world_flat)
 	var sky: String = look.sky
+	_post.position = fr.position
+	_post.size = fr.size
+	PostFx.apply(_post, look)
 	# The game window's background as the game draws it: the scene's Environment's sky, or
 	# (no Environment) the runtime's neutral grey.
 	draw_rect(fr, WorldValues.color(sky))

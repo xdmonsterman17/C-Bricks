@@ -328,12 +328,18 @@ static void cb_draw_object(cb_object *o) {
     cb_push_local(o);
     if (cb_is_a(o, &cls_Shape3D_class)) {
         cls_Shape3D *p = (cls_Shape3D *)o;
-        if (p->f_visible)
+        if (p->f_visible) {
+            cb_be_splat(cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && p->f_splat));
             cb_draw_shape(cb_shape_kind(p->f_shape), cb_v3(0, 0, 0), p->f_size, 0, cb_color(p->f_color));
+            cb_be_splat(cb_be_splat_mode() == 2);
+        }
     } else if (cb_is_a(o, &cls_Mesh3D_class)) {
         cls_Mesh3D *m = (cls_Mesh3D *)o;
-        if (m->f_visible && m->f_mesh)
+        if (m->f_visible && m->f_mesh) {
+            cb_be_splat(cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && m->f_splat));
             cb_draw_mesh(m->f_mesh, cb_v3(0, 0, 0), cb_v3(1, 1, 1), 0, cb_color(m->f_color));
+            cb_be_splat(cb_be_splat_mode() == 2);
+        }
     }
     if (o->cls->drawn)
         o->cls->drawn(o);
@@ -1228,6 +1234,25 @@ static void cb_world_frame(void) {
     cb_world_depth--;
 }
 
+/* The first Environment's post effects (vignette, scanlines, grain, posterize, bloom, curve, outline, dither) and vertex snap, before the frame opens: the
+   backend draws the frame into a texture when one is on. */
+static void cb_post_update(void) {
+    void **all;
+    int i, n = cb_world_objects(&all);
+    for (i = 0; i < n; i++) {
+        cb_object *o = (cb_object *)all[i];
+        if (cb_is_a(o, &cls_Environment_class)) {
+            cls_Environment *e = (cls_Environment *)o;
+            cb_be_post(e->f_vignette, e->f_scanlines, e->f_grain, e->f_posterize, e->f_bloom, e->f_curve, e->f_outline, e->f_dither, e->f_snap);
+            return;
+        }
+    }
+    cb_be_post(0, 0, 0, 0, 0, 0, 0, 0, 0);
+}
+
+/* Graphics setting brick: what 0 shading (0 lit, 1 toon, 2 unlit, 3 wire), 1 splatting (0 off, 1 mixed, 2 full), 2 pixel size. */
+void cb_graphics_setting(int what, int value) { cb_be_set_look(what, value); }
+
 void cb_frame_begin(void) {
     if (cb_poll_hook)
         cb_poll_hook();  /* the network's turn (players joining, the world from the server...) */
@@ -1235,6 +1260,7 @@ void cb_frame_begin(void) {
     cb_ui_input();  /* Buttons: hover, press, clicks (When clicked, When button clicked) */
     if (!cb_headless) {
         cb_be_music_update();
+        cb_post_update();
         cb_be_begin_frame();
     }
     cb_frame_open = true;
@@ -1267,6 +1293,7 @@ void cb_wait_world(double seconds) {
         cb_ui_input();
         if (!cb_headless) {
             cb_be_music_update();
+            cb_post_update();
             cb_be_begin_frame();
             if (cb_world_objects(&all) == 0)
                 cb_be_clear(cb_color("RAYWHITE"));
@@ -1278,8 +1305,10 @@ void cb_wait_world(double seconds) {
         }
     }
     if (reopen) {
-        if (!cb_headless)
+        if (!cb_headless) {
+            cb_post_update();
             cb_be_begin_frame();
+        }
         cb_frame_open = true;
     }
 }

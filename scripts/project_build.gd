@@ -63,13 +63,13 @@ static func generate(dir: String, open_graphs: Dictionary = {}, target := "nativ
 	var graphs := {}
 	for p in paths:
 		graphs[p] = open_graphs[p] if open_graphs.has(p) else CBProject.read_script(p)
-	return generate_graphs(program, version, dir, paths, graphs, target, int(cf.get_value("dos", "screen", 0)), str(cf.get_value("graphics", "backend", "auto")))
+	return generate_graphs(program, version, dir, paths, graphs, target, int(cf.get_value("dos", "screen", 0)), str(cf.get_value("graphics", "backend", "auto")), CBProject.graphics_settings(cf))
 
 
 ## target: the build's target id (it picks the graphics backend unless backend_pick names one:
 ## "auto", "raylib", "dos"); dos_screen: MS-DOS's screen width (0: the smallest of 320 / 640 / 800
 ## the Open window's size fits).
-static func generate_graphs(program: String, version: String, dir: String, paths: PackedStringArray, graphs: Dictionary, target := "native", dos_screen := 0, backend_pick := "auto") -> Dictionary:
+static func generate_graphs(program: String, version: String, dir: String, paths: PackedStringArray, graphs: Dictionary, target := "native", dos_screen := 0, backend_pick := "auto", gfx := {}) -> Dictionary:
 	var errors := []
 	var warnings := []
 	var class_of := collect_classes(dir, paths, graphs, errors)  # script path -> its class
@@ -261,7 +261,7 @@ static func generate_graphs(program: String, version: String, dir: String, paths
 		if CBTypes.lineage(str(o.get("class", ""))).any(func(x): return CBTypes.is_world_builtin(x)):
 			graphics = true
 	var order := class_order(graphics, net)
-	files["cbricks.h"] = header(funcs, includes, {"exit_handlers": exits, "records": records, "constants": const_defs, "inits": inits, "graphics": graphics, "net": net, "classes": order, "world": has_world, "scenes": scenes}, false)
+	files["cbricks.h"] = header(funcs, includes, {"exit_handlers": exits, "records": records, "constants": const_defs, "inits": inits, "graphics": graphics, "net": net, "classes": order, "world": has_world, "scenes": scenes, "gfx": gfx}, false)
 	if has_world:
 		var sides := {}
 		for i in paths.size():
@@ -568,6 +568,7 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 	if extra.get("graphics", false):
 		lines.append_array([
 			"/* Graphics (2026-11-08): C-Bricks' own types; only the backend (cbricks_backend.c) sees its library */",
+			gfx_defines(extra.get("gfx", {})),
 			"typedef struct cb_rgba { unsigned char r, g, b, a; } cb_rgba;  /* a color */",
 			"typedef struct cb_rect { float x, y, width, height; } cb_rect;",
 			"typedef struct cb_texture { int id; int width; int height; } cb_texture;  /* id 0: not loaded */",
@@ -818,6 +819,10 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"void cb_set_light_color(cb_rgba color, double energy);",
 			"void cb_set_fog(cb_rgba color, double density);",
 			"void cb_set_ambient(cb_rgba color, double fog_start);",
+			"void cb_be_post(double vignette, double scanlines, double grain, double posterize, double bloom, double curve, double outline, double dither, double snap);",
+			"void cb_be_set_look(int what, int value);",
+			"int cb_be_splat_mode(void);",
+			"void cb_graphics_setting(int what, int value);  /* 0 shading (lit toon unlit wire), 1 splatting (off mixed full), 2 pixel size */",
 			"/* The backend (cbricks_backend.c): what a graphics library does for C-Bricks. */",
 			"bool cb_be_open(int width, int height, const char *title, int fps, bool esc_closes);",
 			"void cb_be_close(void);",
@@ -869,6 +874,7 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"void cb_be_music_update(void);",
 			"void cb_be_music_forget_all(void);",
 			"void cb_be_begin_3d(Vector3 position, Vector3 target, double fov, bool ortho);",
+			"void cb_be_splat(bool on);  /* the shapes / meshes drawn next are point splats (an object's splat field, or Full splatting) */",
 			"void cb_be_end_3d(void);",
 			"void cb_be_push(void);",
 			"void cb_be_pop(void);",
@@ -1071,6 +1077,24 @@ static func runtime(program: String, version: String, scripts: Array, exits: Arr
 	if net_build != "":
 		text += FileAccess.get_file_as_string(NET_RUNTIME)
 	return text
+
+
+## Project Settings > Graphics as C defines (cbricks.h): the raylib backend reads them (the MS-DOS one ignores them).
+static func gfx_defines(g: Dictionary) -> String:
+	var d := CBProject.graphics_settings(ConfigFile.new())
+	d.merge(g, true)
+	return "\n".join([
+		"/* Graphics settings (Project Settings > Graphics) */",
+		"#define CB_SHADING %d  /* 0 lit, 1 toon, 2 unlit, 3 wireframe */" % CBProject.SHADINGS.find(d.shading),
+		"#define CB_SPLAT %d  /* 0 no splatting, 1 mixed (an object's splat field), 2 full */" % CBProject.SPLATS.find(d.splat),
+		"#define CB_SPLAT_SIZE %s  /* world units across */" % String.num(d.splat_size, 4),
+		"#define CB_SPLAT_DENSITY %s  /* points per square world unit */" % String.num(d.splat_density, 2),
+		"#define CB_SPLAT_ROUND %d" % (1 if d.splat_shape == "round" else 0),
+		"#define CB_PIXEL %d  /* low-res: window pixels per drawn pixel */" % int(d.pixel),
+		"#define CB_MSAA %d" % (1 if d.msaa else 0),
+		"#define CB_VSYNC %d" % (1 if d.vsync else 0),
+		"#define CB_WINDOW %d  /* 0 fixed, 1 resizable, 2 fullscreen, 3 borderless */" % CBProject.WINDOWS.find(d.window),
+	])
 
 
 ## Colors and handle printing for graphics projects (the backend draws them).

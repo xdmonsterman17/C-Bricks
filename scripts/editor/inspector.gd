@@ -1211,6 +1211,8 @@ func _show_world_object(o: Dictionary) -> void:
 		for fld in by_class[c]:
 			var fname: String = fld[0]
 			var ty: String = fld[1]
+			if fname == "splat" and str(CBProject.graphics_settings(CBProject.load_config(context.project_dir)).splat) != "mixed":
+				continue  # (Project Settings > Graphics > Splatting: Mixed puts this checkbox on every shape and mesh)
 			if ty == "bool":
 				var cb := CheckBox.new()
 				cb.button_pressed = str(o.fields.get(fname, defaults.get(fname, "false"))) == "true"

@@ -1,0 +1,10 @@
+[project]
+
+name="Graphics settings"
+version="1.0"
+
+[graphics]
+
+msaa=true
+vsync=true
+window="resizable"

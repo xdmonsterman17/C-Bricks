@@ -171,10 +171,17 @@ func _unpack_file() -> String:
 	Toolchains._rm_tree(part)
 	DirAccess.make_dir_recursive_absolute(part)
 	var out := []
-	var code := OS.execute("tar", ["-xf", ProjectSettings.globalize_path(_file), "-C", ProjectSettings.globalize_path(part), "--strip-components=" + str(int(_entry.get("strip", 0)))], out, true)
-	if code != 0:
-		Toolchains._rm_tree(part)
-		return "Unpacking failed (tar exit %d: %s). Needs `tar` (with xz for .tar.xz)." % [code, " ".join(out).strip_edges().left(300)]
+	if _file.ends_with(".zip") and FileAccess.get_file_as_bytes(_file).size() < 32 * 1024 * 1024:
+		# small zips (emsdk's) are read here: GNU tar can't open a zip (the big Windows ones go through tar.exe)
+		var zerr := _unzip(ProjectSettings.globalize_path(_file), ProjectSettings.globalize_path(part), int(_entry.get("strip", 0)))
+		if zerr != "":
+			Toolchains._rm_tree(part)
+			return zerr
+	else:
+		var code := OS.execute("tar", ["-xf", ProjectSettings.globalize_path(_file), "-C", ProjectSettings.globalize_path(part), "--strip-components=" + str(int(_entry.get("strip", 0)))], out, true)
+		if code != 0:
+			Toolchains._rm_tree(part)
+			return "Unpacking failed (tar exit %d: %s). Needs `tar` (with xz for .tar.xz)." % [code, " ".join(out).strip_edges().left(300)]
 	if _entry.has("emsdk"):  # emsdk's own downloads: the compiler itself
 		var e := _run_emsdk(part, str(_entry.emsdk))
 		if e != "":
@@ -187,6 +194,33 @@ func _unpack_file() -> String:
 		Toolchains._rm_tree(dest)
 		if DirAccess.rename_absolute(part, dest) != OK:
 			return "Can't move the unpacked files into place."
+	return ""
+
+
+## Unpacks a zip with Godot's reader, dropping `strip` leading folders.
+func _unzip(zip: String, dest: String, strip: int) -> String:
+	var z := ZIPReader.new()
+	if z.open(zip) != OK:
+		return "Can't read the downloaded zip."
+	for f in z.get_files():
+		var parts := f.split("/", false)
+		if parts.size() <= strip:
+			continue
+		var rel := "/".join(parts.slice(strip))
+		if ".." in parts:
+			z.close()
+			return "The zip has an unsafe path: not installed."
+		if f.ends_with("/"):
+			DirAccess.make_dir_recursive_absolute(dest.path_join(rel))
+			continue
+		DirAccess.make_dir_recursive_absolute(dest.path_join(rel).get_base_dir())
+		var w := FileAccess.open(dest.path_join(rel), FileAccess.WRITE)
+		if w == null:
+			z.close()
+			return "Can't write %s." % rel
+		w.store_buffer(z.read_file(f))
+		w.close()
+	z.close()
 	return ""
 
 

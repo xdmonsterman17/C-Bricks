@@ -1,5 +1,5 @@
 extends SceneTree
-## Compiles every example for this computer before the editor is exported (export.sh runs
+## Compiles every example for this computer before the editor is exported (export-editor.sh runs
 ## it), into res://prebuilt/<fingerprint>/<program>: the export ships them, so an example's
 ## first Run (from its copy in Documents) reuses its program instead of compiling it
 ## (Toolchains.cached_build). Each is built in a copy, exactly as the app builds a project.

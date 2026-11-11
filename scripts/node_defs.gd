@@ -711,6 +711,18 @@ const DEFS := {
 		"groups": ["next"],
 		"desc": "Pauses the game, or resumes it; Paused? asks; Set time scale makes the world slower (0.5: half speed) or faster (2), Time scale asks. Offline, Pause freezes the world: objects' Every frame, touches, When frame starts / ends and Wait stop (frame time 0), while the Game loop's own Frame chains, drawing, the UI and its clicks go on (a pause menu works); scripts set to Run while paused go on too. In a network game (hosting, a client) Pause and the time scale are only remembered (Paused? says so, e.g. for a menu): the shared world keeps running at its speed.",
 	},
+	"look": {
+		"title": "Graphics setting", "cat": "graphics", "kind": "action", "graphics": true,
+		"mode": "what", "mode_titles": {"Shading": "Set shading", "Splatting": "Set splatting", "Pixel size": "Set pixel size"},
+		"fields": [
+			["what", "option", "Shading", ["Shading", "Splatting", "Pixel size"], "Setting"],
+			["shading", "option", "lit", ["lit", "toon", "unlit", "wire"], "Shading", {"what": ["Shading"]}],
+			["splat", "option", "off", ["off", "mixed", "full"], "Splatting", {"what": ["Splatting"]}],
+		],
+		"args": [["pixel", INT, "2", false, {"what": ["Pixel size"]}]],
+		"groups": ["next"],
+		"desc": "Changes a Project Settings > Graphics setting while the program runs (they start as the project's): Shading (lit, toon, unlit, wire), Splatting (off, mixed: the objects marked splat, full), Pixel size (1..16 window pixels per drawn pixel: the frame, Window width / height and the mouse follow from the next frame). Raylib backend only. The Environment's own effects (vignette, bloom...) are fields: set them with Field.",
+	},
 	"clear": {
 		"title": "Clear window", "cat": "graphics", "kind": "action", "graphics": true,
 		"args": [["color", STRING, "RAYWHITE"]],

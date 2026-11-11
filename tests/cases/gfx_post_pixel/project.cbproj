@@ -1,0 +1,8 @@
+[project]
+
+name="Graphics settings"
+version="1.0"
+
+[graphics]
+
+pixel=2

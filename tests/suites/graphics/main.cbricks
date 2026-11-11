@@ -1,7 +1,7 @@
 {
 	"format": "c-bricks",
 	"version": 4,
-	"next_id": 209,
+	"next_id": 219,
 	"nodes": [
 		{
 			"id": 1,
@@ -51,15 +51,25 @@
 					134,
 					135,
 					136,
+					137,
 					138,
 					139,
 					140,
+					141,
 					142,
 					143,
 					144,
+					145,
 					146,
-					147,
-					206
+					148,
+					149,
+					150,
+					152,
+					153,
+					154,
+					156,
+					157,
+					216
 				]
 			}
 		},
@@ -876,6 +886,208 @@
 		},
 		{
 			"id": 134,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Shading",
+				"shading": "toon"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Shading",
+				"shading": "unlit"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Shading",
+				"shading": "wire"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 137,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Shading",
+				"shading": "lit"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Splatting",
+				"splat": "mixed"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Splatting",
+				"splat": "full"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Splatting",
+				"splat": "off"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 141,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Pixel size"
+			},
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "look",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Pixel size"
+			},
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 143,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[look] shading toon / unlit / wire / lit, splatting mixed / full / off, pixel size 2 then 1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
 			"type": "pause",
 			"pos": [
 				0,
@@ -893,7 +1105,7 @@
 			"links": {}
 		},
 		{
-			"id": 135,
+			"id": 145,
 			"type": "pause",
 			"pos": [
 				0,
@@ -916,7 +1128,7 @@
 			"links": {}
 		},
 		{
-			"id": 136,
+			"id": 146,
 			"type": "text",
 			"pos": [
 				0,
@@ -937,18 +1149,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_136",
+					"var": "line_146",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					137
+					147
 				]
 			}
 		},
 		{
-			"id": 137,
+			"id": 147,
 			"type": "print",
 			"pos": [
 				0,
@@ -963,14 +1175,14 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_136"
+					"var": "line_146"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 138,
+			"id": 148,
 			"type": "pause",
 			"pos": [
 				0,
@@ -988,7 +1200,7 @@
 			"links": {}
 		},
 		{
-			"id": 139,
+			"id": 149,
 			"type": "pause",
 			"pos": [
 				0,
@@ -1011,7 +1223,7 @@
 			"links": {}
 		},
 		{
-			"id": 140,
+			"id": 150,
 			"type": "text",
 			"pos": [
 				0,
@@ -1032,18 +1244,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_140",
+					"var": "line_150",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					141
+					151
 				]
 			}
 		},
 		{
-			"id": 141,
+			"id": 151,
 			"type": "print",
 			"pos": [
 				0,
@@ -1058,14 +1270,14 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_140"
+					"var": "line_150"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 142,
+			"id": 152,
 			"type": "pause",
 			"pos": [
 				0,
@@ -1088,7 +1300,7 @@
 			"links": {}
 		},
 		{
-			"id": 143,
+			"id": 153,
 			"type": "pause",
 			"pos": [
 				0,
@@ -1111,7 +1323,7 @@
 			"links": {}
 		},
 		{
-			"id": 144,
+			"id": 154,
 			"type": "text",
 			"pos": [
 				0,
@@ -1132,18 +1344,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_144",
+					"var": "line_154",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					145
+					155
 				]
 			}
 		},
 		{
-			"id": 145,
+			"id": 155,
 			"type": "print",
 			"pos": [
 				0,
@@ -1158,14 +1370,14 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_144"
+					"var": "line_154"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 146,
+			"id": 156,
 			"type": "pause",
 			"pos": [
 				0,
@@ -1188,7 +1400,7 @@
 			"links": {}
 		},
 		{
-			"id": 147,
+			"id": 157,
 			"type": "var",
 			"pos": [
 				0,
@@ -1212,7 +1424,7 @@
 			"links": {}
 		},
 		{
-			"id": 148,
+			"id": 158,
 			"type": "clear",
 			"pos": [
 				0,
@@ -1233,7 +1445,7 @@
 			"links": {}
 		},
 		{
-			"id": 149,
+			"id": 159,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1272,7 +1484,7 @@
 			"links": {}
 		},
 		{
-			"id": 150,
+			"id": 160,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1311,7 +1523,7 @@
 			"links": {}
 		},
 		{
-			"id": 151,
+			"id": 161,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1346,7 +1558,7 @@
 			"links": {}
 		},
 		{
-			"id": 152,
+			"id": 162,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1385,7 +1597,7 @@
 			"links": {}
 		},
 		{
-			"id": 153,
+			"id": 163,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1424,7 +1636,7 @@
 			"links": {}
 		},
 		{
-			"id": 154,
+			"id": 164,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1458,7 +1670,7 @@
 			"links": {}
 		},
 		{
-			"id": 155,
+			"id": 165,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1512,7 +1724,7 @@
 			"links": {}
 		},
 		{
-			"id": 156,
+			"id": 166,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1555,7 +1767,7 @@
 			"links": {}
 		},
 		{
-			"id": 157,
+			"id": 167,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1598,7 +1810,7 @@
 			"links": {}
 		},
 		{
-			"id": 158,
+			"id": 168,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1636,7 +1848,7 @@
 			"links": {}
 		},
 		{
-			"id": 159,
+			"id": 169,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1690,7 +1902,7 @@
 			"links": {}
 		},
 		{
-			"id": 160,
+			"id": 170,
 			"type": "view2d",
 			"pos": [
 				0,
@@ -1718,12 +1930,12 @@
 			"outs": {},
 			"links": {
 				"draw": [
-					161
+					171
 				]
 			}
 		},
 		{
-			"id": 161,
+			"id": 171,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1758,7 +1970,7 @@
 			"links": {}
 		},
 		{
-			"id": 162,
+			"id": 172,
 			"type": "input",
 			"pos": [
 				0,
@@ -1783,7 +1995,7 @@
 			"links": {}
 		},
 		{
-			"id": 163,
+			"id": 173,
 			"type": "input",
 			"pos": [
 				0,
@@ -1808,7 +2020,7 @@
 			"links": {}
 		},
 		{
-			"id": 164,
+			"id": 174,
 			"type": "input",
 			"pos": [
 				0,
@@ -1833,7 +2045,7 @@
 			"links": {}
 		},
 		{
-			"id": 165,
+			"id": 175,
 			"type": "input",
 			"pos": [
 				0,
@@ -1858,7 +2070,7 @@
 			"links": {}
 		},
 		{
-			"id": 166,
+			"id": 176,
 			"type": "input",
 			"pos": [
 				0,
@@ -1883,7 +2095,7 @@
 			"links": {}
 		},
 		{
-			"id": 167,
+			"id": 177,
 			"type": "mouse",
 			"pos": [
 				0,
@@ -1910,7 +2122,7 @@
 			"links": {}
 		},
 		{
-			"id": 168,
+			"id": 178,
 			"type": "mouse",
 			"pos": [
 				0,
@@ -1937,7 +2149,7 @@
 			"links": {}
 		},
 		{
-			"id": 169,
+			"id": 179,
 			"type": "mouse",
 			"pos": [
 				0,
@@ -1960,7 +2172,7 @@
 			"links": {}
 		},
 		{
-			"id": 170,
+			"id": 180,
 			"type": "key_direction",
 			"pos": [
 				0,
@@ -1986,7 +2198,7 @@
 			"links": {}
 		},
 		{
-			"id": 171,
+			"id": 181,
 			"type": "game_info",
 			"pos": [
 				0,
@@ -2009,7 +2221,7 @@
 			"links": {}
 		},
 		{
-			"id": 172,
+			"id": 182,
 			"type": "game_info",
 			"pos": [
 				0,
@@ -2032,7 +2244,7 @@
 			"links": {}
 		},
 		{
-			"id": 173,
+			"id": 183,
 			"type": "game_info",
 			"pos": [
 				0,
@@ -2055,7 +2267,7 @@
 			"links": {}
 		},
 		{
-			"id": 174,
+			"id": 184,
 			"type": "game_info",
 			"pos": [
 				0,
@@ -2078,7 +2290,7 @@
 			"links": {}
 		},
 		{
-			"id": 175,
+			"id": 185,
 			"type": "game_info",
 			"pos": [
 				0,
@@ -2101,7 +2313,7 @@
 			"links": {}
 		},
 		{
-			"id": 176,
+			"id": 186,
 			"type": "var",
 			"pos": [
 				0,
@@ -2125,7 +2337,7 @@
 			"links": {}
 		},
 		{
-			"id": 177,
+			"id": 187,
 			"type": "if",
 			"pos": [
 				0,
@@ -2150,29 +2362,29 @@
 			"outs": {},
 			"links": {
 				"true": [
-					178,
-					180,
-					182,
-					184,
-					186,
 					188,
 					190,
-					191,
-					193,
+					192,
 					194,
 					196,
-					197,
-					199,
+					198,
 					200,
 					201,
-					202,
+					203,
 					204,
-					205
+					206,
+					207,
+					209,
+					210,
+					211,
+					212,
+					214,
+					215
 				]
 			}
 		},
 		{
-			"id": 178,
+			"id": 188,
 			"type": "text",
 			"pos": [
 				0,
@@ -2189,276 +2401,6 @@
 			"args": {
 				"first": {
 					"var": "gi_width"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_178",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					179
-				]
-			}
-		},
-		{
-			"id": 179,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_178"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 180,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[game_info.Height] {}"
-			},
-			"args": {
-				"first": {
-					"var": "gi_height"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_180",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					181
-				]
-			}
-		},
-		{
-			"id": 181,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_180"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 182,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[input.Key down] {}"
-			},
-			"args": {
-				"first": {
-					"var": "in_key_down"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_182",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					183
-				]
-			}
-		},
-		{
-			"id": 183,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_182"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 184,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[input.Mouse pressed] {}"
-			},
-			"args": {
-				"first": {
-					"var": "in_mouse_pressed"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_184",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					185
-				]
-			}
-		},
-		{
-			"id": 185,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_184"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 186,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[mouse.Wheel] {}"
-			},
-			"args": {
-				"first": {
-					"var": "wheel"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_186",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					187
-				]
-			}
-		},
-		{
-			"id": 187,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_186"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 188,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[key_direction] {}"
-			},
-			"args": {
-				"first": {
-					"var": "keys"
 				}
 			},
 			"outs": {
@@ -2497,37 +2439,6 @@
 		},
 		{
 			"id": 190,
-			"type": "compare",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": ">"
-			},
-			"args": {
-				"a": {
-					"var": "gi_time"
-				},
-				"b": {
-					"type": "float",
-					"value": "0"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "t_ok",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 191,
 			"type": "text",
 			"pos": [
 				0,
@@ -2539,27 +2450,27 @@
 			],
 			"fields": {
 				"op": "Format",
-				"format": "[game_info.Time] {}"
+				"format": "[game_info.Height] {}"
 			},
 			"args": {
 				"first": {
-					"var": "t_ok"
+					"var": "gi_height"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "line_191",
+					"var": "line_190",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					192
+					191
 				]
 			}
 		},
 		{
-			"id": 192,
+			"id": 191,
 			"type": "print",
 			"pos": [
 				0,
@@ -2574,15 +2485,15 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_191"
+					"var": "line_190"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 193,
-			"type": "compare",
+			"id": 192,
+			"type": "text",
 			"pos": [
 				0,
 				0
@@ -2592,23 +2503,46 @@
 				0
 			],
 			"fields": {
-				"op": ">="
+				"op": "Format",
+				"format": "[input.Key down] {}"
 			},
 			"args": {
-				"a": {
-					"var": "gi_frame_time"
-				},
-				"b": {
-					"type": "float",
-					"value": "0"
+				"first": {
+					"var": "in_key_down"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "ft_ok",
+					"var": "line_192",
 					"use": false
 				}
 			},
+			"links": {
+				"next": [
+					193
+				]
+			}
+		},
+		{
+			"id": 193,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_192"
+				}
+			},
+			"outs": {},
 			"links": {}
 		},
 		{
@@ -2624,11 +2558,11 @@
 			],
 			"fields": {
 				"op": "Format",
-				"format": "[game_info.Frame time] {}"
+				"format": "[input.Mouse pressed] {}"
 			},
 			"args": {
 				"first": {
-					"var": "ft_ok"
+					"var": "in_mouse_pressed"
 				}
 			},
 			"outs": {
@@ -2667,6 +2601,284 @@
 		},
 		{
 			"id": 196,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[mouse.Wheel] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wheel"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_196",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					197
+				]
+			}
+		},
+		{
+			"id": 197,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_196"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 198,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[key_direction] {}"
+			},
+			"args": {
+				"first": {
+					"var": "keys"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_198",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					199
+				]
+			}
+		},
+		{
+			"id": 199,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_198"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 200,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "gi_time"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 201,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_201",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					202
+				]
+			}
+		},
+		{
+			"id": 202,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_201"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 203,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">="
+			},
+			"args": {
+				"a": {
+					"var": "gi_frame_time"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ft_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 204,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Frame time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "ft_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_204",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					205
+				]
+			}
+		},
+		{
+			"id": 205,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_204"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 206,
 			"type": "compare",
 			"pos": [
 				0,
@@ -2697,7 +2909,7 @@
 			"links": {}
 		},
 		{
-			"id": 197,
+			"id": 207,
 			"type": "text",
 			"pos": [
 				0,
@@ -2714,277 +2926,6 @@
 			"args": {
 				"first": {
 					"var": "fps_ok"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_197",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					198
-				]
-			}
-		},
-		{
-			"id": 198,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_197"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 199,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[game_loop] 3 frames drawn"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 200,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[draw] every shape, turned ones, a sprite's frame, a 2D view"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 201,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Playing"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "still",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 202,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[music.frames] {}"
-			},
-			"args": {
-				"first": {
-					"var": "still"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_202",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					203
-				]
-			}
-		},
-		{
-			"id": 203,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_202"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 204,
-			"type": "close_window",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {},
-			"args": {},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 205,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[close_window] asked; the frame goes on"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 206,
-			"type": "game_loop",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {},
-			"args": {},
-			"outs": {},
-			"links": {
-				"frame": [
-					148,
-					149,
-					150,
-					151,
-					152,
-					153,
-					154,
-					155,
-					156,
-					157,
-					158,
-					159,
-					160,
-					162,
-					163,
-					164,
-					165,
-					166,
-					167,
-					168,
-					169,
-					170,
-					171,
-					172,
-					173,
-					174,
-					175,
-					176,
-					177
-				],
-				"done": [
-					207
-				]
-			}
-		},
-		{
-			"id": 207,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[close_window.Done] {}"
-			},
-			"args": {
-				"first": {
-					"var": "frames"
 				}
 			},
 			"outs": {
@@ -3016,6 +2957,277 @@
 			"args": {
 				"value": {
 					"var": "line_207"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 209,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[game_loop] 3 frames drawn"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 210,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[draw] every shape, turned ones, a sprite's frame, a 2D view"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 211,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "still",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 212,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.frames] {}"
+			},
+			"args": {
+				"first": {
+					"var": "still"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_212",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					213
+				]
+			}
+		},
+		{
+			"id": 213,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_212"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 214,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 215,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[close_window] asked; the frame goes on"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 216,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					158,
+					159,
+					160,
+					161,
+					162,
+					163,
+					164,
+					165,
+					166,
+					167,
+					168,
+					169,
+					170,
+					172,
+					173,
+					174,
+					175,
+					176,
+					177,
+					178,
+					179,
+					180,
+					181,
+					182,
+					183,
+					184,
+					185,
+					186,
+					187
+				],
+				"done": [
+					217
+				]
+			}
+		},
+		{
+			"id": 217,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[close_window.Done] {}"
+			},
+			"args": {
+				"first": {
+					"var": "frames"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_217",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					218
+				]
+			}
+		},
+		{
+			"id": 218,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_217"
 				}
 			},
 			"outs": {},

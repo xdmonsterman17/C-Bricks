@@ -90,7 +90,20 @@ void cb_be_music_forget_all(void) { cb_playing_n = 0; }
 
 /* ---- the window and its frames ---- */
 bool cb_be_open(int width, int height, const char *title, int fps, bool esc_closes) {
+    unsigned int flags = 0;
     SetTraceLogLevel(LOG_WARNING);  /* raylib's INFO lines would mix with the program's output */
+    if (CB_MSAA && CB_PIXEL == 1)
+        flags |= FLAG_MSAA_4X_HINT;
+    if (CB_VSYNC)
+        flags |= FLAG_VSYNC_HINT;
+    if (CB_WINDOW == 1 || CB_PIXEL > 1)
+        flags |= FLAG_WINDOW_RESIZABLE;
+    if (CB_WINDOW == 2)
+        flags |= FLAG_BORDERLESS_WINDOWED_MODE;
+    if (CB_WINDOW == 3)
+        flags |= FLAG_WINDOW_UNDECORATED;
+    if (flags)
+        SetConfigFlags(flags);
     InitWindow(width, height, title);
     if (!IsWindowReady())
         return false;
@@ -109,15 +122,130 @@ void cb_be_close(void) {
 
 bool cb_be_should_close(void) { return WindowShouldClose(); }
 bool cb_be_ready(void) { return IsWindowReady(); }
-void cb_be_begin_frame(void) { BeginDrawing(); }
-void cb_be_end_frame(void) { EndDrawing(); }
+/* The look's settings start as Project Settings > Graphics (CB_SHADING, CB_SPLAT, CB_PIXEL) and the Graphics
+   setting brick changes them while the program runs. A pixel size change waits for the next frame, so a frame is
+   drawn at one size. */
+static int cb_shading_v = CB_SHADING, cb_splat_v = CB_SPLAT, cb_pixel_v = CB_PIXEL, cb_pixel_next = CB_PIXEL;
+static void cb_shade_uniform(void);
+void cb_be_set_look(int what, int value) {
+    if (what == 0) { cb_shading_v = value < 0 ? 0 : value > 3 ? 3 : value; cb_shade_uniform(); }
+    else if (what == 1) cb_splat_v = value < 0 ? 0 : value > 2 ? 2 : value;
+    else if (what == 2) cb_pixel_next = value < 1 ? 1 : value > 16 ? 16 : value;
+}
+int cb_be_splat_mode(void) { return cb_splat_v; }
+
+/* Pixel size (Project Settings > Graphics): the frame is drawn into a smaller texture, cb_pixel_v times smaller
+   than the window, and stretched up without smoothing at the end. The program sees the small size
+   (cb_be_width / height, the mouse). */
+static RenderTexture2D cb_low;
+static bool cb_low_ok = false, cb_low_in_frame = false;
+
+static void cb_low_size(int *w, int *h) {
+    *w = (GetScreenWidth() + cb_pixel_v - 1) / cb_pixel_v;
+    *h = (GetScreenHeight() + cb_pixel_v - 1) / cb_pixel_v;
+    if (*w < 1) *w = 1;
+    if (*h < 1) *h = 1;
+}
+
+/* Post effects (Environment: vignette, scanlines, grain, posterize): the frame goes through a full-screen shader
+   on its way to the window, so it is drawn into the texture even at pixel size 1. */
+static float cb_post_fx[4] = { 0, 0, 0, 0 };   /* vignette, scanlines, grain, posterize */
+static float cb_post_fx2[4] = { 0, 0, 0, 0 };  /* bloom, curve, outline, dither */
+static float cb_snap_px = 0;                   /* vertex snapping: the grid in frame pixels (0 off) */
+static bool cb_post_on = false;
+static void cb_post_draw(Rectangle src, Rectangle dst);
+static void cb_snap_apply(void);
+
+static float cb_unit(double v) { return v > 0 ? (v > 1 ? 1.0f : (float)v) : 0.0f; }
+
+void cb_be_post(double vignette, double scanlines, double grain, double posterize, double bloom, double curve, double outline, double dither, double snap) {
+    int i;
+    cb_post_fx[0] = cb_unit(vignette);
+    cb_post_fx[1] = cb_unit(scanlines);
+    cb_post_fx[2] = cb_unit(grain);
+    cb_post_fx[3] = posterize >= 2 ? (posterize > 64 ? 64.0f : (float)posterize) : 0.0f;
+    cb_post_fx2[0] = cb_unit(bloom);
+    cb_post_fx2[1] = cb_unit(curve);
+    cb_post_fx2[2] = cb_unit(outline);
+    cb_post_fx2[3] = cb_unit(dither);
+    cb_snap_px = snap >= 1 ? (snap > 32 ? 32.0f : (float)snap) : 0.0f;
+    cb_post_on = false;
+    for (i = 0; i < 4; i++)
+        if (cb_post_fx[i] > 0 || cb_post_fx2[i] > 0)
+            cb_post_on = true;
+}
+
+void cb_be_begin_frame(void) {
+    cb_pixel_v = cb_pixel_next;
+    BeginDrawing();
+    cb_snap_apply();
+    if (cb_pixel_v > 1 || cb_post_on) {
+        int w, h;
+        cb_low_size(&w, &h);
+        if (!cb_low_ok || cb_low.texture.width != w || cb_low.texture.height != h) {
+            if (cb_low_ok)
+                UnloadRenderTexture(cb_low);
+            cb_low = LoadRenderTexture(w, h);
+            SetTextureFilter(cb_low.texture, TEXTURE_FILTER_POINT);
+            cb_low_ok = true;
+        }
+        BeginTextureMode(cb_low);
+        cb_low_in_frame = true;
+    }
+}
+
+void cb_be_end_frame(void) {
+    if (cb_low_in_frame) {
+        Rectangle src, dst;
+        EndTextureMode();
+        cb_low_in_frame = false;
+        src.x = 0; src.y = 0; src.width = (float)cb_low.texture.width; src.height = -(float)cb_low.texture.height;
+        dst.x = 0; dst.y = 0; dst.width = (float)(cb_low.texture.width * cb_pixel_v); dst.height = (float)(cb_low.texture.height * cb_pixel_v);
+        ClearBackground(BLACK);
+        cb_post_draw(src, dst);
+    }
+    EndDrawing();
+}
 void cb_be_flush(void) { rlDrawRenderBatchActive(); }
-int cb_be_width(void) { return GetScreenWidth(); }
-int cb_be_height(void) { return GetScreenHeight(); }
+int cb_be_width(void) { int w, h; if (cb_pixel_v > 1) { cb_low_size(&w, &h); return w; } return GetScreenWidth(); }
+int cb_be_height(void) { int w, h; if (cb_pixel_v > 1) { cb_low_size(&w, &h); return h; } return GetScreenHeight(); }
 int cb_be_fps(void) { return GetFPS(); }
 double cb_be_frame_time(void) { return (double)GetFrameTime(); }
 double cb_be_time(void) { return GetTime(); }
-void cb_be_screenshot(const char *path) { TakeScreenshot(path); }
+static RenderTexture2D cb_shot;
+static bool cb_shot_ok = false;
+
+void cb_be_screenshot(const char *path) {
+    if (cb_low_in_frame) {  /* the frame so far, at its own (small) size, with the post effects */
+        Image img;
+        if (cb_post_on) {
+            Rectangle src, dst;
+            int w = cb_low.texture.width, h = cb_low.texture.height;
+            if (!cb_shot_ok || cb_shot.texture.width != w || cb_shot.texture.height != h) {
+                if (cb_shot_ok)
+                    UnloadRenderTexture(cb_shot);
+                cb_shot = LoadRenderTexture(w, h);
+                cb_shot_ok = true;
+            }
+            EndTextureMode();
+            src.x = 0; src.y = 0; src.width = (float)w; src.height = -(float)h;
+            dst.x = 0; dst.y = 0; dst.width = (float)w; dst.height = (float)h;
+            BeginTextureMode(cb_shot);
+            ClearBackground(BLACK);
+            cb_post_draw(src, dst);
+            EndTextureMode();
+            BeginTextureMode(cb_low);
+            img = LoadImageFromTexture(cb_shot.texture);
+        } else {
+            img = LoadImageFromTexture(cb_low.texture);
+        }
+        ImageFlipVertical(&img);
+        ExportImage(img, path);
+        UnloadImage(img);
+        return;
+    }
+    TakeScreenshot(path);
+}
 
 /* ---- the keyboard and the mouse (CB_KEY_* are raylib's own key numbers) ---- */
 bool cb_be_key_down(int key) { return IsKeyDown(key); }
@@ -126,8 +254,8 @@ bool cb_be_key_released(int key) { return IsKeyReleased(key); }
 bool cb_be_mouse_down(int button) { return IsMouseButtonDown(button); }
 bool cb_be_mouse_pressed(int button) { return IsMouseButtonPressed(button); }
 bool cb_be_mouse_released(int button) { return IsMouseButtonReleased(button); }
-Vector2 cb_be_mouse_pos(void) { return GetMousePosition(); }
-Vector2 cb_be_mouse_delta(void) { return GetMouseDelta(); }
+Vector2 cb_be_mouse_pos(void) { Vector2 p = GetMousePosition(); p.x /= cb_pixel_v; p.y /= cb_pixel_v; return p; }
+Vector2 cb_be_mouse_delta(void) { Vector2 p = GetMouseDelta(); p.x /= cb_pixel_v; p.y /= cb_pixel_v; return p; }
 double cb_be_mouse_wheel(void) { return (double)GetMouseWheelMove(); }
 
 /* 0 visible, 1 hidden, 2 captured (hidden and held in the window: mouse look). */
@@ -163,7 +291,7 @@ Vector2 cb_be_text_size(const char *text, double size) {
 
 void cb_be_begin_2d(Vector2 center, double zoom, double rotation) {
     Camera2D c;
-    c.offset = cb_v2(GetScreenWidth() / 2.0, GetScreenHeight() / 2.0);
+    c.offset = cb_v2(cb_be_width() / 2.0, cb_be_height() / 2.0);
     c.target = center;
     c.rotation = (float)rotation;
     c.zoom = zoom > 0 ? (float)zoom : 1.0f;
@@ -222,7 +350,11 @@ void cb_be_sound_play(cb_sound h) {
    GLSL 330 (OpenGL 3.3: Windows, macOS), 120 (OpenGL 2.1: Linux, a Pi), 100 (the Web). */
 static Shader cb_lit;
 static bool cb_lit_ready = false;
-static bool cb_lit_ok = false;  /* false: the shader didn't compile, models stay unlit */
+static bool cb_lit_ok = false;
+/* The light, fog and ambient as last set (the shader has them for models; splats are lit in C with the same numbers). */
+static Vector3 cb_sun = { -0.3f, -0.8f, -0.5f };
+static float cb_sun_amb = 0.38f, cb_sun_col[3] = { 1, 1, 1 }, cb_fog_col[3] = { 1, 1, 1 }, cb_fog_dens = 0.0f;
+static float cb_amb_col[3] = { 1, 1, 1 }, cb_fog_start = 0.0f;  /* false: the shader didn't compile, models stay unlit */
 static Model cb_shape_models[4];
 static bool cb_shapes_ready = false;
 
@@ -240,25 +372,50 @@ static bool cb_shapes_ready = false;
 
 static const char cb_vs[] = CB_VS_HEAD
     "ATTR vec3 vertexPosition;\nATTR vec2 vertexTexCoord;\nATTR vec3 vertexNormal;\nATTR vec4 vertexColor;\n"
-    "uniform mat4 mvp;\nuniform mat4 matNormal;\n"
+    "uniform mat4 mvp;\nuniform mat4 matNormal;\nuniform vec2 snapGrid;\n"
     "VARY vec2 fragTexCoord;\nVARY vec4 fragColor;\nVARY vec3 fragNormal;\n"
     "void main() {\n"
     "    fragTexCoord = vertexTexCoord;\n    fragColor = vertexColor;\n"
     "    fragNormal = (matNormal * vec4(vertexNormal, 0.0)).xyz;\n"
-    "    gl_Position = mvp * vec4(vertexPosition, 1.0);\n}\n";
+    "    gl_Position = mvp * vec4(vertexPosition, 1.0);\n"
+    "    if (snapGrid.x > 0.5) {\n"  /* PS1 wobble: the vertex on screen jumps to a grid of snapGrid points across */
+    "        vec2 g = snapGrid * 0.5;\n"
+    "        gl_Position.xy = floor(gl_Position.xy / gl_Position.w * g + 0.5) / g * gl_Position.w;\n    }\n}\n";
 
 static const char cb_fs[] = CB_FS_HEAD
     "VARY vec2 fragTexCoord;\nVARY vec4 fragColor;\nVARY vec3 fragNormal;\n"
     "uniform sampler2D texture0;\nuniform vec4 colDiffuse;\nuniform vec3 lightDir;\nuniform float ambient;\n"
-    "uniform vec3 lightCol;\nuniform vec3 fogCol;\nuniform float fogDensity;\nuniform vec3 ambientCol;\nuniform float fogStart;\n"
+    "uniform float shade;\nuniform vec3 lightCol;\nuniform vec3 fogCol;\nuniform float fogDensity;\nuniform vec3 ambientCol;\nuniform float fogStart;\n"
     "void main() {\n"
     "    vec3 n = normalize(fragNormal);\n"
     "    if (!gl_FrontFacing) n = -n;\n"
-    "    vec3 light = ambient * ambientCol + (1.0 - ambient) * max(dot(n, -lightDir), 0.0) * lightCol;\n"
+    "    float diff = max(dot(n, -lightDir), 0.0);\n"
+    "    if (shade > 0.5 && shade < 1.5) diff = floor(diff * 3.0 + 0.5) / 3.0;\n"  /* toon: three steps of light */
+    "    vec3 light = ambient * ambientCol + (1.0 - ambient) * diff * lightCol;\n"
+    "    if (shade > 1.5) light = vec3(1.0);\n"  /* unlit */
     "    vec4 base = TEX(texture0, fragTexCoord) * colDiffuse * fragColor;\n"
     "    float seen = exp(-fogDensity * max(1.0 / gl_FragCoord.w - fogStart, 0.0));\n"  /* 1 / w: the depth from the camera */
     "    FRAG = vec4(mix(fogCol, base.rgb * light, seen), base.a);\n}\n";
 
+
+static bool cb_wire_3d = false;
+
+/* The lit shader's shade uniform follows the shading setting; the vertex snap its grid. Both wait for the shader. */
+static void cb_shade_uniform(void) {
+    if (cb_lit_ready && cb_lit_ok) {
+        float shade = cb_shading_v == 1 ? 1.0f : cb_shading_v == 2 ? 2.0f : 0.0f;
+        SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "shade"), &shade, SHADER_UNIFORM_FLOAT);
+    }
+}
+
+static void cb_snap_apply(void) {
+    if (cb_lit_ready && cb_lit_ok) {
+        float g[2];
+        g[0] = cb_snap_px > 0 ? (float)cb_be_width() / cb_snap_px : 0.0f;
+        g[1] = cb_snap_px > 0 ? (float)cb_be_height() / cb_snap_px : 0.0f;
+        SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "snapGrid"), g, SHADER_UNIFORM_VEC2);
+    }
+}
 
 static void cb_3d_ready(void) {
     if (cb_lit_ready)
@@ -273,7 +430,11 @@ static void cb_3d_ready(void) {
         } else {
             SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightDir"), &sun, SHADER_UNIFORM_VEC3);
             SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "ambient"), &amb, SHADER_UNIFORM_FLOAT);
+            cb_shade_uniform();
+            cb_snap_apply();
         }
+        cb_sun = sun;
+        cb_sun_amb = amb;
     }
     cb_lit_ready = true;
     {
@@ -281,6 +442,79 @@ static void cb_3d_ready(void) {
         cb_set_light_color(white, 1.0);
         cb_set_fog(white, 0.0);
         cb_set_ambient(white, 0.0);
+    }
+}
+
+/* The post shader (raylib's own vertex shader: fragTexCoord, fragColor). fx = vignette, scanlines, grain, posterize;
+   fx2 = bloom, curve, outline, dither. (The editor's preview, scripts/editor/post_fx.gd, is the same maths.) */
+static const char cb_post_fs[] = CB_FS_HEAD
+    "VARY vec2 fragTexCoord;\nVARY vec4 fragColor;\n"
+    "uniform sampler2D texture0;\nuniform vec4 fx;\nuniform vec4 fx2;\nuniform vec2 res;\n"
+    "vec3 src(vec2 uv) { return TEX(texture0, uv).rgb; }\n"
+    "float luma(vec3 c) { return dot(c, vec3(0.299, 0.587, 0.114)); }\n"
+    "float b2(float a, float b) { return mod(2.0 * a + 3.0 * b, 4.0); }\n"
+    "void main() {\n"
+    "    vec2 uv = fragTexCoord;\n"
+    "    if (fx2.y > 0.0) {\n"  /* CRT curve: the screen bulges, outside it is black */
+    "        vec2 w = uv * 2.0 - 1.0;\n"
+    "        w *= vec2(1.0 + w.y * w.y * fx2.y * 0.25, 1.0 + w.x * w.x * fx2.y * 0.25);\n"
+    "        uv = w * 0.5 + 0.5;\n"
+    "        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) { FRAG = vec4(0.0, 0.0, 0.0, 1.0); return; }\n"
+    "    }\n"
+    "    vec2 px = 1.0 / res;\n"
+    "    vec3 c = src(uv);\n"
+    "    if (fx2.z > 0.0) {\n"  /* outline: dark where the picture changes sharply (Sobel on the brightness) */
+    "        float tl = luma(src(uv + px * vec2(-1.0, -1.0))), t = luma(src(uv + px * vec2(0.0, -1.0))), tr = luma(src(uv + px * vec2(1.0, -1.0)));\n"
+    "        float l = luma(src(uv + px * vec2(-1.0, 0.0))), r = luma(src(uv + px * vec2(1.0, 0.0)));\n"
+    "        float bl = luma(src(uv + px * vec2(-1.0, 1.0))), bo = luma(src(uv + px * vec2(0.0, 1.0))), br = luma(src(uv + px * vec2(1.0, 1.0)));\n"
+    "        float gx = (tr + 2.0 * r + br) - (tl + 2.0 * l + bl), gy = (bl + 2.0 * bo + br) - (tl + 2.0 * t + tr);\n"
+    "        c *= 1.0 - fx2.z * clamp(sqrt(gx * gx + gy * gy) * 3.0, 0.0, 1.0);\n"
+    "    }\n"
+    "    if (fx2.x > 0.0) {\n"  /* bloom: the bright parts of 12 nearby points spill over */
+    "        vec3 glow = vec3(0.0);\n"
+    "        vec2 o1 = px * 2.5, o2 = px * 5.0;\n"
+    "        glow += max(src(uv + vec2(o1.x, 0.0)) - 0.6, 0.0) + max(src(uv - vec2(o1.x, 0.0)) - 0.6, 0.0);\n"
+    "        glow += max(src(uv + vec2(0.0, o1.y)) - 0.6, 0.0) + max(src(uv - vec2(0.0, o1.y)) - 0.6, 0.0);\n"
+    "        glow += max(src(uv + o1) - 0.6, 0.0) + max(src(uv - o1) - 0.6, 0.0);\n"
+    "        glow += max(src(uv + vec2(o1.x, -o1.y)) - 0.6, 0.0) + max(src(uv - vec2(o1.x, -o1.y)) - 0.6, 0.0);\n"
+    "        glow += max(src(uv + vec2(o2.x, 0.0)) - 0.6, 0.0) + max(src(uv - vec2(o2.x, 0.0)) - 0.6, 0.0);\n"
+    "        glow += max(src(uv + vec2(0.0, o2.y)) - 0.6, 0.0) + max(src(uv - vec2(0.0, o2.y)) - 0.6, 0.0);\n"
+    "        c += glow * (fx2.x * 0.25);\n"
+    "    }\n"
+    "    vec2 d = uv - vec2(0.5);\n"
+    "    c *= 1.0 - fx.x * clamp(dot(d, d) * 2.0, 0.0, 1.0);\n"                       /* vignette: dark corners */
+    "    c *= 1.0 - fx.y * 0.55 * mod(floor(uv.y * res.y), 2.0);\n"                    /* scanlines: every other row */
+    "    c += (fract(sin(dot(floor(uv * res), vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * fx.z * 0.35;\n"  /* grain */
+    "    if (fx2.w > 0.0) {\n"  /* dither: a 4 x 4 ordered pattern, one posterize step (or 1/31) wide */
+    "        vec2 p = mod(floor(uv * res), 4.0);\n"
+    "        float m = (4.0 * b2(mod(p.x, 2.0), mod(p.y, 2.0)) + b2(floor(p.x / 2.0), floor(p.y / 2.0))) / 16.0 - 0.46875;\n"
+    "        c += m * fx2.w / (fx.w > 1.5 ? fx.w - 1.0 : 31.0);\n"
+    "    }\n"
+    "    if (fx.w > 1.5) c = floor(clamp(c, 0.0, 1.0) * (fx.w - 1.0) + 0.5) / (fx.w - 1.0);\n"  /* posterize: fx.w levels a channel */
+    "    FRAG = vec4(c, 1.0);\n}\n";
+
+static Shader cb_post_shader;
+static bool cb_post_ready = false, cb_post_ok = false;
+
+static void cb_post_draw(Rectangle src, Rectangle dst) {
+    if (!cb_post_ready) {
+        cb_post_shader = LoadShaderFromMemory(NULL, cb_post_fs);
+        cb_post_ok = cb_post_shader.id != rlGetShaderIdDefault();
+        cb_post_ready = true;
+        if (!cb_post_ok)
+            fputs("[warning] post effects aren't available on this GPU\n", stderr);
+    }
+    if (cb_post_on && cb_post_ok) {
+        float res[2];
+        res[0] = (float)cb_low.texture.width; res[1] = (float)cb_low.texture.height;
+        SetShaderValue(cb_post_shader, GetShaderLocation(cb_post_shader, "fx"), cb_post_fx, SHADER_UNIFORM_VEC4);
+        SetShaderValue(cb_post_shader, GetShaderLocation(cb_post_shader, "fx2"), cb_post_fx2, SHADER_UNIFORM_VEC4);
+        SetShaderValue(cb_post_shader, GetShaderLocation(cb_post_shader, "res"), res, SHADER_UNIFORM_VEC2);
+        BeginShaderMode(cb_post_shader);
+        DrawTexturePro(cb_low.texture, src, dst, cb_v2(0, 0), 0.0f, WHITE);
+        EndShaderMode();
+    } else {
+        DrawTexturePro(cb_low.texture, src, dst, cb_v2(0, 0), 0.0f, WHITE);
     }
 }
 
@@ -292,6 +526,182 @@ static Model cb_lit_model(Mesh mesh) {
     return m;
 }
 
+
+/* ---- point splatting (2026-11-11): a model drawn as screen-facing discs (or squares) sprinkled over its
+   triangles instead of filled triangles. The points are picked per triangle by area (CB_SPLAT_DENSITY a
+   square world unit; the object's scale counts, so a big floor and a small box get the same spacing), once
+   per model and scale, and kept; they are lit in C with the light, ambient and fog set above, then drawn as
+   rlgl quads facing the camera, CB_SPLAT_SIZE across: so splats shrink with distance like real ones. ---- */
+typedef struct cb_pt { float p[3], n[3]; unsigned char c[4]; } cb_pt;
+typedef struct cb_splat_set { const void *key; int qx, qy, qz, stamp; cb_pt *pts; int count; } cb_splat_set;
+#define CB_SPLAT_SETS 48
+#define CB_SPLAT_MAX 150000  /* points of one model */
+static cb_splat_set cb_splats[CB_SPLAT_SETS];
+static int cb_splat_tick = 0;
+static bool cb_splat_now = (CB_SPLAT == 2);
+
+void cb_be_splat(bool on) { cb_splat_now = on; }
+
+static void cb_splat_forget(void) {
+    int i;
+    for (i = 0; i < CB_SPLAT_SETS; i++) {
+        free(cb_splats[i].pts);
+        memset(&cb_splats[i], 0, sizeof cb_splats[i]);
+    }
+}
+
+static int cb_scale_step(float s) { return s > 0.0001f ? (int)floor(log((double)s) / log(1.15) + 0.5) : -999; }
+
+static float cb_rand01(unsigned long *seed) {
+    *seed = *seed * 1103515245UL + 12345UL;
+    return (float)((*seed >> 8) & 0xFFFFFFUL) / 16777216.0f;
+}
+
+static cb_splat_set *cb_splats_for(const void *key, const Mesh *g, float sx, float sy, float sz) {
+    int qx = cb_scale_step(sx), qy = cb_scale_step(sy), qz = cb_scale_step(sz), i, slot = 0, oldest = 0x7fffffff;
+    cb_splat_set *set;
+    unsigned long seed = 12345UL;
+    int cap = 0, t;
+    float ex = (float)pow(1.15, qx), ey = (float)pow(1.15, qy), ez = (float)pow(1.15, qz);
+    for (i = 0; i < CB_SPLAT_SETS; i++) {
+        if (cb_splats[i].key == key && cb_splats[i].qx == qx && cb_splats[i].qy == qy && cb_splats[i].qz == qz) {
+            cb_splats[i].stamp = ++cb_splat_tick;
+            return &cb_splats[i];
+        }
+        if (cb_splats[i].stamp < oldest) {
+            oldest = cb_splats[i].stamp;
+            slot = i;
+        }
+    }
+    set = &cb_splats[slot];
+    free(set->pts);
+    memset(set, 0, sizeof *set);
+    set->key = key; set->qx = qx; set->qy = qy; set->qz = qz;
+    set->stamp = ++cb_splat_tick;
+    for (t = 0; t < g->triangleCount && set->count < CB_SPLAT_MAX; t++) {
+        int idx[3], k, want;
+        float v[3][3], e1[3], e2[3], cr[3], area, expect;
+        for (k = 0; k < 3; k++) {
+            int j;
+            idx[k] = g->indices ? (int)g->indices[t * 3 + k] : t * 3 + k;
+            for (j = 0; j < 3; j++)
+                v[k][j] = g->vertices[idx[k] * 3 + j];
+        }
+        for (k = 0; k < 3; k++) {  /* the triangle as the scaled object shows it */
+            e1[k] = (v[1][k] - v[0][k]) * (k == 0 ? ex : k == 1 ? ey : ez);
+            e2[k] = (v[2][k] - v[0][k]) * (k == 0 ? ex : k == 1 ? ey : ez);
+        }
+        cr[0] = e1[1] * e2[2] - e1[2] * e2[1];
+        cr[1] = e1[2] * e2[0] - e1[0] * e2[2];
+        cr[2] = e1[0] * e2[1] - e1[1] * e2[0];
+        area = 0.5f * sqrtf(cr[0] * cr[0] + cr[1] * cr[1] + cr[2] * cr[2]);
+        expect = area * (float)CB_SPLAT_DENSITY;
+        want = (int)expect;
+        if (cb_rand01(&seed) < expect - (float)want)
+            want++;
+        if (set->count + want > cap) {
+            cap = (set->count + want) * 2 + 64;
+            set->pts = (cb_pt *)realloc((void *)set->pts, sizeof(cb_pt) * (size_t)cap);
+            if (!set->pts) { fputs("out of memory\n", stderr); exit(3); }
+        }
+        for (k = 0; k < want && set->count < CB_SPLAT_MAX; k++) {
+            float r1 = sqrtf(cb_rand01(&seed)), r2 = cb_rand01(&seed);
+            float w[3], len;
+            int j;
+            cb_pt *pt = &set->pts[set->count++];
+            w[0] = 1.0f - r1; w[1] = r1 * (1.0f - r2); w[2] = r1 * r2;
+            for (j = 0; j < 3; j++)
+                pt->p[j] = w[0] * v[0][j] + w[1] * v[1][j] + w[2] * v[2][j];
+            for (j = 0; j < 3; j++) {
+                pt->n[j] = g->normals ? w[0] * g->normals[idx[0] * 3 + j] + w[1] * g->normals[idx[1] * 3 + j] + w[2] * g->normals[idx[2] * 3 + j] : cr[j];
+            }
+            len = sqrtf(pt->n[0] * pt->n[0] + pt->n[1] * pt->n[1] + pt->n[2] * pt->n[2]);
+            if (len > 0.00001f)
+                for (j = 0; j < 3; j++)
+                    pt->n[j] /= len;
+            for (j = 0; j < 4; j++)
+                pt->c[j] = g->colors ? (unsigned char)(w[0] * g->colors[idx[0] * 4 + j] + w[1] * g->colors[idx[1] * 4 + j] + w[2] * g->colors[idx[2] * 4 + j] + 0.5f) : 255;
+        }
+    }
+    return set;
+}
+
+/* Draws mesh g's points (the current transform is the object's placement). */
+static void cb_splat_draw(const void *key, const Mesh *g, cb_rgba tint) {
+    Matrix view = rlGetMatrixModelview(), mdl = rlGetMatrixTransform();
+    float sx = sqrtf(mdl.m0 * mdl.m0 + mdl.m1 * mdl.m1 + mdl.m2 * mdl.m2);
+    float sy = sqrtf(mdl.m4 * mdl.m4 + mdl.m5 * mdl.m5 + mdl.m6 * mdl.m6);
+    float sz = sqrtf(mdl.m8 * mdl.m8 + mdl.m9 * mdl.m9 + mdl.m10 * mdl.m10);
+    float rx = view.m0, ry = view.m4, rz = view.m8;  /* the camera's right, up and back in the world */
+    float ux = view.m1, uy = view.m5, uz = view.m9;
+    float bx = view.m2, by = view.m6, bz = view.m10;
+    float half = (float)CB_SPLAT_SIZE * 0.5f;
+    int i, shaded = cb_shading_v != 2;
+    cb_splat_set *set = cb_splats_for(key, g, sx, sy, sz);
+    static const float ring[6][2] = { { 1.0f, 0.0f }, { 0.5f, 0.8660254f }, { -0.5f, 0.8660254f }, { -1.0f, 0.0f }, { -0.5f, -0.8660254f }, { 0.5f, -0.8660254f } };
+    if (set->count == 0)
+        return;
+    rlDrawRenderBatchActive();
+    rlDisableBackfaceCulling();
+    rlPushMatrix();
+    rlLoadIdentity();  /* the points are placed in the world by hand below */
+    rlSetTexture(0);
+    rlBegin(RL_QUADS);
+    for (i = 0; i < set->count; i++) {
+        const cb_pt *pt = &set->pts[i];
+        float wx = mdl.m0 * pt->p[0] + mdl.m4 * pt->p[1] + mdl.m8 * pt->p[2] + mdl.m12;
+        float wy = mdl.m1 * pt->p[0] + mdl.m5 * pt->p[1] + mdl.m9 * pt->p[2] + mdl.m13;
+        float wz = mdl.m2 * pt->p[0] + mdl.m6 * pt->p[1] + mdl.m10 * pt->p[2] + mdl.m14;
+        float col[3], k;
+        int j;
+        col[0] = pt->c[0] / 255.0f * tint.r / 255.0f;
+        col[1] = pt->c[1] / 255.0f * tint.g / 255.0f;
+        col[2] = pt->c[2] / 255.0f * tint.b / 255.0f;
+        if (shaded) {
+            float nx = mdl.m0 * pt->n[0] + mdl.m4 * pt->n[1] + mdl.m8 * pt->n[2];
+            float ny = mdl.m1 * pt->n[0] + mdl.m5 * pt->n[1] + mdl.m9 * pt->n[2];
+            float nz = mdl.m2 * pt->n[0] + mdl.m6 * pt->n[1] + mdl.m10 * pt->n[2];
+            float len = sqrtf(nx * nx + ny * ny + nz * nz), diff;
+            if (len > 0.00001f) { nx /= len; ny /= len; nz /= len; }
+            if (nx * bx + ny * by + nz * bz < 0.0f) { nx = -nx; ny = -ny; nz = -nz; }  /* two-sided, like the shader */
+            diff = -(nx * cb_sun.x + ny * cb_sun.y + nz * cb_sun.z);
+            if (diff < 0.0f) diff = 0.0f;
+            if (cb_shading_v == 1) diff = floorf(diff * 3.0f + 0.5f) / 3.0f;
+            for (j = 0; j < 3; j++)
+                col[j] *= cb_sun_amb * cb_amb_col[j] + (1.0f - cb_sun_amb) * diff * cb_sun_col[j];
+        }
+        {
+            float depth = -(view.m2 * wx + view.m6 * wy + view.m10 * wz + view.m14), seen;
+            seen = cb_fog_dens > 0.0f ? expf(-cb_fog_dens * (depth > cb_fog_start ? depth - cb_fog_start : 0.0f)) : 1.0f;
+            for (j = 0; j < 3; j++) {
+                k = cb_fog_col[j] + (col[j] - cb_fog_col[j]) * seen;
+                col[j] = k < 0.0f ? 0.0f : k > 1.0f ? 1.0f : k;
+            }
+        }
+        rlColor4ub((unsigned char)(col[0] * 255.0f), (unsigned char)(col[1] * 255.0f), (unsigned char)(col[2] * 255.0f), tint.a);
+#define CB_CORNER(ax, ay) rlVertex3f(wx + half * ((ax) * rx + (ay) * ux), wy + half * ((ax) * ry + (ay) * uy), wz + half * ((ax) * rz + (ay) * uz))
+        if (CB_SPLAT_ROUND) {  /* a hexagon: three quads around the middle */
+            for (j = 0; j < 3; j++) {
+                const float *a = ring[j * 2], *b = ring[j * 2 + 1], *c = ring[(j * 2 + 2) % 6];
+                rlVertex3f(wx, wy, wz);
+                CB_CORNER(a[0], a[1]);
+                CB_CORNER(b[0], b[1]);
+                CB_CORNER(c[0], c[1]);
+            }
+        } else {
+            CB_CORNER(-1.0f, -1.0f);
+            CB_CORNER(1.0f, -1.0f);
+            CB_CORNER(1.0f, 1.0f);
+            CB_CORNER(-1.0f, 1.0f);
+        }
+#undef CB_CORNER
+    }
+    rlEnd();
+    rlDrawRenderBatchActive();
+    rlPopMatrix();
+    rlEnableBackfaceCulling();
+}
+
 /* 3D drawing from a camera (the neutral side keeps the camera: Set camera, Camera3D, shakes). */
 void cb_be_begin_3d(Vector3 position, Vector3 target, double fov, bool ortho) {
     Camera3D cam;
@@ -301,9 +711,21 @@ void cb_be_begin_3d(Vector3 position, Vector3 target, double fov, bool ortho) {
     cam.fovy = (float)fov;
     cam.projection = ortho ? CAMERA_ORTHOGRAPHIC : CAMERA_PERSPECTIVE;
     BeginMode3D(cam);
+#if !defined(GRAPHICS_API_OPENGL_ES2)
+    cb_wire_3d = (cb_shading_v == 3);
+    if (cb_wire_3d)
+        rlEnableWireMode();
+#endif
 }
 
-void cb_be_end_3d(void) { EndMode3D(); }
+void cb_be_end_3d(void) {
+#if !defined(GRAPHICS_API_OPENGL_ES2)
+    if (cb_wire_3d)
+        rlDisableWireMode();
+    cb_wire_3d = false;
+#endif
+    EndMode3D();
+}
 
 /* Shapes 1 across, their middle at the origin (the cylinder's too). */
 static void cb_shapes(void) {
@@ -326,6 +748,15 @@ void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba colo
     cb_shapes();
     if (kind < 0 || kind > 3)
         kind = 0;
+    if (cb_splat_now) {
+        rlPushMatrix();
+        rlTranslatef(at.x, at.y, at.z);
+        rlRotatef((float)turn, 0, 1, 0);
+        rlScalef(size.x, size.y, size.z);
+        cb_splat_draw(&cb_shape_models[kind], &cb_shape_models[kind].meshes[0], color);
+        rlPopMatrix();
+        return;
+    }
     DrawModelEx(cb_shape_models[kind], at, cb_v3(0, 1, 0), (float)turn, size, RL(color));
 }
 
@@ -519,6 +950,7 @@ void cb_mesh_finish(cb_mesh *m, bool smooth, bool both_sides, int file, int bric
     } else {
         m->model = cb_lit_model(g);
     }
+    cb_splat_forget();
     m->built = g.vertexCount > 0 || m->built;
     m->both = both_sides;
     m->smooth = smooth;
@@ -529,6 +961,15 @@ void cb_draw_mesh(cb_mesh *m, Vector3 at, Vector3 size, double turn, cb_rgba rgb
     Color tint = RL(rgba);
     if (!m || !m->built || m->model.meshes[0].vertexCount == 0)
         return;
+    if (cb_splat_now) {
+        rlPushMatrix();
+        rlTranslatef(at.x, at.y, at.z);
+        rlRotatef((float)turn, 0, 1, 0);
+        rlScalef(size.x, size.y, size.z);
+        cb_splat_draw(m, &m->model.meshes[0], rgba);
+        rlPopMatrix();
+        return;
+    }
     if (m->both)
         rlDisableBackfaceCulling();
     DrawModelEx(m->model, at, cb_v3(0, 1, 0), (float)turn, size, tint);
@@ -562,6 +1003,7 @@ void cb_mesh_set_points(cb_mesh *m, const cb_list *points, int file, int brick) 
         g->vertices[i * 3] = p->x; g->vertices[i * 3 + 1] = p->y; g->vertices[i * 3 + 2] = p->z;
     }
     cb_mesh_normals(g, false, NULL);
+    cb_splat_forget();
     UpdateMeshBuffer(*g, 0, g->vertices, g->vertexCount * 3 * (int)sizeof(float), 0);
     UpdateMeshBuffer(*g, 2, g->normals, g->vertexCount * 3 * (int)sizeof(float), 0);
 }
@@ -578,6 +1020,8 @@ void cb_set_light(Vector3 direction, double ambient) {
     Vector3 sun = cb_v3_normalize(direction);
     float amb = (float)ambient;
     cb_3d_ready();
+    cb_sun = sun;
+    cb_sun_amb = amb;
     if (!cb_lit_ok)
         return;
     SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightDir"), &sun, SHADER_UNIFORM_VEC3);
@@ -586,39 +1030,37 @@ void cb_set_light(Vector3 direction, double ambient) {
 
 /* The sun's color times its energy (Light3D), and the fog (Environment: density 0 = none). */
 void cb_set_light_color(cb_rgba color, double energy) {
-    float c[3];
     cb_3d_ready();
-    if (!cb_lit_ok)
-        return;
-    c[0] = (float)(color.r / 255.0 * energy);
-    c[1] = (float)(color.g / 255.0 * energy);
-    c[2] = (float)(color.b / 255.0 * energy);
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightCol"), c, SHADER_UNIFORM_VEC3);
+    cb_sun_col[0] = (float)(color.r / 255.0 * energy);
+    cb_sun_col[1] = (float)(color.g / 255.0 * energy);
+    cb_sun_col[2] = (float)(color.b / 255.0 * energy);
+    if (cb_lit_ok)
+        SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightCol"), cb_sun_col, SHADER_UNIFORM_VEC3);
 }
 
 void cb_set_fog(cb_rgba color, double density) {
-    float c[3], d = density > 0 ? (float)density : 0.0f;
     cb_3d_ready();
+    cb_fog_col[0] = color.r / 255.0f;
+    cb_fog_col[1] = color.g / 255.0f;
+    cb_fog_col[2] = color.b / 255.0f;
+    cb_fog_dens = density > 0 ? (float)density : 0.0f;
     if (!cb_lit_ok)
         return;
-    c[0] = color.r / 255.0f;
-    c[1] = color.g / 255.0f;
-    c[2] = color.b / 255.0f;
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogCol"), c, SHADER_UNIFORM_VEC3);
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogDensity"), &d, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogCol"), cb_fog_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogDensity"), &cb_fog_dens, SHADER_UNIFORM_FLOAT);
 }
 
 /* The ambient light's colour and where fog begins (Environment: ambient_color, fog_start). */
 void cb_set_ambient(cb_rgba color, double fog_start) {
-    float c[3], st = fog_start > 0 ? (float)fog_start : 0.0f;
     cb_3d_ready();
+    cb_amb_col[0] = color.r / 255.0f;
+    cb_amb_col[1] = color.g / 255.0f;
+    cb_amb_col[2] = color.b / 255.0f;
+    cb_fog_start = fog_start > 0 ? (float)fog_start : 0.0f;
     if (!cb_lit_ok)
         return;
-    c[0] = color.r / 255.0f;
-    c[1] = color.g / 255.0f;
-    c[2] = color.b / 255.0f;
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "ambientCol"), c, SHADER_UNIFORM_VEC3);
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogStart"), &st, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "ambientCol"), cb_amb_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogStart"), &cb_fog_start, SHADER_UNIFORM_FLOAT);
 }
 
 /* ---- 3D transforms and lines (the world's placement; Draw shape's lines and grids) ---- */
@@ -641,7 +1083,11 @@ void cb_be_target_begin(int width, int height) {
     BeginTextureMode(cb_rt);
 }
 
-void cb_be_target_end(void) { EndTextureMode(); }
+void cb_be_target_end(void) {
+    EndTextureMode();
+    if (cb_low_in_frame)
+        BeginTextureMode(cb_low);  /* back into the frame's small texture */
+}
 
 static Image cb_rt_image(void) {
     Image img = LoadImageFromTexture(cb_rt.texture);

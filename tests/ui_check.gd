@@ -442,9 +442,41 @@ func _in_3d() -> void:
 	view.end_drag()
 	var moved := WorldValues.vec(str(CBProject.read_world(_dir).objects[0].fields.get("position", "")))
 	_check(moved.distance_to(Vector3(3, 2, 3)) < 0.05, "dragging the X arrow moves it 2 along x and saves it (%s)" % moved)
-	var at := _frame
-	_wait_for = func() -> bool: return _frame > at + 20
-	_then = _in_2d
+	# Camera3D / Light3D are icons at their place (picked by a click near them on the screen), the Environment's
+	# post effects show over the view. Only the view's copy of the world is changed (nothing is saved).
+	var kept: Dictionary = context_world_copy()
+	var flat: Dictionary = _panel.context.world_flat
+	var ids: Array = flat.objects.map(func(x): return int(x.id))
+	var top := int(ids.max()) + 1
+	flat.objects.append({"id": top, "class": "Camera3D", "name": "Cam", "parent": 0, "fields": {"position": "4, 3, 8", "target": "1, 2, 3"}})
+	flat.objects.append({"id": top + 1, "class": "Light3D", "name": "Sun", "parent": 0, "fields": {"position": "-3, 4, 2"}})
+	flat.objects.append({"id": top + 2, "class": "Environment", "name": "Env", "parent": 0, "fields": {"sky": "#5a7fb0", "vignette": "0.7", "scanlines": "0.4", "posterize": "8"}})
+	view.rebuild()
+	_check(view._icons.size() == 2 and view._post.visible, "a Camera3D and a Light3D are icons, and the Environment's post effects show (%d icons)" % view._icons.size())
+	_check(view._post.material.shader.get_shader_uniform_list().size() > 0, "the post-effect shader compiled (it lists its uniforms)")
+	_check(view._post_btn.visible and view._post_btn.button_pressed, "the Effects checkbox shows while an effect is on")
+	view._post_btn.button_pressed = false
+	_check(not view._post.visible and view._post_btn.visible, "Effects off hides the post preview (the checkbox stays)")
+	view._post_btn.button_pressed = true
+	_check(view._post.visible, "Effects on shows it again")
+	_check(view.pick_at(view._cam.unproject_position(Vector3(4, 3, 8)) + Vector2(5, 4)) == top, "clicking near the Camera3D's icon picks it")
+	_check(view.pick_at(view._cam.unproject_position(Vector3(-3, 4, 2))) == top + 1, "clicking the Light3D's icon picks it")
+	_wait_for = func() -> bool: return _frame > _frame_mark + 10
+	_frame_mark = _frame
+	_then = func() -> void:
+		_shot("view_3d_icons")
+		flat.objects = kept.objects
+		view.rebuild()
+		_wait_for = func() -> bool: return _frame > _frame_mark + 20
+		_frame_mark = _frame
+		_then = _in_2d
+
+
+var _frame_mark := 0
+
+
+func context_world_copy() -> Dictionary:
+	return (_panel.context.world_flat as Dictionary).duplicate(true)
 
 
 ## The 2D screen: a Label on the game window's frame, picked and dragged.
