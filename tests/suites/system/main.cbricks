@@ -1,7 +1,7 @@
 {
 	"format": "c-bricks",
 	"version": 4,
-	"next_id": 122,
+	"next_id": 141,
 	"nodes": [
 		{
 			"id": 1,
@@ -21,27 +21,469 @@
 				"out": [
 					101,
 					102,
-					103,
 					104,
 					105,
-					106,
+					107,
 					108,
-					109,
 					110,
-					112,
+					111,
 					113,
+					114,
 					115,
-					116,
 					117,
 					118,
 					119,
 					120,
-					121
+					121,
+					122,
+					124,
+					125,
+					126,
+					128,
+					129,
+					131,
+					132,
+					133,
+					134,
+					135,
+					136,
+					137,
+					138,
+					139
 				]
 			}
 		},
 		{
 			"id": 101,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Count"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "a_count",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.Count] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_count"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_102",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					103
+				]
+			}
+		},
+		{
+			"id": 103,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_102"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "At index"
+			},
+			"args": {
+				"index": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a_at_index",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.At index] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_at_index"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_105",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					106
+				]
+			}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_105"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Option"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "name"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a_option",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.Option] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_option"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_108",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_108"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "args",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Flag"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "loud"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "a_flag",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[args.Flag] {}"
+			},
+			"args": {
+				"first": {
+					"var": "a_flag"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_111",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					112
+				]
+			}
+		},
+		{
+			"id": 112,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_111"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 113,
+			"type": "time",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"seconds": {
+					"var": "now",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "now"
+				},
+				"b": {
+					"type": "int",
+					"value": "1700000000"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "recent",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "recent"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_115",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					116
+				]
+			}
+		},
+		{
+			"id": 116,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_115"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
 			"type": "sleep",
 			"pos": [
 				0,
@@ -62,7 +504,7 @@
 			"links": {}
 		},
 		{
-			"id": 102,
+			"id": 118,
 			"type": "print",
 			"pos": [
 				0,
@@ -85,7 +527,7 @@
 			"links": {}
 		},
 		{
-			"id": 103,
+			"id": 119,
 			"type": "env",
 			"pos": [
 				0,
@@ -111,7 +553,7 @@
 			"links": {}
 		},
 		{
-			"id": 104,
+			"id": 120,
 			"type": "text",
 			"pos": [
 				0,
@@ -138,7 +580,7 @@
 			"links": {}
 		},
 		{
-			"id": 105,
+			"id": 121,
 			"type": "compare",
 			"pos": [
 				0,
@@ -169,7 +611,7 @@
 			"links": {}
 		},
 		{
-			"id": 106,
+			"id": 122,
 			"type": "text",
 			"pos": [
 				0,
@@ -190,18 +632,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_106",
+					"var": "line_122",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					107
+					123
 				]
 			}
 		},
 		{
-			"id": 107,
+			"id": 123,
 			"type": "print",
 			"pos": [
 				0,
@@ -216,14 +658,14 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_106"
+					"var": "line_122"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 108,
+			"id": 124,
 			"type": "env",
 			"pos": [
 				0,
@@ -249,7 +691,7 @@
 			"links": {}
 		},
 		{
-			"id": 109,
+			"id": 125,
 			"type": "text",
 			"pos": [
 				0,
@@ -276,7 +718,7 @@
 			"links": {}
 		},
 		{
-			"id": 110,
+			"id": 126,
 			"type": "text",
 			"pos": [
 				0,
@@ -297,18 +739,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_110",
+					"var": "line_126",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					111
+					127
 				]
 			}
 		},
 		{
-			"id": 111,
+			"id": 127,
 			"type": "print",
 			"pos": [
 				0,
@@ -323,14 +765,14 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_110"
+					"var": "line_126"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 112,
+			"id": 128,
 			"type": "run_command",
 			"pos": [
 				0,
@@ -356,7 +798,7 @@
 			"links": {}
 		},
 		{
-			"id": 113,
+			"id": 129,
 			"type": "text",
 			"pos": [
 				0,
@@ -377,18 +819,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_113",
+					"var": "line_129",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					114
+					130
 				]
 			}
 		},
 		{
-			"id": 114,
+			"id": 130,
 			"type": "print",
 			"pos": [
 				0,
@@ -403,14 +845,14 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_113"
+					"var": "line_129"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 115,
+			"id": 131,
 			"type": "terminal",
 			"pos": [
 				0,
@@ -429,7 +871,7 @@
 			"links": {}
 		},
 		{
-			"id": 116,
+			"id": 132,
 			"type": "terminal",
 			"pos": [
 				0,
@@ -447,7 +889,7 @@
 			"links": {}
 		},
 		{
-			"id": 117,
+			"id": 133,
 			"type": "terminal",
 			"pos": [
 				0,
@@ -474,7 +916,7 @@
 			"links": {}
 		},
 		{
-			"id": 118,
+			"id": 134,
 			"type": "terminal",
 			"pos": [
 				0,
@@ -492,7 +934,7 @@
 			"links": {}
 		},
 		{
-			"id": 119,
+			"id": 135,
 			"type": "terminal",
 			"pos": [
 				0,
@@ -510,7 +952,7 @@
 			"links": {}
 		},
 		{
-			"id": 120,
+			"id": 136,
 			"type": "terminal",
 			"pos": [
 				0,
@@ -528,7 +970,7 @@
 			"links": {}
 		},
 		{
-			"id": 121,
+			"id": 137,
 			"type": "print",
 			"pos": [
 				0,
@@ -545,6 +987,73 @@
 				"value": {
 					"type": "string",
 					"value": "[terminal] 6 modes written"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[quit] Exit program next (code 0)"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 139,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[quit] not reached"
 				}
 			},
 			"outs": {},

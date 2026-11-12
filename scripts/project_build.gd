@@ -386,7 +386,7 @@ static func brick_caps(type: String) -> Array:
 	var def: Dictionary = T.DEFS.get(type, {})
 	var cat := str(def.get("cat", ""))
 	var caps := []
-	if bool(def.get("graphics", false)) or cat in ["graphics", "ui", "3d"] or type in ["frame_start", "frame_end", "button_clicked", "player_key"]:
+	if bool(def.get("graphics", false)) or cat in ["graphics", "game", "audio", "ui", "3d"] or type in ["frame_start", "frame_end", "button_clicked", "player_key"]:
 		caps.append("graphics")
 	if cat == "3d":
 		caps.append("3d")
@@ -809,6 +809,7 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba color);",
 			"cb_mesh *cb_mesh_new(void);",
 			"cb_mesh *cb_mesh_begin(cb_mesh *mesh);",
+			"/* front = the side where a, b, c go round CLOCKWISE (Add to mesh: (0,0,0) (1,0,0) (0,0,1) faces up) */",
 			"void cb_mesh_triangle(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, cb_rgba color);",
 			"void cb_mesh_quad(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, Vector3 d, cb_rgba color);",
 			"void cb_mesh_shape(cb_mesh *mesh, int kind, Vector3 at, Vector3 size, cb_rgba color);",
@@ -836,7 +837,7 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"int cb_be_fps(void);",
 			"double cb_be_frame_time(void);",
 			"double cb_be_time(void);",
-			"void cb_be_screenshot(const char *path);",
+			"bool cb_be_screenshot(const char *path);",
 			"bool cb_be_key_down(int key);",
 			"bool cb_be_key_pressed(int key);",
 			"bool cb_be_key_released(int key);",
@@ -904,7 +905,7 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"double cb_get_time_scale(void);",
 			"void cb_on_click(int side, const char *name, void (*fn)(void *button));",
 			"bool cb_mouse_over_ui(void);",
-			"void cb_screenshot(const char *path);",
+			"bool cb_screenshot(const char *path);",
 			"extern const char *cb_click_spec;",
 			"void cb_window_opened(void);",
 			"bool cb_loop_go(void);",

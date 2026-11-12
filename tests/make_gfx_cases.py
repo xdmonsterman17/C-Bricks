@@ -30,6 +30,9 @@ CASES = {
                       {"bloom": "0.8", "curve": "0.6", "outline": "0.8", "dither": "0.9", "posterize": "8"}),
     "gfx_snap": ({"pixel": 2}, None, (160, 100), "PS1 vertex snapping (a 40 x 25 grid) with dither at pixel size 2",
                  {"snap": "4", "dither": "0.6", "posterize": "16"}),
+    # A floor far bigger than the point cap: its points are thinned evenly (and grow), not cut off at the far triangles
+    "gfx_splat_big": ({"splat": "full", "splat_size": 0.12, "splat_density": 90}, None, (320, 200), "a 200 x 200 floor in full splatting: over the point cap, still covered to the horizon",
+                      {}, {"Floor": {"size": "200, 0.2, 200", "position": "0, -0.6, 0"}}),
     "gfx_runtime": ({}, None, (160, 100), "frame 5: Graphics setting bricks set toon shading and pixel size 2; Field bricks set the Environment's vignette and outline",
                     {}),
 }
@@ -37,6 +40,7 @@ CASES = {
 for name, spec in CASES.items():
     gfx, mark, size, what = spec[:4]
     env = spec[4] if len(spec) > 4 else {}
+    objs = spec[5] if len(spec) > 5 else {}
     D = os.path.join(T, "cases", name)
     if os.path.isdir(D):
         shutil.rmtree(D)
@@ -46,6 +50,8 @@ for name, spec in CASES.items():
     for o in scene["objects"]:
         if o["class"] == "Environment":
             o["fields"].update(env)
+        if o["name"] in objs:
+            o["fields"].update(objs[o["name"]])
         if mark == "even" and o["name"].startswith("Box") and int(o["name"][3:]) % 2 == 0:
             o["fields"]["splat"] = "true"
     json.dump(scene, open(os.path.join(D, "main.cbscene"), "w"), indent="\t")

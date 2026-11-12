@@ -89,6 +89,9 @@ void cb_be_music_update(void) {
 void cb_be_music_forget_all(void) { cb_playing_n = 0; }
 
 /* ---- the window and its frames ---- */
+static float cb_splat_q = 1.0f;  /* the quality level 0.05..1: the share of every object's points drawn; follows the frame time */
+static long cb_splat_drawn = 0;  /* points drawn this frame */
+static int cb_target_fps = 60;
 bool cb_be_open(int width, int height, const char *title, int fps, bool esc_closes) {
     unsigned int flags = 0;
     SetTraceLogLevel(LOG_WARNING);  /* raylib's INFO lines would mix with the program's output */
@@ -108,6 +111,7 @@ bool cb_be_open(int width, int height, const char *title, int fps, bool esc_clos
     if (!IsWindowReady())
         return false;
     SetTargetFPS(fps);
+    cb_target_fps = fps > 0 ? fps : 60;
     if (!esc_closes)
         SetExitKey(KEY_NULL);
     InitAudioDevice();
@@ -194,7 +198,28 @@ void cb_be_begin_frame(void) {
     }
 }
 
+#ifdef CB_SPLAT_PROFILE
+void cb_prof_report(void);
+#endif
+/* Splat quality follows the frame time: slower than the target frame rate (by 12%): fewer points, each bigger;
+   faster by 20%: more again. It moves a little each frame so it doesn't flicker. */
+static void cb_splat_adapt(void) {
+    if (cb_splat_drawn > 0) {
+        double dt = (double)GetFrameTime(), want = 1.0 / (double)cb_target_fps;
+        if (dt > want * 1.12)
+            cb_splat_q *= 0.92f;
+        else if (dt < want * 0.8)
+            cb_splat_q *= 1.03f;
+        if (cb_splat_q > 1.0f) cb_splat_q = 1.0f;
+        if (cb_splat_q < 0.05f) cb_splat_q = 0.05f;
+    }
+    cb_splat_drawn = 0;
+}
+
 void cb_be_end_frame(void) {
+#ifdef CB_SPLAT_PROFILE
+    { static int n = 0; if (++n % 30 == 0) cb_prof_report(); }
+#endif
     if (cb_low_in_frame) {
         Rectangle src, dst;
         EndTextureMode();
@@ -204,6 +229,7 @@ void cb_be_end_frame(void) {
         ClearBackground(BLACK);
         cb_post_draw(src, dst);
     }
+    cb_splat_adapt();
     EndDrawing();
 }
 void cb_be_flush(void) { rlDrawRenderBatchActive(); }
@@ -215,7 +241,8 @@ double cb_be_time(void) { return GetTime(); }
 static RenderTexture2D cb_shot;
 static bool cb_shot_ok = false;
 
-void cb_be_screenshot(const char *path) {
+bool cb_be_screenshot(const char *path) {
+    bool ok;
     if (cb_low_in_frame) {  /* the frame so far, at its own (small) size, with the post effects */
         Image img;
         if (cb_post_on) {
@@ -240,11 +267,16 @@ void cb_be_screenshot(const char *path) {
             img = LoadImageFromTexture(cb_low.texture);
         }
         ImageFlipVertical(&img);
-        ExportImage(img, path);
+        ok = ExportImage(img, path);
         UnloadImage(img);
-        return;
+        return ok;
     }
-    TakeScreenshot(path);
+    {   /* (raylib's TakeScreenshot drops the folder: this writes exactly where asked) */
+        Image img = LoadImageFromScreen();
+        ok = ExportImage(img, path);
+        UnloadImage(img);
+    }
+    return ok;
 }
 
 /* ---- the keyboard and the mouse (CB_KEY_* are raylib's own key numbers) ---- */
@@ -533,7 +565,10 @@ static Model cb_lit_model(Mesh mesh) {
    per model and scale, and kept; they are lit in C with the light, ambient and fog set above, then drawn as
    rlgl quads facing the camera, CB_SPLAT_SIZE across: so splats shrink with distance like real ones. ---- */
 typedef struct cb_pt { float p[3], n[3]; unsigned char c[4]; } cb_pt;
-typedef struct cb_splat_set { const void *key; int qx, qy, qz, stamp; cb_pt *pts; int count; } cb_splat_set;
+#define CB_SPLAT_CHUNK 16384  /* points in one vertex buffer: 4 corners each, so indices fit 16 bits */
+/* thin: the points' size factor when the cap thinned them. On the GPU path the points live in vertex buffers
+   (chunks of CB_SPLAT_CHUNK points, 4 corner vertices each) and pts is freed; center / radius bound them for culling. */
+typedef struct cb_splat_set { const void *key; int qx, qy, qz, stamp; cb_pt *pts; int count; float thin; unsigned int *vao, *vbo; int chunks; float center[3], radius; } cb_splat_set;
 #define CB_SPLAT_SETS 48
 #define CB_SPLAT_MAX 150000  /* points of one model */
 static cb_splat_set cb_splats[CB_SPLAT_SETS];
@@ -542,12 +577,20 @@ static bool cb_splat_now = (CB_SPLAT == 2);
 
 void cb_be_splat(bool on) { cb_splat_now = on; }
 
+static void cb_splat_free(cb_splat_set *set) {
+    int i;
+    for (i = 0; i < set->chunks; i++) {
+        rlUnloadVertexArray(set->vao[i]);
+        rlUnloadVertexBuffer(set->vbo[i]);
+    }
+    free(set->vao); free(set->vbo); free(set->pts);
+    memset(set, 0, sizeof *set);
+}
+
 static void cb_splat_forget(void) {
     int i;
-    for (i = 0; i < CB_SPLAT_SETS; i++) {
-        free(cb_splats[i].pts);
-        memset(&cb_splats[i], 0, sizeof cb_splats[i]);
-    }
+    for (i = 0; i < CB_SPLAT_SETS; i++)
+        cb_splat_free(&cb_splats[i]);
 }
 
 static int cb_scale_step(float s) { return s > 0.0001f ? (int)floor(log((double)s) / log(1.15) + 0.5) : -999; }
@@ -557,11 +600,14 @@ static float cb_rand01(unsigned long *seed) {
     return (float)((*seed >> 8) & 0xFFFFFFUL) / 16777216.0f;
 }
 
+static void cb_splat_upload(cb_splat_set *set);
+
 static cb_splat_set *cb_splats_for(const void *key, const Mesh *g, float sx, float sy, float sz) {
     int qx = cb_scale_step(sx), qy = cb_scale_step(sy), qz = cb_scale_step(sz), i, slot = 0, oldest = 0x7fffffff;
     cb_splat_set *set;
     unsigned long seed = 12345UL;
     int cap = 0, t;
+    float dens = 1.0f;
     float ex = (float)pow(1.15, qx), ey = (float)pow(1.15, qy), ez = (float)pow(1.15, qz);
     for (i = 0; i < CB_SPLAT_SETS; i++) {
         if (cb_splats[i].key == key && cb_splats[i].qx == qx && cb_splats[i].qy == qy && cb_splats[i].qz == qz) {
@@ -574,10 +620,35 @@ static cb_splat_set *cb_splats_for(const void *key, const Mesh *g, float sx, flo
         }
     }
     set = &cb_splats[slot];
-    free(set->pts);
-    memset(set, 0, sizeof *set);
+    cb_splat_free(set);
     set->key = key; set->qx = qx; set->qy = qy; set->qz = qz;
     set->stamp = ++cb_splat_tick;
+    set->thin = 1.0f;
+    {   /* a big object (a floor) would pass the cap and lose its far triangles: thin every triangle evenly instead,
+           and let the points grow to keep the surface covered */
+        double total = 0.0;
+        for (t = 0; t < g->triangleCount; t++) {
+            int k;
+            float v[3][3], e1[3], e2[3], cr[3];
+            for (k = 0; k < 3; k++) {
+                int j, ix = g->indices ? (int)g->indices[t * 3 + k] : t * 3 + k;
+                for (j = 0; j < 3; j++)
+                    v[k][j] = g->vertices[ix * 3 + j];
+            }
+            for (k = 0; k < 3; k++) {
+                e1[k] = (v[1][k] - v[0][k]) * (k == 0 ? ex : k == 1 ? ey : ez);
+                e2[k] = (v[2][k] - v[0][k]) * (k == 0 ? ex : k == 1 ? ey : ez);
+            }
+            cr[0] = e1[1] * e2[2] - e1[2] * e2[1];
+            cr[1] = e1[2] * e2[0] - e1[0] * e2[2];
+            cr[2] = e1[0] * e2[1] - e1[1] * e2[0];
+            total += 0.5 * sqrt((double)(cr[0] * cr[0] + cr[1] * cr[1] + cr[2] * cr[2])) * CB_SPLAT_DENSITY;
+        }
+        if (total > (double)CB_SPLAT_MAX * 0.95) {
+            dens = (float)((double)CB_SPLAT_MAX * 0.95 / total);
+            set->thin = 1.0f / sqrtf(dens);
+        }
+    }
     for (t = 0; t < g->triangleCount && set->count < CB_SPLAT_MAX; t++) {
         int idx[3], k, want;
         float v[3][3], e1[3], e2[3], cr[3], area, expect;
@@ -595,7 +666,7 @@ static cb_splat_set *cb_splats_for(const void *key, const Mesh *g, float sx, flo
         cr[1] = e1[2] * e2[0] - e1[0] * e2[2];
         cr[2] = e1[0] * e2[1] - e1[1] * e2[0];
         area = 0.5f * sqrtf(cr[0] * cr[0] + cr[1] * cr[1] + cr[2] * cr[2]);
-        expect = area * (float)CB_SPLAT_DENSITY;
+        expect = area * (float)CB_SPLAT_DENSITY * dens;
         want = (int)expect;
         if (cb_rand01(&seed) < expect - (float)want)
             want++;
@@ -623,8 +694,253 @@ static cb_splat_set *cb_splats_for(const void *key, const Mesh *g, float sx, flo
                 pt->c[j] = g->colors ? (unsigned char)(w[0] * g->colors[idx[0] * 4 + j] + w[1] * g->colors[idx[1] * 4 + j] + w[2] * g->colors[idx[2] * 4 + j] + 0.5f) : 255;
         }
     }
+    for (t = set->count - 1; t > 0; t--) {  /* shuffled: any prefix is an even sample (the quality level draws a prefix) */
+        int u = (int)(cb_rand01(&seed) * (float)(t + 1));
+        cb_pt tmp;
+        if (u > t) u = t;
+        tmp = set->pts[t]; set->pts[t] = set->pts[u]; set->pts[u] = tmp;
+    }
+    cb_splat_upload(set);
     return set;
 }
+
+
+/* ---- the GPU path: the points sit in static vertex buffers and a vertex shader does the rest (transform,
+   light, fog, the camera-facing corner), so a frame costs the CPU a handful of draw calls however many points
+   there are. Each point is 4 vertices (position, normal + which corner, color) and 6 indices. The quality level
+   draws a prefix of the shuffled points. If the GPU has no vertex arrays or the shader fails, the C loop below
+   draws the points as before. ---- */
+static const char cb_splat_vs[] = CB_VS_HEAD
+    "ATTR vec3 vertexPosition;\nATTR vec4 vertexNormal;\nATTR vec4 vertexColor;\n"
+    "uniform mat4 matModel;\nuniform mat4 matView;\nuniform mat4 matProj;\nuniform float splatHalf;\nuniform vec4 tint;\n"
+    "uniform vec3 sunEye;\nuniform float ambient;\nuniform float shade;\nuniform vec3 lightCol;\nuniform vec3 ambientCol;\n"
+    "uniform vec3 fogCol;\nuniform float fogDensity;\nuniform float fogStart;\n"
+    "VARY vec4 fragColor;\nVARY vec2 fragCorner;\n"
+    "void main() {\n"
+    "    float k = floor(vertexNormal.w * 127.0 + 0.5);\n"  /* the corner: 0 (-,-), 1 (+,-), 2 (+,+), 3 (-,+) */
+    "    vec2 cn = vec2((k > 0.5 && k < 2.5) ? 1.0 : -1.0, k > 1.5 ? 1.0 : -1.0);\n"
+    "    vec4 e = matView * (matModel * vec4(vertexPosition, 1.0));\n"
+    "    vec3 n = (matView * (matModel * vec4(vertexNormal.xyz, 0.0))).xyz;\n"
+    "    n = dot(n, n) > 0.00000001 ? normalize(n) : vec3(0.0, 0.0, 1.0);\n"
+    "    if (n.z < 0.0) n = -n;\n"  /* two-sided, like the lit shader */
+    "    float diff = max(dot(n, -sunEye), 0.0);\n"
+    "    if (shade > 0.5 && shade < 1.5) diff = floor(diff * 3.0 + 0.5) / 3.0;\n"
+    "    vec3 light = ambient * ambientCol + (1.0 - ambient) * diff * lightCol;\n"
+    "    if (shade > 1.5) light = vec3(1.0);\n"
+    "    float depth = -e.z;\n"
+    "    float seen = fogDensity > 0.0 ? exp(-fogDensity * max(depth - fogStart, 0.0)) : 1.0;\n"
+    "    fragColor = vec4(mix(fogCol, vertexColor.rgb * tint.rgb * light, seen), tint.a);\n"
+    "    fragCorner = cn;\n"
+    "    e.xy += cn * splatHalf;\n"
+    "    gl_Position = matProj * e;\n}\n";
+
+static const char cb_splat_fs[] = CB_FS_HEAD
+    "VARY vec4 fragColor;\nVARY vec2 fragCorner;\nuniform float hexa;\n"
+    "void main() {\n"
+    "    if (hexa > 0.5) {\n"  /* a hexagon, as the C path draws */
+    "        vec2 a = abs(fragCorner);\n"
+    "        if (max(a.x * 0.8660254 + a.y * 0.5, a.y) > 0.8660254) discard;\n    }\n"
+    "    FRAG = fragColor;\n}\n";
+
+static Shader cb_splat_sh;
+static int cb_splat_gpu = 0;  /* 0 not tried, 1 works, -1 not available */
+static unsigned int cb_splat_ebo = 0;
+static int cb_splat_loc[16];
+static const char *const cb_splat_names[16] = { "matModel", "matView", "matProj", "splatHalf", "tint", "sunEye", "ambient", "shade",
+    "lightCol", "ambientCol", "fogCol", "fogDensity", "fogStart", "hexa", "", "" };
+
+static bool cb_splat_gpu_ok(void) {
+    if (cb_splat_gpu)
+        return cb_splat_gpu > 0;
+    cb_splat_gpu = -1;
+    if (!cb_lit_ok)
+        return false;
+    cb_splat_sh = LoadShaderFromMemory(cb_splat_vs, cb_splat_fs);
+    if (cb_splat_sh.id == rlGetShaderIdDefault() || cb_splat_sh.id == 0)
+        return false;
+    {
+        unsigned short *idx = (unsigned short *)malloc(sizeof(unsigned short) * 6 * CB_SPLAT_CHUNK);
+        unsigned int vao, i;
+        if (!idx)
+            return false;
+        for (i = 0; i < CB_SPLAT_CHUNK; i++) {
+            idx[i * 6] = (unsigned short)(i * 4); idx[i * 6 + 1] = (unsigned short)(i * 4 + 1); idx[i * 6 + 2] = (unsigned short)(i * 4 + 2);
+            idx[i * 6 + 3] = (unsigned short)(i * 4); idx[i * 6 + 4] = (unsigned short)(i * 4 + 2); idx[i * 6 + 5] = (unsigned short)(i * 4 + 3);
+        }
+        vao = rlLoadVertexArray();  /* 0: the GPU has no vertex arrays */
+        if (vao == 0) {
+            free(idx);
+            return false;
+        }
+        rlEnableVertexArray(vao);  /* the index buffer is loaded with a vertex array bound (core profiles insist) */
+        cb_splat_ebo = rlLoadVertexBufferElement(idx, (int)(sizeof(unsigned short) * 6 * CB_SPLAT_CHUNK), false);
+        rlDisableVertexArray();
+        rlUnloadVertexArray(vao);
+        free(idx);
+    }
+    for (int i = 0; i < 14; i++)
+        cb_splat_loc[i] = GetShaderLocation(cb_splat_sh, cb_splat_names[i]);
+    {
+        float hexa = CB_SPLAT_ROUND ? 1.0f : 0.0f;
+        SetShaderValue(cb_splat_sh, cb_splat_loc[13], &hexa, SHADER_UNIFORM_FLOAT);
+    }
+    cb_splat_gpu = 1;
+    return true;
+}
+
+/* Packs the points into vertex buffers (and frees them from RAM). A failure leaves them for the C loop. */
+static void cb_splat_upload(cb_splat_set *set) {
+    static const signed char cx[4] = { 0, 1, 2, 3 };
+    int i, c, chunks;
+    float lo[3] = { 1e30f, 1e30f, 1e30f }, hi[3] = { -1e30f, -1e30f, -1e30f };
+    unsigned char *buf;
+    if (set->count == 0)
+        return;
+    for (i = 0; i < set->count; i++)
+        for (c = 0; c < 3; c++) {
+            if (set->pts[i].p[c] < lo[c]) lo[c] = set->pts[i].p[c];
+            if (set->pts[i].p[c] > hi[c]) hi[c] = set->pts[i].p[c];
+        }
+    for (c = 0; c < 3; c++)
+        set->center[c] = (lo[c] + hi[c]) * 0.5f;
+    set->radius = 0.0f;
+    for (i = 0; i < set->count; i++) {
+        float d[3], r;
+        for (c = 0; c < 3; c++)
+            d[c] = set->pts[i].p[c] - set->center[c];
+        r = sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+        if (r > set->radius) set->radius = r;
+    }
+    if (!cb_splat_gpu_ok())
+        return;
+    chunks = (set->count + CB_SPLAT_CHUNK - 1) / CB_SPLAT_CHUNK;
+    set->vao = (unsigned int *)calloc((size_t)chunks, sizeof(unsigned int));
+    set->vbo = (unsigned int *)calloc((size_t)chunks, sizeof(unsigned int));
+    buf = (unsigned char *)malloc((size_t)CB_SPLAT_CHUNK * 4 * 20);
+    if (!set->vao || !set->vbo || !buf) {
+        free(set->vao); free(set->vbo); free(buf);
+        set->vao = NULL; set->vbo = NULL;
+        return;
+    }
+    for (c = 0; c < chunks; c++) {
+        int first = c * CB_SPLAT_CHUNK, n = set->count - first, k;
+        unsigned int vao;
+        if (n > CB_SPLAT_CHUNK) n = CB_SPLAT_CHUNK;
+        for (i = 0; i < n; i++) {
+            const cb_pt *pt = &set->pts[first + i];
+            for (k = 0; k < 4; k++) {
+                unsigned char *v = buf + ((size_t)i * 4 + (size_t)k) * 20;
+                signed char nb[4];
+                int j;
+                memcpy(v, pt->p, 12);
+                for (j = 0; j < 3; j++) {
+                    float f = pt->n[j] * 127.0f;
+                    nb[j] = (signed char)(f < -127.0f ? -127 : f > 127.0f ? 127 : (int)(f < 0 ? f - 0.5f : f + 0.5f));
+                }
+                nb[3] = cx[k];
+                memcpy(v + 12, nb, 4);
+                memcpy(v + 16, pt->c, 4);
+            }
+        }
+        vao = rlLoadVertexArray();
+        if (vao == 0)
+            break;
+        rlEnableVertexArray(vao);
+        set->vbo[c] = rlLoadVertexBuffer(buf, n * 4 * 20, false);
+        rlSetVertexAttribute(0, 3, RL_FLOAT, false, 20, 0);
+        rlEnableVertexAttribute(0);
+        rlSetVertexAttribute(2, 4, 0x1400 /* GL_BYTE */, true, 20, 12);
+        rlEnableVertexAttribute(2);
+        rlSetVertexAttribute(3, 4, RL_UNSIGNED_BYTE, true, 20, 16);
+        rlEnableVertexAttribute(3);
+        rlEnableVertexBufferElement(cb_splat_ebo);
+        rlDisableVertexArray();
+        set->vao[c] = vao;
+        set->chunks = c + 1;
+    }
+    free(buf);
+    if (set->chunks == chunks) {
+        free(set->pts);
+        set->pts = NULL;
+    } else {  /* a vertex array failed half way: drop the buffers, keep the points for the C loop */
+        int saved = set->chunks;
+        cb_pt *pts = set->pts;
+        set->chunks = saved;
+        set->pts = NULL;
+        {
+            int u;
+            for (u = 0; u < saved; u++) { rlUnloadVertexArray(set->vao[u]); rlUnloadVertexBuffer(set->vbo[u]); }
+        }
+        free(set->vao); free(set->vbo);
+        set->vao = NULL; set->vbo = NULL; set->chunks = 0;
+        set->pts = pts;
+    }
+}
+
+static bool cb_splat_draw_gpu(cb_splat_set *set, cb_rgba tint, Matrix mdl, Matrix view, Matrix proj, float half, int n, float scale_max) {
+    float sun[3], shade, tintv[4], ex, ey, depth, rad, reach_x, reach_y, margin;
+    int persp = proj.m15 == 0.0f, c, left;
+    if (!set->chunks)
+        return false;
+    reach_x = 1.0f / (proj.m0 != 0.0f ? proj.m0 : 1.0f);  /* the frustum's side planes, as the C loop tests them */
+    reach_y = 1.0f / (proj.m5 != 0.0f ? proj.m5 : 1.0f);
+    margin = half * 1.5f + 0.0001f;
+    {   /* the whole object off screen: no draw at all */
+        float wx = mdl.m0 * set->center[0] + mdl.m4 * set->center[1] + mdl.m8 * set->center[2] + mdl.m12;
+        float wy = mdl.m1 * set->center[0] + mdl.m5 * set->center[1] + mdl.m9 * set->center[2] + mdl.m13;
+        float wz = mdl.m2 * set->center[0] + mdl.m6 * set->center[1] + mdl.m10 * set->center[2] + mdl.m14;
+        ex = view.m0 * wx + view.m4 * wy + view.m8 * wz + view.m12;
+        ey = view.m1 * wx + view.m5 * wy + view.m9 * wz + view.m13;
+        depth = -(view.m2 * wx + view.m6 * wy + view.m10 * wz + view.m14);
+        rad = set->radius * scale_max + margin;
+        if (persp) {
+            if (depth + rad < 0.02f
+                || (fabsf(ex) - depth * reach_x) / sqrtf(1.0f + reach_x * reach_x) > rad
+                || (fabsf(ey) - depth * reach_y) / sqrtf(1.0f + reach_y * reach_y) > rad)
+                return true;
+        } else if (fabsf(ex) > reach_x + rad || fabsf(ey) > reach_y + rad) {
+            return true;
+        }
+    }
+    sun[0] = view.m0 * cb_sun.x + view.m4 * cb_sun.y + view.m8 * cb_sun.z;  /* the light in the camera's space */
+    sun[1] = view.m1 * cb_sun.x + view.m5 * cb_sun.y + view.m9 * cb_sun.z;
+    sun[2] = view.m2 * cb_sun.x + view.m6 * cb_sun.y + view.m10 * cb_sun.z;
+    shade = cb_shading_v == 1 ? 1.0f : cb_shading_v == 2 ? 2.0f : 0.0f;
+    tintv[0] = tint.r / 255.0f; tintv[1] = tint.g / 255.0f; tintv[2] = tint.b / 255.0f; tintv[3] = tint.a / 255.0f;
+    rlDrawRenderBatchActive();
+    rlDisableBackfaceCulling();
+    SetShaderValueMatrix(cb_splat_sh, cb_splat_loc[0], mdl);
+    SetShaderValueMatrix(cb_splat_sh, cb_splat_loc[1], view);
+    SetShaderValueMatrix(cb_splat_sh, cb_splat_loc[2], proj);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[3], &half, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[4], tintv, SHADER_UNIFORM_VEC4);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[5], sun, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[6], &cb_sun_amb, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[7], &shade, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[8], cb_sun_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[9], cb_amb_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[10], cb_fog_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[11], &cb_fog_dens, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_splat_sh, cb_splat_loc[12], &cb_fog_start, SHADER_UNIFORM_FLOAT);
+    rlEnableShader(cb_splat_sh.id);
+    left = n;
+    for (c = 0; c < set->chunks && left > 0; c++) {
+        int k = left > CB_SPLAT_CHUNK ? CB_SPLAT_CHUNK : left;
+        if (rlEnableVertexArray(set->vao[c]))
+            rlDrawVertexArrayElements(0, k * 6, NULL);
+        left -= k;
+    }
+    rlDisableVertexArray();
+    rlDisableShader();
+    rlEnableBackfaceCulling();
+    return true;
+}
+
+#ifdef CB_SPLAT_PROFILE
+static double cb_prof_t0 = 0, cb_prof_ms = 0;
+static long cb_prof_pts = 0, cb_prof_draws = 0, cb_prof_emit = 0;
+void cb_prof_report(void) { fprintf(stderr, "[splat] draws %ld, points %ld, drawn %ld, %.1f ms in the draws, quality %.2f\n", cb_prof_draws, cb_prof_pts, cb_prof_emit, cb_prof_ms, (double)cb_splat_q); cb_prof_emit = 0; cb_prof_draws = 0; cb_prof_pts = 0; cb_prof_ms = 0; }
+#endif
 
 /* Draws mesh g's points (the current transform is the object's placement). */
 static void cb_splat_draw(const void *key, const Mesh *g, cb_rgba tint) {
@@ -635,25 +951,50 @@ static void cb_splat_draw(const void *key, const Mesh *g, cb_rgba tint) {
     float rx = view.m0, ry = view.m4, rz = view.m8;  /* the camera's right, up and back in the world */
     float ux = view.m1, uy = view.m5, uz = view.m9;
     float bx = view.m2, by = view.m6, bz = view.m10;
-    float half = (float)CB_SPLAT_SIZE * 0.5f;
-    int i, shaded = cb_shading_v != 2;
+    Matrix proj = rlGetMatrixProjection();
+    int persp = proj.m15 == 0.0f;
+    float half, margin_x, margin_y, reach_x, reach_y;
+    int i, n, shaded = cb_shading_v != 2;
     cb_splat_set *set = cb_splats_for(key, g, sx, sy, sz);
     static const float ring[6][2] = { { 1.0f, 0.0f }, { 0.5f, 0.8660254f }, { -0.5f, 0.8660254f }, { -1.0f, 0.0f }, { -0.5f, -0.8660254f }, { 0.5f, -0.8660254f } };
     if (set->count == 0)
         return;
+    n = (int)((float)set->count * cb_splat_q + 0.5f);  /* the quality level: a prefix of the shuffled points, grown to cover the same */
+    if (n < 1) n = 1;
+    if (n > set->count) n = set->count;
+    half = (float)CB_SPLAT_SIZE * 0.5f * set->thin / sqrtf((float)n / (float)set->count);
+    reach_x = 1.0f / (proj.m0 != 0.0f ? proj.m0 : 1.0f);  /* how far from the view's axis a splat can still show: its eye-space x per depth (or flat when orthographic) */
+    reach_y = 1.0f / (proj.m5 != 0.0f ? proj.m5 : 1.0f);
+    margin_x = half * 1.5f; margin_y = half * 1.5f;
+    cb_splat_drawn += n;
+    if (set->chunks && cb_splat_draw_gpu(set, tint, mdl, view, proj, half, n, fmaxf(sx, fmaxf(sy, sz))))
+        return;
+#ifdef CB_SPLAT_PROFILE
+    cb_prof_t0 = GetTime();
+    cb_prof_pts += n;
+#endif
     rlDrawRenderBatchActive();
     rlDisableBackfaceCulling();
     rlPushMatrix();
     rlLoadIdentity();  /* the points are placed in the world by hand below */
     rlSetTexture(0);
     rlBegin(RL_QUADS);
-    for (i = 0; i < set->count; i++) {
+    for (i = 0; i < n; i++) {
         const cb_pt *pt = &set->pts[i];
         float wx = mdl.m0 * pt->p[0] + mdl.m4 * pt->p[1] + mdl.m8 * pt->p[2] + mdl.m12;
         float wy = mdl.m1 * pt->p[0] + mdl.m5 * pt->p[1] + mdl.m9 * pt->p[2] + mdl.m13;
         float wz = mdl.m2 * pt->p[0] + mdl.m6 * pt->p[1] + mdl.m10 * pt->p[2] + mdl.m14;
-        float col[3], k;
+        float col[3], k, ex, ey, depth;
         int j;
+        ex = view.m0 * wx + view.m4 * wy + view.m8 * wz + view.m12;  /* the point in the camera's space: off screen ones are skipped */
+        ey = view.m1 * wx + view.m5 * wy + view.m9 * wz + view.m13;
+        depth = -(view.m2 * wx + view.m6 * wy + view.m10 * wz + view.m14);
+        if (persp) {
+            if (depth < 0.02f || fabsf(ex) > depth * reach_x + margin_x || fabsf(ey) > depth * reach_y + margin_y)
+                continue;
+        } else if (fabsf(ex) > reach_x + margin_x || fabsf(ey) > reach_y + margin_y) {
+            continue;
+        }
         col[0] = pt->c[0] / 255.0f * tint.r / 255.0f;
         col[1] = pt->c[1] / 255.0f * tint.g / 255.0f;
         col[2] = pt->c[2] / 255.0f * tint.b / 255.0f;
@@ -671,13 +1012,16 @@ static void cb_splat_draw(const void *key, const Mesh *g, cb_rgba tint) {
                 col[j] *= cb_sun_amb * cb_amb_col[j] + (1.0f - cb_sun_amb) * diff * cb_sun_col[j];
         }
         {
-            float depth = -(view.m2 * wx + view.m6 * wy + view.m10 * wz + view.m14), seen;
+            float seen;
             seen = cb_fog_dens > 0.0f ? expf(-cb_fog_dens * (depth > cb_fog_start ? depth - cb_fog_start : 0.0f)) : 1.0f;
             for (j = 0; j < 3; j++) {
                 k = cb_fog_col[j] + (col[j] - cb_fog_col[j]) * seen;
                 col[j] = k < 0.0f ? 0.0f : k > 1.0f ? 1.0f : k;
             }
         }
+#ifdef CB_SPLAT_PROFILE
+        cb_prof_emit++;
+#endif
         rlColor4ub((unsigned char)(col[0] * 255.0f), (unsigned char)(col[1] * 255.0f), (unsigned char)(col[2] * 255.0f), tint.a);
 #define CB_CORNER(ax, ay) rlVertex3f(wx + half * ((ax) * rx + (ay) * ux), wy + half * ((ax) * ry + (ay) * uy), wz + half * ((ax) * rz + (ay) * uz))
         if (CB_SPLAT_ROUND) {  /* a hexagon: three quads around the middle */
@@ -698,6 +1042,10 @@ static void cb_splat_draw(const void *key, const Mesh *g, cb_rgba tint) {
     }
     rlEnd();
     rlDrawRenderBatchActive();
+#ifdef CB_SPLAT_PROFILE
+    cb_prof_ms += (GetTime() - cb_prof_t0) * 1000.0;
+    cb_prof_draws++;
+#endif
     rlPopMatrix();
     rlEnableBackfaceCulling();
 }
@@ -784,7 +1132,7 @@ static Vector3 cb_face_normal(Vector3 a, Vector3 b, Vector3 c) {
     return cb_v3_cross(cb_v3_sub(b, a), cb_v3_sub(c, a));
 }
 
-/* One triangle, corners already counter-clockwise; normals given (own) or not. */
+/* One triangle (INTERNAL: corners already counter-clockwise: your code calls cb_mesh_triangle, clockwise); normals given (own) or not. */
 static void cb_mesh_add(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, const Vector3 *normals, Color color) {
     cb_tri *t = (cb_tri *)cb_list_add(m->tris);
     t->p[0] = a; t->p[1] = b; t->p[2] = c;
@@ -795,6 +1143,8 @@ static void cb_mesh_add(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, const Vecto
     }
 }
 
+/* The public triangle: its front is the side where a, b, c go round CLOCKWISE (the Add to mesh
+   brick's rule: (0,0,0) (1,0,0) (0,0,1) faces up). It is stored counter-clockwise (a, c, b). */
 void cb_mesh_triangle(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, cb_rgba color) {
     cb_mesh_add(m, a, c, b, NULL, RL(color));
 }

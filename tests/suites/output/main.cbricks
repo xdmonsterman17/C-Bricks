@@ -1,7 +1,7 @@
 {
 	"format": "c-bricks",
 	"version": 4,
-	"next_id": 116,
+	"next_id": 112,
 	"nodes": [
 		{
 			"id": 1,
@@ -26,10 +26,7 @@
 					106,
 					107,
 					109,
-					110,
-					112,
-					113,
-					114
+					110
 				]
 			}
 		},
@@ -308,112 +305,6 @@
 			"args": {
 				"value": {
 					"var": "line_110"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 112,
-			"type": "time",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {},
-			"args": {},
-			"outs": {
-				"seconds": {
-					"var": "now",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 113,
-			"type": "compare",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": ">"
-			},
-			"args": {
-				"a": {
-					"var": "now"
-				},
-				"b": {
-					"type": "int",
-					"value": "1700000000"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "recent",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 114,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[time] {}"
-			},
-			"args": {
-				"first": {
-					"var": "recent"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_114",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					115
-				]
-			}
-		},
-		{
-			"id": 115,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_114"
 				}
 			},
 			"outs": {},

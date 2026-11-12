@@ -115,7 +115,7 @@ var _scene_hist := {}
 const EXAMPLE_SCRATCH := "user://example"
 ## The start page's example groups (an example with Target MS-DOS goes under MS-DOS).
 const EXAMPLE_GROUP_ORDER := ["Text programs", "2D and 3D graphics", "Networking", "MS-DOS"]
-const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "gem_hunt": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
+const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
 const NEW_HINT := "Makes a folder with project.cbproj and assets/ (no scripts yet: add nodes to the Main scene; running it runs that scene)."
 var _saving_example := false
 var _progress_dialog: AcceptDialog = null
@@ -332,8 +332,17 @@ func _ready() -> void:
 	for d in (DirAccess.get_directories_at(scratch) if DirAccess.dir_exists_absolute(scratch) else PackedStringArray()):
 		if not scratch.path_join(d) in _recent:
 			_remove_tree(scratch.path_join(d))
+	# a project folder (or its project.cbproj) on the command line opens instead of the last one
+	# (`cbricks DIR`); user args after `--` count too
+	var wanted := ""
+	for a in OS.get_cmdline_args() + OS.get_cmdline_user_args():
+		var p := a.get_base_dir() if a.get_file() == "project.cbproj" else a
+		if not a.begins_with("-") and CBProject.is_project(p):
+			wanted = p.simplify_path()
 	var last := _recent[0] if not _recent.is_empty() else ""
-	if last != "" and CBProject.is_project(last):
+	if wanted != "":
+		open_project(wanted)
+	elif last != "" and CBProject.is_project(last):
 		open_project(last)
 	if not Toolchains.can_execute():
 		_log_info("Running in a browser: building is off, but Export downloads the C project as a .zip.")

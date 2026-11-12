@@ -1,7 +1,7 @@
 {
 	"format": "c-bricks",
 	"version": 4,
-	"next_id": 219,
+	"next_id": 138,
 	"nodes": [
 		{
 			"id": 1,
@@ -32,44 +32,9 @@
 					111,
 					112,
 					113,
+					114,
 					115,
-					116,
-					117,
-					118,
-					120,
-					121,
-					122,
-					124,
-					125,
-					126,
-					128,
-					129,
-					130,
-					131,
-					132,
-					133,
-					134,
-					135,
-					136,
-					137,
-					138,
-					139,
-					140,
-					141,
-					142,
-					143,
-					144,
-					145,
-					146,
-					148,
-					149,
-					150,
-					152,
-					153,
-					154,
-					156,
-					157,
-					216
+					135
 				]
 			}
 		},
@@ -179,713 +144,6 @@
 		},
 		{
 			"id": 105,
-			"type": "sound",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"mode": "Load"
-			},
-			"args": {
-				"path": {
-					"type": "string",
-					"value": "assets/beep.wav"
-				}
-			},
-			"outs": {
-				"sound": {
-					"var": "beep",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 106,
-			"type": "sound",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"mode": "Play"
-			},
-			"args": {
-				"sound": {
-					"var": "beep"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 107,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[sound] loaded and played"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 108,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Load",
-				"loop": true
-			},
-			"args": {
-				"path": {
-					"type": "string",
-					"value": "assets/beep.wav"
-				}
-			},
-			"outs": {
-				"music": {
-					"var": "song",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 109,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": false
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[music.Load] "
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 110,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "song"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 111,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Play"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 112,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Playing"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "playing",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 113,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[music.Playing] {}"
-			},
-			"args": {
-				"first": {
-					"var": "playing"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_113",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					114
-				]
-			}
-		},
-		{
-			"id": 114,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_113"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 115,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Volume"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				},
-				"volume": {
-					"type": "float",
-					"value": "0.5"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 116,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Pause"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 117,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Playing"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "paused_playing",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 118,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[music.Pause] {}"
-			},
-			"args": {
-				"first": {
-					"var": "paused_playing"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_118",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					119
-				]
-			}
-		},
-		{
-			"id": 119,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_118"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 120,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Resume"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 121,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Playing"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "resumed",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 122,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[music.Resume] {}"
-			},
-			"args": {
-				"first": {
-					"var": "resumed"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_122",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					123
-				]
-			}
-		},
-		{
-			"id": 123,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_122"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 124,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Stop"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 125,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Playing"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "stopped",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 126,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[music.Stop] {}"
-			},
-			"args": {
-				"first": {
-					"var": "stopped"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_126",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					127
-				]
-			}
-		},
-		{
-			"id": 127,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_126"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 128,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Play"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 129,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[music.Volume] set to 0.5; playing again during the frames"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 130,
-			"type": "mouse_mode",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"mode": "Captured"
-			},
-			"args": {},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 131,
-			"type": "mouse_mode",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"mode": "Hidden"
-			},
-			"args": {},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 132,
-			"type": "mouse_mode",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"mode": "Visible"
-			},
-			"args": {},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 133,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[mouse_mode] Captured, Hidden, Visible"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 134,
 			"type": "look",
 			"pos": [
 				0,
@@ -904,7 +162,7 @@
 			"links": {}
 		},
 		{
-			"id": 135,
+			"id": 106,
 			"type": "look",
 			"pos": [
 				0,
@@ -923,7 +181,7 @@
 			"links": {}
 		},
 		{
-			"id": 136,
+			"id": 107,
 			"type": "look",
 			"pos": [
 				0,
@@ -942,7 +200,7 @@
 			"links": {}
 		},
 		{
-			"id": 137,
+			"id": 108,
 			"type": "look",
 			"pos": [
 				0,
@@ -961,7 +219,7 @@
 			"links": {}
 		},
 		{
-			"id": 138,
+			"id": 109,
 			"type": "look",
 			"pos": [
 				0,
@@ -980,7 +238,7 @@
 			"links": {}
 		},
 		{
-			"id": 139,
+			"id": 110,
 			"type": "look",
 			"pos": [
 				0,
@@ -999,7 +257,7 @@
 			"links": {}
 		},
 		{
-			"id": 140,
+			"id": 111,
 			"type": "look",
 			"pos": [
 				0,
@@ -1018,7 +276,7 @@
 			"links": {}
 		},
 		{
-			"id": 141,
+			"id": 112,
 			"type": "look",
 			"pos": [
 				0,
@@ -1041,7 +299,7 @@
 			"links": {}
 		},
 		{
-			"id": 142,
+			"id": 113,
 			"type": "look",
 			"pos": [
 				0,
@@ -1064,7 +322,7 @@
 			"links": {}
 		},
 		{
-			"id": 143,
+			"id": 114,
 			"type": "print",
 			"pos": [
 				0,
@@ -1087,320 +345,7 @@
 			"links": {}
 		},
 		{
-			"id": 144,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Pause"
-			},
-			"args": {},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 145,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Is paused"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "p1",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 146,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[pause.Pause] {}"
-			},
-			"args": {
-				"first": {
-					"var": "p1"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_146",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					147
-				]
-			}
-		},
-		{
-			"id": 147,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_146"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 148,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Resume"
-			},
-			"args": {},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 149,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Is paused"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "p2",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 150,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[pause.Resume] {}"
-			},
-			"args": {
-				"first": {
-					"var": "p2"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_150",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					151
-				]
-			}
-		},
-		{
-			"id": 151,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_150"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 152,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Set time scale"
-			},
-			"args": {
-				"scale": {
-					"type": "float",
-					"value": "0.5"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 153,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Time scale"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "ts",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 154,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[pause.Time scale] {}"
-			},
-			"args": {
-				"first": {
-					"var": "ts"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_154",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					155
-				]
-			}
-		},
-		{
-			"id": 155,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_154"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 156,
-			"type": "pause",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Set time scale"
-			},
-			"args": {
-				"scale": {
-					"type": "float",
-					"value": "1"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 157,
+			"id": 115,
 			"type": "var",
 			"pos": [
 				0,
@@ -1424,7 +369,7 @@
 			"links": {}
 		},
 		{
-			"id": 158,
+			"id": 116,
 			"type": "clear",
 			"pos": [
 				0,
@@ -1445,7 +390,7 @@
 			"links": {}
 		},
 		{
-			"id": 159,
+			"id": 117,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1484,7 +429,7 @@
 			"links": {}
 		},
 		{
-			"id": 160,
+			"id": 118,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1523,7 +468,7 @@
 			"links": {}
 		},
 		{
-			"id": 161,
+			"id": 119,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1558,7 +503,7 @@
 			"links": {}
 		},
 		{
-			"id": 162,
+			"id": 120,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1597,7 +542,7 @@
 			"links": {}
 		},
 		{
-			"id": 163,
+			"id": 121,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1636,7 +581,7 @@
 			"links": {}
 		},
 		{
-			"id": 164,
+			"id": 122,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1670,7 +615,7 @@
 			"links": {}
 		},
 		{
-			"id": 165,
+			"id": 123,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1724,7 +669,7 @@
 			"links": {}
 		},
 		{
-			"id": 166,
+			"id": 124,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1767,7 +712,7 @@
 			"links": {}
 		},
 		{
-			"id": 167,
+			"id": 125,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1810,7 +755,7 @@
 			"links": {}
 		},
 		{
-			"id": 168,
+			"id": 126,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1848,7 +793,7 @@
 			"links": {}
 		},
 		{
-			"id": 169,
+			"id": 127,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1902,7 +847,7 @@
 			"links": {}
 		},
 		{
-			"id": 170,
+			"id": 128,
 			"type": "view2d",
 			"pos": [
 				0,
@@ -1930,12 +875,12 @@
 			"outs": {},
 			"links": {
 				"draw": [
-					171
+					129
 				]
 			}
 		},
 		{
-			"id": 171,
+			"id": 129,
 			"type": "draw",
 			"pos": [
 				0,
@@ -1970,8 +915,8 @@
 			"links": {}
 		},
 		{
-			"id": 172,
-			"type": "input",
+			"id": 130,
+			"type": "print",
 			"pos": [
 				0,
 				0
@@ -1981,339 +926,19 @@
 				0
 			],
 			"fields": {
-				"when": "Key down",
-				"key": "SPACE",
-				"button": "LEFT"
+				"newline": true
 			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "in_key_down",
-					"use": false
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[draw] every shape, turned ones, a sprite's frame, a 2D view"
 				}
 			},
+			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 173,
-			"type": "input",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"when": "Key pressed",
-				"key": "SPACE",
-				"button": "LEFT"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "in_key_pressed",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 174,
-			"type": "input",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"when": "Key released",
-				"key": "SPACE",
-				"button": "LEFT"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "in_key_released",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 175,
-			"type": "input",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"when": "Mouse down",
-				"key": "SPACE",
-				"button": "LEFT"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "in_mouse_down",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 176,
-			"type": "input",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"when": "Mouse pressed",
-				"key": "SPACE",
-				"button": "LEFT"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "in_mouse_pressed",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 177,
-			"type": "mouse",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Position"
-			},
-			"args": {},
-			"outs": {
-				"x": {
-					"var": "mx",
-					"use": false
-				},
-				"y": {
-					"var": "my",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 178,
-			"type": "mouse",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Movement"
-			},
-			"args": {},
-			"outs": {
-				"x": {
-					"var": "dx",
-					"use": false
-				},
-				"y": {
-					"var": "dy",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 179,
-			"type": "mouse",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Wheel"
-			},
-			"args": {},
-			"outs": {
-				"x": {
-					"var": "wheel",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 180,
-			"type": "key_direction",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"left": "A",
-				"right": "D",
-				"forward": "W",
-				"back": "S"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "keys",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 181,
-			"type": "game_info",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Frame time"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "gi_frame_time",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 182,
-			"type": "game_info",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Time"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "gi_time",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 183,
-			"type": "game_info",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Width"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "gi_width",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 184,
-			"type": "game_info",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Height"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "gi_height",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 185,
-			"type": "game_info",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "FPS"
-			},
-			"args": {},
-			"outs": {
-				"result": {
-					"var": "gi_fps",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 186,
+			"id": 131,
 			"type": "var",
 			"pos": [
 				0,
@@ -2337,7 +962,7 @@
 			"links": {}
 		},
 		{
-			"id": 187,
+			"id": 132,
 			"type": "if",
 			"pos": [
 				0,
@@ -2362,735 +987,14 @@
 			"outs": {},
 			"links": {
 				"true": [
-					188,
-					190,
-					192,
-					194,
-					196,
-					198,
-					200,
-					201,
-					203,
-					204,
-					206,
-					207,
-					209,
-					210,
-					211,
-					212,
-					214,
-					215
+					130,
+					133,
+					134
 				]
 			}
 		},
 		{
-			"id": 188,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[game_info.Width] {}"
-			},
-			"args": {
-				"first": {
-					"var": "gi_width"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_188",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					189
-				]
-			}
-		},
-		{
-			"id": 189,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_188"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 190,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[game_info.Height] {}"
-			},
-			"args": {
-				"first": {
-					"var": "gi_height"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_190",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					191
-				]
-			}
-		},
-		{
-			"id": 191,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_190"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 192,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[input.Key down] {}"
-			},
-			"args": {
-				"first": {
-					"var": "in_key_down"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_192",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					193
-				]
-			}
-		},
-		{
-			"id": 193,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_192"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 194,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[input.Mouse pressed] {}"
-			},
-			"args": {
-				"first": {
-					"var": "in_mouse_pressed"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_194",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					195
-				]
-			}
-		},
-		{
-			"id": 195,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_194"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 196,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[mouse.Wheel] {}"
-			},
-			"args": {
-				"first": {
-					"var": "wheel"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_196",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					197
-				]
-			}
-		},
-		{
-			"id": 197,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_196"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 198,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[key_direction] {}"
-			},
-			"args": {
-				"first": {
-					"var": "keys"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_198",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					199
-				]
-			}
-		},
-		{
-			"id": 199,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_198"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 200,
-			"type": "compare",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": ">"
-			},
-			"args": {
-				"a": {
-					"var": "gi_time"
-				},
-				"b": {
-					"type": "float",
-					"value": "0"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "t_ok",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 201,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[game_info.Time] {}"
-			},
-			"args": {
-				"first": {
-					"var": "t_ok"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_201",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					202
-				]
-			}
-		},
-		{
-			"id": 202,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_201"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 203,
-			"type": "compare",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": ">="
-			},
-			"args": {
-				"a": {
-					"var": "gi_frame_time"
-				},
-				"b": {
-					"type": "float",
-					"value": "0"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "ft_ok",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 204,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[game_info.Frame time] {}"
-			},
-			"args": {
-				"first": {
-					"var": "ft_ok"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_204",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					205
-				]
-			}
-		},
-		{
-			"id": 205,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_204"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 206,
-			"type": "compare",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": ">="
-			},
-			"args": {
-				"a": {
-					"var": "gi_fps"
-				},
-				"b": {
-					"type": "int",
-					"value": "0"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "fps_ok",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 207,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[game_info.FPS] {}"
-			},
-			"args": {
-				"first": {
-					"var": "fps_ok"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_207",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					208
-				]
-			}
-		},
-		{
-			"id": 208,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_207"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 209,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[game_loop] 3 frames drawn"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 210,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[draw] every shape, turned ones, a sprite's frame, a 2D view"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 211,
-			"type": "music",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"do": "Playing"
-			},
-			"args": {
-				"music": {
-					"var": "song"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "still",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 212,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[music.frames] {}"
-			},
-			"args": {
-				"first": {
-					"var": "still"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_212",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					213
-				]
-			}
-		},
-		{
-			"id": 213,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_212"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 214,
+			"id": 133,
 			"type": "close_window",
 			"pos": [
 				0,
@@ -3106,7 +1010,7 @@
 			"links": {}
 		},
 		{
-			"id": 215,
+			"id": 134,
 			"type": "print",
 			"pos": [
 				0,
@@ -3129,7 +1033,7 @@
 			"links": {}
 		},
 		{
-			"id": 216,
+			"id": 135,
 			"type": "game_loop",
 			"pos": [
 				0,
@@ -3144,43 +1048,29 @@
 			"outs": {},
 			"links": {
 				"frame": [
-					158,
-					159,
-					160,
-					161,
-					162,
-					163,
-					164,
-					165,
-					166,
-					167,
-					168,
-					169,
-					170,
-					172,
-					173,
-					174,
-					175,
-					176,
-					177,
-					178,
-					179,
-					180,
-					181,
-					182,
-					183,
-					184,
-					185,
-					186,
-					187
+					116,
+					117,
+					118,
+					119,
+					120,
+					121,
+					122,
+					123,
+					124,
+					125,
+					126,
+					127,
+					128,
+					131,
+					132
 				],
 				"done": [
-					217
+					136
 				]
 			}
 		},
 		{
-			"id": 217,
+			"id": 136,
 			"type": "text",
 			"pos": [
 				0,
@@ -3201,18 +1091,18 @@
 			},
 			"outs": {
 				"result": {
-					"var": "line_217",
+					"var": "line_136",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					218
+					137
 				]
 			}
 		},
 		{
-			"id": 218,
+			"id": 137,
 			"type": "print",
 			"pos": [
 				0,
@@ -3227,7 +1117,7 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_217"
+					"var": "line_136"
 				}
 			},
 			"outs": {},

@@ -1,7 +1,7 @@
 {
 	"format": "c-bricks",
 	"version": 4,
-	"next_id": 132,
+	"next_id": 138,
 	"nodes": [
 		{
 			"id": 1,
@@ -21,31 +21,67 @@
 				"out": [
 					101,
 					102,
+					103,
 					104,
 					105,
+					106,
 					107,
 					108,
+					109,
 					110,
-					111,
+					112,
 					113,
 					114,
-					116,
+					115,
 					117,
+					118,
 					119,
-					120,
 					121,
+					122,
 					123,
-					124,
+					125,
 					126,
 					127,
-					129,
-					130
+					135
 				]
 			}
 		},
 		{
 			"id": 101,
-			"type": "args",
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "Audio suite"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "sound",
 			"pos": [
 				0,
 				0
@@ -55,20 +91,25 @@
 				0
 			],
 			"fields": {
-				"what": "Count"
+				"mode": "Load"
 			},
-			"args": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "assets/beep.wav"
+				}
+			},
 			"outs": {
-				"result": {
-					"var": "a_count",
+				"sound": {
+					"var": "beep",
 					"use": false
 				}
 			},
 			"links": {}
 		},
 		{
-			"id": 102,
-			"type": "text",
+			"id": 103,
+			"type": "sound",
 			"pos": [
 				0,
 				0
@@ -78,28 +119,18 @@
 				0
 			],
 			"fields": {
-				"op": "Format",
-				"format": "[args.Count] {}"
+				"mode": "Play"
 			},
 			"args": {
-				"first": {
-					"var": "a_count"
+				"sound": {
+					"var": "beep"
 				}
 			},
-			"outs": {
-				"result": {
-					"var": "line_102",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					103
-				]
-			}
+			"outs": {},
+			"links": {}
 		},
 		{
-			"id": 103,
+			"id": 104,
 			"type": "print",
 			"pos": [
 				0,
@@ -114,15 +145,16 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_102"
+					"type": "string",
+					"value": "[sound] loaded and played"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 104,
-			"type": "args",
+			"id": 105,
+			"type": "music",
 			"pos": [
 				0,
 				0
@@ -132,53 +164,22 @@
 				0
 			],
 			"fields": {
-				"what": "At index"
+				"do": "Load",
+				"loop": true
 			},
 			"args": {
-				"index": {
-					"type": "int",
-					"value": "2"
+				"path": {
+					"type": "string",
+					"value": "assets/beep.wav"
 				}
 			},
 			"outs": {
-				"result": {
-					"var": "a_at_index",
+				"music": {
+					"var": "song",
 					"use": false
 				}
 			},
 			"links": {}
-		},
-		{
-			"id": 105,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[args.At index] {}"
-			},
-			"args": {
-				"first": {
-					"var": "a_at_index"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_105",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					106
-				]
-			}
 		},
 		{
 			"id": 106,
@@ -192,11 +193,12 @@
 				0
 			],
 			"fields": {
-				"newline": true
+				"newline": false
 			},
 			"args": {
 				"value": {
-					"var": "line_105"
+					"type": "string",
+					"value": "[music.Load] "
 				}
 			},
 			"outs": {},
@@ -204,66 +206,6 @@
 		},
 		{
 			"id": 107,
-			"type": "args",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"what": "Option"
-			},
-			"args": {
-				"name": {
-					"type": "string",
-					"value": "name"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "a_option",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 108,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Format",
-				"format": "[args.Option] {}"
-			},
-			"args": {
-				"first": {
-					"var": "a_option"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_108",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					109
-				]
-			}
-		},
-		{
-			"id": 109,
 			"type": "print",
 			"pos": [
 				0,
@@ -278,15 +220,15 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_108"
+					"var": "song"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 110,
-			"type": "args",
+			"id": 108,
+			"type": "music",
 			"pos": [
 				0,
 				0
@@ -296,24 +238,45 @@
 				0
 			],
 			"fields": {
-				"what": "Flag"
+				"do": "Play"
 			},
 			"args": {
-				"name": {
-					"type": "string",
-					"value": "loud"
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "a_flag",
+					"var": "playing",
 					"use": false
 				}
 			},
 			"links": {}
 		},
 		{
-			"id": 111,
+			"id": 110,
 			"type": "text",
 			"pos": [
 				0,
@@ -325,27 +288,27 @@
 			],
 			"fields": {
 				"op": "Format",
-				"format": "[args.Flag] {}"
+				"format": "[music.Playing] {}"
 			},
 			"args": {
 				"first": {
-					"var": "a_flag"
+					"var": "playing"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "line_111",
+					"var": "line_110",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					112
+					111
 				]
 			}
 		},
 		{
-			"id": 112,
+			"id": 111,
 			"type": "print",
 			"pos": [
 				0,
@@ -360,7 +323,33 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_111"
+					"var": "line_110"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Volume"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				},
+				"volume": {
+					"type": "float",
+					"value": "0.5"
 				}
 			},
 			"outs": {},
@@ -368,7 +357,7 @@
 		},
 		{
 			"id": 113,
-			"type": "write_file",
+			"type": "music",
 			"pos": [
 				0,
 				0
@@ -378,28 +367,45 @@
 				0
 			],
 			"fields": {
-				"mode": "Write"
+				"do": "Pause"
 			},
 			"args": {
-				"path": {
-					"type": "string",
-					"value": "out.txt"
-				},
-				"text": {
-					"type": "string",
-					"value": "one\\n"
+				"music": {
+					"var": "song"
 				}
 			},
-			"outs": {
-				"ok": {
-					"var": "wrote",
-					"use": false
-				}
-			},
+			"outs": {},
 			"links": {}
 		},
 		{
 			"id": 114,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "paused_playing",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 115,
 			"type": "text",
 			"pos": [
 				0,
@@ -411,27 +417,27 @@
 			],
 			"fields": {
 				"op": "Format",
-				"format": "[write_file.Write] {}"
+				"format": "[music.Pause] {}"
 			},
 			"args": {
 				"first": {
-					"var": "wrote"
+					"var": "paused_playing"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "line_114",
+					"var": "line_115",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					115
+					116
 				]
 			}
 		},
 		{
-			"id": 115,
+			"id": 116,
 			"type": "print",
 			"pos": [
 				0,
@@ -446,47 +452,15 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_114"
+					"var": "line_115"
 				}
 			},
 			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 116,
-			"type": "write_file",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"mode": "Append"
-			},
-			"args": {
-				"path": {
-					"type": "string",
-					"value": "out.txt"
-				},
-				"text": {
-					"type": "string",
-					"value": "two\\n"
-				}
-			},
-			"outs": {
-				"ok": {
-					"var": "appended",
-					"use": false
-				}
-			},
 			"links": {}
 		},
 		{
 			"id": 117,
-			"type": "text",
+			"type": "music",
 			"pos": [
 				0,
 				0
@@ -496,103 +470,45 @@
 				0
 			],
 			"fields": {
-				"op": "Format",
-				"format": "[write_file.Append] {}"
+				"do": "Resume"
 			},
 			"args": {
-				"first": {
-					"var": "appended"
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "line_117",
+					"var": "resumed",
 					"use": false
 				}
 			},
-			"links": {
-				"next": [
-					118
-				]
-			}
-		},
-		{
-			"id": 118,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"var": "line_117"
-				}
-			},
-			"outs": {},
 			"links": {}
 		},
 		{
 			"id": 119,
-			"type": "read_file",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {},
-			"args": {
-				"path": {
-					"type": "string",
-					"value": "out.txt"
-				}
-			},
-			"outs": {
-				"text": {
-					"var": "back",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 120,
-			"type": "text",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"op": "Length"
-			},
-			"args": {
-				"text": {
-					"var": "back"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "back_len",
-					"use": false
-				}
-			},
-			"links": {}
-		},
-		{
-			"id": 121,
 			"type": "text",
 			"pos": [
 				0,
@@ -604,27 +520,27 @@
 			],
 			"fields": {
 				"op": "Format",
-				"format": "[read_file] {}"
+				"format": "[music.Resume] {}"
 			},
 			"args": {
 				"first": {
-					"var": "back_len"
+					"var": "resumed"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "line_121",
+					"var": "line_119",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					122
+					120
 				]
 			}
 		},
 		{
-			"id": 122,
+			"id": 120,
 			"type": "print",
 			"pos": [
 				0,
@@ -639,15 +555,15 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_121"
+					"var": "line_119"
 				}
 			},
 			"outs": {},
 			"links": {}
 		},
 		{
-			"id": 123,
-			"type": "file_exists",
+			"id": 121,
+			"type": "music",
 			"pos": [
 				0,
 				0
@@ -656,23 +572,46 @@
 				0,
 				0
 			],
-			"fields": {},
+			"fields": {
+				"do": "Stop"
+			},
 			"args": {
-				"path": {
-					"type": "string",
-					"value": "out.txt"
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "there",
+					"var": "stopped",
 					"use": false
 				}
 			},
 			"links": {}
 		},
 		{
-			"id": 124,
+			"id": 123,
 			"type": "text",
 			"pos": [
 				0,
@@ -684,27 +623,27 @@
 			],
 			"fields": {
 				"op": "Format",
-				"format": "[file_exists] {}"
+				"format": "[music.Stop] {}"
 			},
 			"args": {
 				"first": {
-					"var": "there"
+					"var": "stopped"
 				}
 			},
 			"outs": {
 				"result": {
-					"var": "line_124",
+					"var": "line_123",
 					"use": false
 				}
 			},
 			"links": {
 				"next": [
-					125
+					124
 				]
 			}
 		},
 		{
-			"id": 125,
+			"id": 124,
 			"type": "print",
 			"pos": [
 				0,
@@ -719,7 +658,29 @@
 			},
 			"args": {
 				"value": {
-					"var": "line_124"
+					"var": "line_123"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Play"
+			},
+			"args": {
+				"music": {
+					"var": "song"
 				}
 			},
 			"outs": {},
@@ -727,7 +688,7 @@
 		},
 		{
 			"id": 126,
-			"type": "file_exists",
+			"type": "print",
 			"pos": [
 				0,
 				0
@@ -736,24 +697,21 @@
 				0,
 				0
 			],
-			"fields": {},
+			"fields": {
+				"newline": true
+			},
 			"args": {
-				"path": {
+				"value": {
 					"type": "string",
-					"value": "nowhere.txt"
+					"value": "[music.Volume] set to 0.5; playing again during the frames"
 				}
 			},
-			"outs": {
-				"result": {
-					"var": "not_there",
-					"use": false
-				}
-			},
+			"outs": {},
 			"links": {}
 		},
 		{
 			"id": 127,
-			"type": "text",
+			"type": "var",
 			"pos": [
 				0,
 				0
@@ -763,85 +721,11 @@
 				0
 			],
 			"fields": {
-				"op": "Format",
-				"format": "[file_exists.missing] {}"
-			},
-			"args": {
-				"first": {
-					"var": "not_there"
-				}
-			},
-			"outs": {
-				"result": {
-					"var": "line_127",
-					"use": false
-				}
-			},
-			"links": {
-				"next": [
-					128
-				]
-			}
-		},
-		{
-			"id": 128,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
+				"mode": "Set",
+				"name": "frames"
 			},
 			"args": {
 				"value": {
-					"var": "line_127"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 129,
-			"type": "print",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {
-				"newline": true
-			},
-			"args": {
-				"value": {
-					"type": "string",
-					"value": "[quit] Exit program next (code 0)"
-				}
-			},
-			"outs": {},
-			"links": {}
-		},
-		{
-			"id": 130,
-			"type": "quit",
-			"pos": [
-				0,
-				0
-			],
-			"size": [
-				0,
-				0
-			],
-			"fields": {},
-			"args": {
-				"code": {
 					"type": "int",
 					"value": "0"
 				}
@@ -850,7 +734,161 @@
 			"links": {}
 		},
 		{
+			"id": 128,
+			"type": "music",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Playing"
+			},
+			"args": {
+				"music": {
+					"var": "song"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "still",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[music.frames] {}"
+			},
+			"args": {
+				"first": {
+					"var": "still"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_129",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					130
+				]
+			}
+		},
+		{
+			"id": 130,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_129"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
 			"id": 131,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					128,
+					129,
+					133,
+					134
+				]
+			}
+		},
+		{
+			"id": 133,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 134,
 			"type": "print",
 			"pos": [
 				0,
@@ -866,7 +904,85 @@
 			"args": {
 				"value": {
 					"type": "string",
-					"value": "[quit] not reached"
+					"value": "[close_window] asked; the frame goes on"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 135,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					131,
+					132
+				],
+				"done": [
+					136
+				]
+			}
+		},
+		{
+			"id": 136,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[close_window.Done] {}"
+			},
+			"args": {
+				"first": {
+					"var": "frames"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_136",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					137
+				]
+			}
+		},
+		{
+			"id": 137,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_136"
 				}
 			},
 			"outs": {},

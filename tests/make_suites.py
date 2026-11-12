@@ -184,9 +184,6 @@ def output():
     s.out("read.int", V("int_in"), "7")
     s.b("read", {"as": "float", "prompt": ""}, {}, {"value": "float_in"})
     s.out("read.float", V("float_in"), "2.5")
-    s.b("time", {}, {}, {"seconds": "now"})
-    s.b("compare", {"op": ">"}, {"a": V("now"), "b": I(1700000000)}, {"result": "recent"})
-    s.out("time", V("recent"), "true")
     return s
 
 
@@ -389,12 +386,8 @@ def data():
     return s
 
 
-def program():
-    s = Suite("program", "Program")
-    s.cfg["args"] = "--name=Ada --loud extra"
-    for what, args, want in [("Count", {}, "3"), ("At index", {"index": I(2)}, "extra"), ("Option", {"name": S("name")}, "Ada"), ("Flag", {"name": S("loud")}, "true")]:
-        s.b("args", {"what": what}, args, {"result": "a_" + what.replace(" ", "_").lower()})
-        s.out("args." + what, V("a_" + what.replace(" ", "_").lower()), want)
+def files():
+    s = Suite("files", "Files")
     s.b("write_file", {"mode": "Write"}, {"path": S("out.txt"), "text": S("one\\n")}, {"ok": "wrote"})
     s.out("write_file.Write", V("wrote"), "true")
     s.b("write_file", {"mode": "Append"}, {"path": S("out.txt"), "text": S("two\\n")}, {"ok": "appended"})
@@ -406,14 +399,18 @@ def program():
     s.out("file_exists", V("there"), "true")
     s.b("file_exists", {}, {"path": S("nowhere.txt")}, {"result": "not_there"})
     s.out("file_exists.missing", V("not_there"), "false")
-    s.say("quit", "Exit program next (code 0)")
-    s.b("quit", {}, {"code": I(0)})
-    s.b("print", {"newline": True}, {"value": S("[quit] not reached")}, top=False)
     return s
 
 
 def system():
     s = Suite("system", "System")
+    s.cfg["args"] = "--name=Ada --loud extra"
+    for what, args, want in [("Count", {}, "3"), ("At index", {"index": I(2)}, "extra"), ("Option", {"name": S("name")}, "Ada"), ("Flag", {"name": S("loud")}, "true")]:
+        s.b("args", {"what": what}, args, {"result": "a_" + what.replace(" ", "_").lower()})
+        s.out("args." + what, V("a_" + what.replace(" ", "_").lower()), want)
+    s.b("time", {}, {}, {"seconds": "now"})
+    s.b("compare", {"op": ">"}, {"a": V("now"), "b": I(1700000000)}, {"result": "recent"})
+    s.out("time", V("recent"), "true")
     s.b("sleep", {}, {"ms": I(10)})
     s.say("sleep", "done")
     s.b("env", {}, {"name": S("PATH")}, {"value": "path"})
@@ -435,6 +432,9 @@ def system():
     s.say("terminal", "6 modes written")
     s.order_only = True
     s.cfg["expect_contains"] = ["\u001b[32m", "\u001b[0m", "\u001b[1;1H", "\u001b[?25l", "\u001b[?25h", "\u001b[2J"]
+    s.say("quit", "Exit program next (code 0)")
+    s.b("quit", {}, {"code": I(0)})
+    s.b("print", {"newline": True}, {"value": S("[quit] not reached")}, top=False)
     return s
 
 
@@ -473,16 +473,110 @@ def wav_bytes(n=400):
     return b"RIFF" + struct.pack("<I", 36 + n) + b"WAVEfmt " + struct.pack("<IHHIIHH", 16, 1, 1, 8000, 8000, 1, 8) + b"data" + struct.pack("<I", n) + data
 
 
-def graphics():
-    s = Suite("graphics", "Graphics")
+def _window(s, w=320, h=200):
+    """The window every one of these suites opens (raylib may print warnings: lines are checked in order)."""
     s.order_only = True
     s.files["assets/dot.png"] = png_bytes()
     s.files["assets/beep.wav"] = wav_bytes()
-    s.b("window", {}, {"width": I(320), "height": I(200), "title": S("Graphics suite"), "fps": I(60)})
+    s.b("window", {}, {"width": I(w), "height": I(h), "title": S("%s suite" % s.title), "fps": I(60)})
+
+
+def _loop(s, fr, report):
+    """Count three frames, then report and Close window; Done prints the frame count."""
+    fr.append(s.b("var", {"mode": "Add", "name": "frames"}, {"value": I(1)}, top=False))
+    done = s.b("if", {"operator": "=="}, {"a": V("frames"), "b": I(3)}, top=False)
+    report.append(s.b("close_window", top=False))
+    report.append(s.say("close_window", "asked; the frame goes on", top=False))
+    s.link(done, "true", report)
+    fr.append(done)
+    gl = s.b("game_loop")
+    s.link(gl, "frame", fr)
+    s.link(gl, "done", [s.out("close_window.Done", V("frames"), "3", top=False)])
+
+
+def game():
+    s = Suite("game", "Game")
+    _window(s)
+    # Pause game (2026-11-08): every mode (what pausing does: case pause)
+    s.b("pause", {"do": "Pause"})
+    s.b("pause", {"do": "Is paused"}, {}, {"result": "p1"})
+    s.out("pause.Pause", V("p1"), "true")
+    s.b("pause", {"do": "Resume"})
+    s.b("pause", {"do": "Is paused"}, {}, {"result": "p2"})
+    s.out("pause.Resume", V("p2"), "false")
+    s.b("pause", {"do": "Set time scale"}, {"scale": F(0.5)})
+    s.b("pause", {"do": "Time scale"}, {}, {"result": "ts"})
+    s.out("pause.Time scale", V("ts"), "0.5")
+    s.b("pause", {"do": "Set time scale"}, {"scale": F(1)})
+    for m in ["Captured", "Hidden", "Visible"]:
+        s.b("mouse_mode", {"mode": m})
+    s.say("mouse_mode", "Captured, Hidden, Visible")
+    s.b("var", {"mode": "Set", "name": "frames"}, {"value": I(0)})
+    fr = []
+    for when in ["Key down", "Key pressed", "Key released", "Mouse down", "Mouse pressed"]:
+        fr.append(s.b("input", {"when": when, "key": "SPACE", "button": "LEFT"}, {}, {"result": "in_" + when.replace(" ", "_").lower()}, top=False))
+    fr.append(s.b("mouse", {"what": "Position"}, {}, {"x": "mx", "y": "my"}, top=False))
+    fr.append(s.b("mouse", {"what": "Movement"}, {}, {"x": "dx", "y": "dy"}, top=False))
+    fr.append(s.b("mouse", {"what": "Wheel"}, {}, {"x": "wheel"}, top=False))
+    fr.append(s.b("key_direction", {"left": "A", "right": "D", "forward": "W", "back": "S"}, {}, {"result": "keys"}, top=False))
+    for what in ["Frame time", "Time", "Width", "Height", "FPS"]:
+        fr.append(s.b("game_info", {"what": what}, {}, {"result": "gi_" + what.replace(" ", "_").lower()}, top=False))
+    report = [s.out("game_info.Width", V("gi_width"), "320", top=False), s.out("game_info.Height", V("gi_height"), "200", top=False),
+              s.out("input.Key down", V("in_key_down"), "false", top=False), s.out("input.Mouse pressed", V("in_mouse_pressed"), "false", top=False),
+              s.out("mouse.Wheel", V("wheel"), "0", top=False), s.out("key_direction", V("keys"), "(0, 0)", top=False)]
+    tb = s.b("compare", {"op": ">"}, {"a": V("gi_time"), "b": F(0)}, {"result": "t_ok"}, top=False)
+    report += [tb, s.out("game_info.Time", V("t_ok"), "true", top=False)]
+    ft = s.b("compare", {"op": ">="}, {"a": V("gi_frame_time"), "b": F(0)}, {"result": "ft_ok"}, top=False)
+    report += [ft, s.out("game_info.Frame time", V("ft_ok"), "true", top=False)]
+    fp = s.b("compare", {"op": ">="}, {"a": V("gi_fps"), "b": I(0)}, {"result": "fps_ok"}, top=False)
+    report += [fp, s.out("game_info.FPS", V("fps_ok"), "true", top=False)]
+    report.append(s.say("game_loop", "3 frames drawn", top=False))
+    _loop(s, fr, report)
+    return s
+
+
+def graphics():
+    s = Suite("graphics", "Graphics")
+    _window(s)
     s.b("load_texture", {}, {"path": S("assets/dot.png")}, {"texture": "dot"})
     s.b("print", {"newline": False}, {"value": S("[load_texture] ")})
     s.b("print", {"newline": True}, {"value": V("dot")})
     s.lines.append("[load_texture] texture 4x4")
+    # Graphics setting (2026-11-11, round 3): every setting changed and put back (what they look like: cases gfx_runtime)
+    for sh in ["toon", "unlit", "wire", "lit"]:
+        s.b("look", {"what": "Shading", "shading": sh})
+    for sp in ["mixed", "full", "off"]:
+        s.b("look", {"what": "Splatting", "splat": sp})
+    s.b("look", {"what": "Pixel size"}, {"pixel": I(2)})
+    s.b("look", {"what": "Pixel size"}, {"pixel": I(1)})
+    s.say("look", "shading toon / unlit / wire / lit, splatting mixed / full / off, pixel size 2 then 1")
+    s.b("var", {"mode": "Set", "name": "frames"}, {"value": I(0)})
+    fr = []
+    fr.append(s.b("clear", {}, {"color": S("RAYWHITE")}, top=False))
+    for shape, args in [("Rectangle", {"x": I(10), "y": I(10), "width": I(20), "height": I(10), "color": S("RED")}),
+                        ("Outline", {"x": I(40), "y": I(10), "width": I(20), "height": I(10), "color": S("BLUE")}),
+                        ("Circle", {"x": I(80), "y": I(15), "radius": F(6), "color": S("GREEN")}),
+                        ("Line", {"x": I(100), "y": I(10), "x2": I(130), "y2": I(20), "color": S("BLACK")}),
+                        ("Text", {"text": S("hi"), "x": I(140), "y": I(10), "size": I(10), "color": S("BLACK")}),
+                        ("Texture", {"texture": V("dot"), "x": I(170), "y": I(10), "color": S("WHITE")}),
+                        ("Sprite", {"texture": V("dot"), "x": I(190), "y": I(10), "frame": I(3), "columns": I(2), "rows": I(2), "scale": F(4), "rotation": F(0), "color": S("WHITE")})]:
+        fr.append(s.b("draw", {"shape": shape}, args, top=False))
+    # turned (rotation): Rectangle, Text, Texture, Sprite
+    for shape, args in [("Rectangle", {"x": I(10), "y": I(40), "width": I(20), "height": I(10)}), ("Text", {"text": S("turned"), "x": I(40), "y": I(40), "size": I(10)}),
+                        ("Texture", {"texture": V("dot"), "x": I(100), "y": I(40)}), ("Sprite", {"texture": V("dot"), "x": I(120), "y": I(40), "frame": I(1), "columns": I(2), "rows": I(2), "scale": F(4)})]:
+        args.update({"rotation": F(30), "color": S("PURPLE")})
+        fr.append(s.b("draw", {"shape": shape}, args, top=False))
+    v2 = s.b("view2d", {}, {"center": V2("50, 20"), "zoom": F(2), "rotation": F(10)}, top=False)
+    s.link(v2, "draw", [s.b("draw", {"shape": "Circle"}, {"x": I(50), "y": I(20), "radius": F(5), "color": S("ORANGE")}, top=False)])
+    fr.append(v2)
+    report = [s.say("draw", "every shape, turned ones, a sprite's frame, a 2D view", top=False)]
+    _loop(s, fr, report)
+    return s
+
+
+def audio():
+    s = Suite("audio", "Audio")
+    _window(s)
     s.b("sound", {"mode": "Load"}, {"path": S("assets/beep.wav")}, {"sound": "beep"})
     s.b("sound", {"mode": "Play"}, {"sound": V("beep")})
     s.say("sound", "loaded and played")
@@ -506,77 +600,11 @@ def graphics():
     s.out("music.Stop", V("stopped"), "false")
     s.b("music", {"do": "Play"}, {"music": V("song")})
     s.say("music.Volume", "set to 0.5; playing again during the frames")
-    for m in ["Captured", "Hidden", "Visible"]:
-        s.b("mouse_mode", {"mode": m})
-    s.say("mouse_mode", "Captured, Hidden, Visible")
-    # Graphics setting (2026-11-11, round 3): every setting changed and put back (what they look like: cases gfx_runtime)
-    for sh in ["toon", "unlit", "wire", "lit"]:
-        s.b("look", {"what": "Shading", "shading": sh})
-    for sp in ["mixed", "full", "off"]:
-        s.b("look", {"what": "Splatting", "splat": sp})
-    s.b("look", {"what": "Pixel size"}, {"pixel": I(2)})
-    s.b("look", {"what": "Pixel size"}, {"pixel": I(1)})
-    s.say("look", "shading toon / unlit / wire / lit, splatting mixed / full / off, pixel size 2 then 1")
-    # Pause game (2026-11-08): every mode (what pausing does: case pause)
-    s.b("pause", {"do": "Pause"})
-    s.b("pause", {"do": "Is paused"}, {}, {"result": "p1"})
-    s.out("pause.Pause", V("p1"), "true")
-    s.b("pause", {"do": "Resume"})
-    s.b("pause", {"do": "Is paused"}, {}, {"result": "p2"})
-    s.out("pause.Resume", V("p2"), "false")
-    s.b("pause", {"do": "Set time scale"}, {"scale": F(0.5)})
-    s.b("pause", {"do": "Time scale"}, {}, {"result": "ts"})
-    s.out("pause.Time scale", V("ts"), "0.5")
-    s.b("pause", {"do": "Set time scale"}, {"scale": F(1)})
     s.b("var", {"mode": "Set", "name": "frames"}, {"value": I(0)})
     fr = []
-    fr.append(s.b("clear", {}, {"color": S("RAYWHITE")}, top=False))
-    for shape, args in [("Rectangle", {"x": I(10), "y": I(10), "width": I(20), "height": I(10), "color": S("RED")}),
-                        ("Outline", {"x": I(40), "y": I(10), "width": I(20), "height": I(10), "color": S("BLUE")}),
-                        ("Circle", {"x": I(80), "y": I(15), "radius": F(6), "color": S("GREEN")}),
-                        ("Line", {"x": I(100), "y": I(10), "x2": I(130), "y2": I(20), "color": S("BLACK")}),
-                        ("Text", {"text": S("hi"), "x": I(140), "y": I(10), "size": I(10), "color": S("BLACK")}),
-                        ("Texture", {"texture": V("dot"), "x": I(170), "y": I(10), "color": S("WHITE")}),
-                        ("Sprite", {"texture": V("dot"), "x": I(190), "y": I(10), "frame": I(3), "columns": I(2), "rows": I(2), "scale": F(4), "rotation": F(0), "color": S("WHITE")})]:
-        fr.append(s.b("draw", {"shape": shape}, args, top=False))
-    # turned (rotation): Rectangle, Text, Texture, Sprite
-    for shape, args in [("Rectangle", {"x": I(10), "y": I(40), "width": I(20), "height": I(10)}), ("Text", {"text": S("turned"), "x": I(40), "y": I(40), "size": I(10)}),
-                        ("Texture", {"texture": V("dot"), "x": I(100), "y": I(40)}), ("Sprite", {"texture": V("dot"), "x": I(120), "y": I(40), "frame": I(1), "columns": I(2), "rows": I(2), "scale": F(4)})]:
-        args.update({"rotation": F(30), "color": S("PURPLE")})
-        fr.append(s.b("draw", {"shape": shape}, args, top=False))
-    v2 = s.b("view2d", {}, {"center": V2("50, 20"), "zoom": F(2), "rotation": F(10)}, top=False)
-    s.link(v2, "draw", [s.b("draw", {"shape": "Circle"}, {"x": I(50), "y": I(20), "radius": F(5), "color": S("ORANGE")}, top=False)])
-    fr.append(v2)
-    for when in ["Key down", "Key pressed", "Key released", "Mouse down", "Mouse pressed"]:
-        fr.append(s.b("input", {"when": when, "key": "SPACE", "button": "LEFT"}, {}, {"result": "in_" + when.replace(" ", "_").lower()}, top=False))
-    fr.append(s.b("mouse", {"what": "Position"}, {}, {"x": "mx", "y": "my"}, top=False))
-    fr.append(s.b("mouse", {"what": "Movement"}, {}, {"x": "dx", "y": "dy"}, top=False))
-    fr.append(s.b("mouse", {"what": "Wheel"}, {}, {"x": "wheel"}, top=False))
-    fr.append(s.b("key_direction", {"left": "A", "right": "D", "forward": "W", "back": "S"}, {}, {"result": "keys"}, top=False))
-    for what in ["Frame time", "Time", "Width", "Height", "FPS"]:
-        fr.append(s.b("game_info", {"what": what}, {}, {"result": "gi_" + what.replace(" ", "_").lower()}, top=False))
-    fr.append(s.b("var", {"mode": "Add", "name": "frames"}, {"value": I(1)}, top=False))
-    done = s.b("if", {"operator": "=="}, {"a": V("frames"), "b": I(3)}, top=False)
-    report = [s.out("game_info.Width", V("gi_width"), "320", top=False), s.out("game_info.Height", V("gi_height"), "200", top=False),
-              s.out("input.Key down", V("in_key_down"), "false", top=False), s.out("input.Mouse pressed", V("in_mouse_pressed"), "false", top=False),
-              s.out("mouse.Wheel", V("wheel"), "0", top=False), s.out("key_direction", V("keys"), "(0, 0)", top=False)]
-    tb = s.b("compare", {"op": ">"}, {"a": V("gi_time"), "b": F(0)}, {"result": "t_ok"}, top=False)
-    report += [tb, s.out("game_info.Time", V("t_ok"), "true", top=False)]
-    ft = s.b("compare", {"op": ">="}, {"a": V("gi_frame_time"), "b": F(0)}, {"result": "ft_ok"}, top=False)
-    report += [ft, s.out("game_info.Frame time", V("ft_ok"), "true", top=False)]
-    fp = s.b("compare", {"op": ">="}, {"a": V("gi_fps"), "b": I(0)}, {"result": "fps_ok"}, top=False)
-    report += [fp, s.out("game_info.FPS", V("fps_ok"), "true", top=False)]
-    report.append(s.say("game_loop", "3 frames drawn", top=False))
-    report.append(s.say("draw", "every shape, turned ones, a sprite's frame, a 2D view", top=False))
-    report.append(s.b("music", {"do": "Playing"}, {"music": V("song")}, {"result": "still"}, top=False))
+    report = [s.b("music", {"do": "Playing"}, {"music": V("song")}, {"result": "still"}, top=False)]
     report.append(s.out("music.frames", V("still"), "true", top=False))
-    report.append(s.b("close_window", top=False))
-    report.append(s.say("close_window", "asked; the frame goes on", top=False))
-    s.link(done, "true", report)
-    fr.append(done)
-    gl = s.b("game_loop")
-    s.link(gl, "frame", fr)
-    s.link(gl, "done", [s.out("close_window.Done", V("frames"), "3", top=False)])
+    _loop(s, fr, report)
     return s
 
 
@@ -992,8 +1020,8 @@ def ui():
 
 
 SUITES = {"events": events, "flow": flow, "output": output, "variables": variables, "functions": functions, "logic": logic,
-          "math": math, "text": text, "data": data, "program": program, "system": system, "debug": debug,
-          "advanced": advanced, "graphics": graphics, "3d": three_d, "objects": objects, "network": network, "input": user_input, "ui": ui}
+          "math": math, "text": text, "data": data, "files": files, "system": system, "debug": debug,
+          "advanced": advanced, "game": game, "graphics": graphics, "audio": audio, "3d": three_d, "objects": objects, "network": network, "input": user_input, "ui": ui}
 
 if __name__ == "__main__":
     pick = sys.argv[1:] or list(SUITES)

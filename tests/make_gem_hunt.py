@@ -1,6 +1,5 @@
-# Generates examples/gem_hunt (objects: a world file, a Player class and a Gem class) and
-# its test copies: python3 tests/make_gem_hunt.py <out dir> [test [auto]]
-#   examples/gem_hunt                        the example (then laid out: tests/layout_example.gd -- gem_hunt)
+# Generates the Gem Hunt test cases (objects: a world file, a Player class and a Gem class; the example itself was
+# removed 2026-11-11, the user: it didn't have much):  python3 tests/make_gem_hunt.py <out dir> [test [auto]]
 #   tests/cases/gem_hunt_shot test           + a screenshot at frame 40 and a quit
 #   tests/cases/gem_hunt_auto test auto      + D held, 2 s rounds, gems in a row to the right, a screenshot at frame 150
 import json, sys, os

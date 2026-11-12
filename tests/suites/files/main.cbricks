@@ -1,0 +1,476 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 117,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					104,
+					105,
+					107,
+					108,
+					109,
+					111,
+					112,
+					114,
+					115
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "write_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Write"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				},
+				"text": {
+					"type": "string",
+					"value": "one\\n"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "wrote",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[write_file.Write] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wrote"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_102",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					103
+				]
+			}
+		},
+		{
+			"id": 103,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_102"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "write_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Append"
+			},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				},
+				"text": {
+					"type": "string",
+					"value": "two\\n"
+				}
+			},
+			"outs": {
+				"ok": {
+					"var": "appended",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 105,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[write_file.Append] {}"
+			},
+			"args": {
+				"first": {
+					"var": "appended"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_105",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					106
+				]
+			}
+		},
+		{
+			"id": 106,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_105"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "read_file",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				}
+			},
+			"outs": {
+				"text": {
+					"var": "back",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Length"
+			},
+			"args": {
+				"text": {
+					"var": "back"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "back_len",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 109,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[read_file] {}"
+			},
+			"args": {
+				"first": {
+					"var": "back_len"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_109",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					110
+				]
+			}
+		},
+		{
+			"id": 110,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_109"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "file_exists",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "out.txt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "there",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[file_exists] {}"
+			},
+			"args": {
+				"first": {
+					"var": "there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_112",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					113
+				]
+			}
+		},
+		{
+			"id": 113,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_112"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "file_exists",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"path": {
+					"type": "string",
+					"value": "nowhere.txt"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "not_there",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[file_exists.missing] {}"
+			},
+			"args": {
+				"first": {
+					"var": "not_there"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_115",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					116
+				]
+			}
+		},
+		{
+			"id": 116,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_115"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}

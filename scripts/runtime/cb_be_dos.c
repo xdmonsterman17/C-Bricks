@@ -798,18 +798,20 @@ int cb_be_fps(void) { return cb_dos_dt > 0 ? (int)(1.0 / cb_dos_dt + 0.5) : cb_d
 double cb_be_frame_time(void) { return cb_dos_dt; }
 double cb_be_time(void) { return (double)(uclock() - cb_dos_t0) / UCLOCKS_PER_SEC; }
 
-void cb_be_screenshot(const char *path) {
+bool cb_be_screenshot(const char *path) {
+    int ok;
     size_t n = (size_t)cb_dos_w * (size_t)cb_dos_h, i;
     unsigned char *rgb = (unsigned char *)malloc(n * 3);
     if (!rgb)
-        return;
+        return false;
     for (i = 0; i < n; i++) {
         rgb[i * 3] = cb_dos_pal[cb_dos_back[i]][0];
         rgb[i * 3 + 1] = cb_dos_pal[cb_dos_back[i]][1];
         rgb[i * 3 + 2] = cb_dos_pal[cb_dos_back[i]][2];
     }
-    stbi_write_png(path, cb_dos_w, cb_dos_h, 3, rgb, cb_dos_w * 3);
+    ok = stbi_write_png(path, cb_dos_w, cb_dos_h, 3, rgb, cb_dos_w * 3);
     free(rgb);
+    return ok != 0;
 }
 
 /* ---------------------------------------------------------------- sound and music: a Sound Blaster, mixed by software
@@ -2859,6 +2861,7 @@ cb_mesh *cb_mesh_begin(cb_mesh *m) {
     return m;
 }
 
+/* INTERNAL: corners counter-clockwise; cb_mesh_triangle takes them clockwise. */
 static void cb_mesh_add(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, const Vector3 *normals, cb_rgba color) {
     cb_tri *t = (cb_tri *)cb_list_add(m->tris);
     t->p[0] = a; t->p[1] = b; t->p[2] = c;

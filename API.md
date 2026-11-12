@@ -77,7 +77,7 @@ MyGame/
 
 ### 2.2 The palette (the Bricks screen's left column)
 
-- A **search box** (every brick, by its title, type, group and mode names: `quad` finds Add to mesh) and **category buttons** (Events, Flow, Input / Output, Variables, Functions, Logic, Math, Text, Lists, Maps & Records, Program, System, Graphics, 3D, Debug / Testing, Advanced).
+- A **search box** (every brick, by its title, type, group and mode names: `quad` finds Add to mesh) and **category buttons** (Events, Flow, Input / Output, Variables, Functions, Logic, Math, Text, Lists, Maps & Records, Game, Graphics, Audio, Files, System, 3D, Debug / Testing, Advanced).
 - **Click** an entry: Properties shows what it does, its inputs, settings, output and exits.
 - **Drag** an entry onto the canvas, or **double-click** it to add it in the middle of the view.
 - A brick that may be used once (When program starts / ends) is greyed out once the script has it.
@@ -324,11 +324,6 @@ Each entry gives the brick's **type** (as saved in `.cbricks` files and in `Node
 - **When:** interactive text programs (*Guess the Number*, *Read Your Name*). In the editor, type into the Console's input line; in tests, `--input FILE`.
 - **Notes:** at the end of input a number reads as 0 (a While waiting for input then loops forever: use `--max-steps`).
 
-#### `time`: Get Time
-- **What:** seconds since the Unix epoch, `time(NULL)`.
-- **Output:** `seconds: int` (`now`).
-- **When:** timestamps, measuring long waits. (In games use Game info.)
-
 ### 4.3b User Input
 
 The keys and the mouse (palette group **User Input**, 2026-11-07): what this machine's player does (Input, Mouse position, Mouse mode, Key Direction), and players' keys read where the game's rules run (Player Key, Player Input; 4.6b). They need a window (graphics projects).
@@ -342,13 +337,6 @@ The keys and the mouse (palette group **User Input**, 2026-11-07): what this mac
 #### `mouse`: Mouse position
 - **What:** the mouse (Get): its **Position** in the window (pixels, ints); its **Movement** since the last frame (floats: mouse look, with Mouse mode Captured; the first moment after capturing reads 0, so the view doesn't jump); how far the **Wheel** turned (X).
 - **Settings:** Get. **Outputs:** `x`, `y` (`mouse_x`, `mouse_y`; Wheel: x only).
-
-#### `look`: Graphics setting
-- **What:** changes a Project Settings > Graphics setting while the program runs (they start as the project's): **Shading** (lit, toon, unlit, wire), **Splatting** (off, mixed: the objects marked `splat`, full), **Pixel size** (1..16 window pixels per drawn pixel). Shading and splatting apply to the next thing drawn; a new pixel size from the next frame (the frame, Window width / height and the mouse position follow).
-- **Settings:** Setting; Shading / Splatting (their choice). **Inputs:** `pixel: int = 2` (Pixel size). **Exits:** `next`.
-- **When:** a "retro mode" key, toon shading for a power-up, a low-res cutscene. The Environment's own effects (vignette, bloom, curve...) are its fields: set them with Field.
-- **Problems:** raylib backend only (MS-DOS ignores it); MSAA can't change while running; a dedicated server has no window and skips it.
-- **C:** `cb_graphics_setting(what, value)` (0 shading, 1 splatting, 2 pixel size) in `cbricks_gfx.c`, then the backend's `cb_be_set_look`.
 
 #### `mouse_mode`: Mouse mode
 - **What:** how the mouse behaves (Brickscript's Mouse mode): **Visible**, **Captured** (hidden and kept in the window: mouse look), **Hidden**.
@@ -465,7 +453,7 @@ Their fields are read and set with Record field, or by name inside a class that 
 
 **Scenes** (`.cbscene` files, edited in the editor's **Scene** dock, 2.10) hold objects: each one's class, name, parent and field values, plus **copies of other scenes** (prefabs, Godot's packed scenes: an enemy made of a body, a sword and its Script object, placed many times). The project's **Main scene** (`main.cbscene` by default; project.cbproj `main_scene`; FileSystem's right-click **Set as Main Scene**) holds the objects the world starts with. A copy can change its **root's** name, fields, groups and metadata; what's under the root is edited in the scene's own file, and a change there shows in every copy. **Every scene has one root** (the first node added); a scene can't hold itself. Old scenes with several objects at the top are upgraded when read: they go under a new root (a Node named after the file, e.g. Main; the Main scene's World settings of 2026-11-07, if any, become its class and name). **Instance scene** and **Change scene** (the Scene brick) use them while the program runs. Old projects' `world.cnworld` is read as the Main scene and renamed to `main.cbscene` when the project is opened.
 
-The Main scene's objects are made before When program starts runs (each one's When created first, then the file's values), and bricks find them by name with **Node (Find)** (`Find "Player" as Player`). The *Gem Hunt* example is built this way: the camera, sun, floor, walls, player and HUD are in its world file; a Player class moves itself, a Gem class spins and is picked up; main only opens the window, makes the gems and runs the Game loop.
+The Main scene's objects are made before When program starts runs (each one's When created first, then the file's values), and bricks find them by name with **Node (Find)** (`Find "Player" as Player`). The Arena example is built this way: its camera, sun, floor, walls and fighters are in its scenes; classes (Fighter, Enemy, Spark) move and fight themselves; main only opens the window and runs the Game loop.
 
 #### `class`: Class
 - **What:** makes this script a class (one per script). A declaration: no wires.
@@ -733,54 +721,9 @@ A network game, Roblox's / Brickscript's way: **one machine runs the game** (a h
 - **Inputs:** `record` (a record or object variable), `value: Anything = 0` (Set). **Output:** `value` (Get).
 - **Notes:** records are values: a record taken from a list is a copy; change it, then List (Set) it back.
 
-### 4.11 Program
+### 4.11 Game (raylib)
 
-#### `args`: Program Arguments
-- **What:** what the program was started with: how many arguments (Count), one by position (At index, from 0), the value of `--name=value` or `--name value` (Option), or whether `--name` was given (Flag).
-- **Settings:** Get. **Inputs:** `index: int = 0` (At index), `name: string = name` (Option, Flag). **Output:** `result` (`arg`): int, string or bool.
-- **Notes:** C-Bricks' own flags (section 6) are taken out first; after `--` everything is the program's. In the editor, Project Settings ▸ run arguments.
-
-#### `quit`: Exit program
-- **What:** ends the program at once with an exit code (0: success). When program ends still runs.
-- **Inputs:** `code: int = 0`. **Exits:** none.
-
-#### `read_file`: Read file
-- **What:** reads a whole text file (a path from the project folder, or absolute) into a string; `""` when it can't be read.
-- **Inputs:** `path: string = assets/hello.txt`. **Output:** `text: string`.
-- **Notes:** Run starts programs from the project folder (`--cd`), so `assets/…` paths work there and in exported projects run from their folder.
-
-#### `write_file`: Write file
-- **What:** writes text to a file, replacing it (Write) or adding to its end (Append).
-- **Settings:** Mode. **Inputs:** `path: string = output.txt`, `text: string`. **Output:** `ok: bool` (optional).
-
-#### `file_exists`: File exists
-- **What:** whether a file can be opened for reading.
-- **Inputs:** `path: string`. **Output:** `result: bool` (`found`).
-
-### 4.12 System
-
-#### `sleep`: Sleep
-- **What:** waits a number of milliseconds.
-- **Inputs:** `ms: int = 500`.
-- **When:** text animations, polling. (In a Game loop, don't: use the frame time.)
-
-#### `env`: Environment variable
-- **What:** an environment variable's text, `""` when it isn't set.
-- **Inputs:** `name: string = HOME`. **Output:** `value: string` (`env_value`).
-
-#### `run_command`: Run command
-- **What:** runs a command in the system's shell and waits for it.
-- **Inputs:** `command: string`. **Output:** `code: int` (its exit code; −1 where there's no shell, e.g. WASI).
-
-#### `terminal`: Terminal
-- **What:** controls the terminal with ANSI codes (Windows 10+ too): Clear screen, Color (the text that follows, or its background), Reset, Move cursor (row, column from 1, 1), Hide / Show cursor.
-- **Settings:** Do; Color (16 colors, when Color); Background (when Color).
-- **Inputs:** `row`, `column: int = 1` (Move cursor).
-- **When:** text games and dashboards in a terminal. (The editor's Console shows colors too.)
-
-### 4.13 Graphics (raylib, 2D)
-
-Graphics bricks make windowed programs with [raylib](https://www.raylib.com) 5.5 (bundled). A project that uses one builds raylib in (the first build for a target takes a minute or two). They build for this computer, Windows (zig), macOS (on a Mac) and the Web (Emscripten); other targets are text-only.
+The Game bricks make the program a windowed game: open the window, run the Game loop, pause it, close it, ask about the frame. They use [raylib](https://www.raylib.com) 5.5 (bundled); a project that uses one builds raylib in (the first build for a target takes a minute or two). They build for this computer and, where their toolchains are installed, Windows, macOS and the web.
 
 #### `window`: Open window
 - **What:** opens the program's window (and its sound) at a frame rate.
@@ -810,6 +753,15 @@ Graphics bricks make windowed programs with [raylib](https://www.raylib.com) 5.5
 - **When:** a Quit button or key, a game that's over, a test that should stop after some frames (instead of Exit program, so the Game loop's Done still runs).
 - **C:** `cb_close_window()`; the Game loop is `while (cb_loop_go())`.
 
+#### `game_info`: Game info
+- **What:** Frame time (seconds the last frame took), Time (seconds since the window opened), the window's Width / Height, FPS.
+- **Settings:** Get. **Output:** `result` (`dt`): a float or an int.
+- **When:** smooth movement: `speed × frame time` per frame. Animations: `sin(Time)`.
+
+### 4.12 Graphics (raylib, 2D)
+
+Drawing in the Game loop's window: clearing, shapes, text, textures and sprites, a 2D camera, and the look settings (shading, splatting, pixel size). See also 3D.
+
 #### `clear`: Clear window
 - **What:** fills the window with a color. **Inputs:** `color: string = RAYWHITE`.
 
@@ -827,14 +779,22 @@ Graphics bricks make windowed programs with [raylib](https://www.raylib.com) 5.5
 - **When:** a 2D game bigger than its window: Center = the player's position follows them; a HUD goes in Next. (The world's own 2D nodes use a Camera2D node instead.)
 - **C:** `cb_begin_2d(center, zoom, rotation)` ... `cb_end_2d()` (the backend's `cb_be_begin_2d`).
 
-#### `game_info`: Game info
-- **What:** Frame time (seconds the last frame took), Time (seconds since the window opened), the window's Width / Height, FPS.
-- **Settings:** Get. **Output:** `result` (`dt`): a float or an int.
-- **When:** smooth movement: `speed × frame time` per frame. Animations: `sin(Time)`.
-
 #### `load_texture`: Load texture
 - **What:** loads an image (png, jpg, bmp…) from the project's files, to draw with Draw (Texture). After Open window.
 - **Inputs:** `path: string = assets/player.png`. **Output:** `texture` (`image`).
+
+#### `look`: Graphics setting
+- **What:** changes a Project Settings > Graphics setting while the program runs (they start as the project's): **Shading** (lit, toon, unlit, wire), **Splatting** (off, mixed: the objects marked `splat`, full), **Pixel size** (1..16 window pixels per drawn pixel). Shading and splatting apply to the next thing drawn; a new pixel size from the next frame (the frame, Window width / height and the mouse position follow).
+- **Settings:** Setting; Shading / Splatting (their choice). **Inputs:** `pixel: int = 2` (Pixel size). **Exits:** `next`.
+- **When:** a "retro mode" key, toon shading for a power-up, a low-res cutscene. The Environment's own effects (vignette, bloom, curve...) are its fields: set them with Field.
+- **Problems:** raylib backend only (MS-DOS ignores it); MSAA can't change while running; a dedicated server has no window and skips it.
+- **C:** `cb_graphics_setting(what, value)` (0 shading, 1 splatting, 2 pixel size) in `cbricks_gfx.c`, then the backend's `cb_be_set_look`.
+
+### 4.13 Audio (raylib)
+
+#### `sound`: Sound
+- **What:** loads a sound (wav, ogg, mp3) from the project's files, or plays one. After Open window.
+- **Settings:** Mode (Load / Play). **Inputs:** `path: string` (Load), `sound` (Play). **Output:** `sound` (Load; `jump`).
 
 #### `music`: Music
 - **What:** streamed music (raylib's music streams: ogg, mp3, wav, flac, xm, mod), read a little at a time instead of loaded whole like a Sound: long songs, background loops.
@@ -843,9 +803,55 @@ Graphics bricks make windowed programs with [raylib](https://www.raylib.com) 5.5
 - **When:** after Open window. It plays while the Game loop runs (and during a Wait): the runtime feeds every playing stream each frame (`cb_music_update`). Print shows `music (12.5 s, looping)`. A dedicated server skips it.
 - **C:** `cb_music_load`, `cb_music_play`, `cb_music_stop`, `cb_music_pause`, `cb_music_resume`, `cb_music_volume`, `cb_music_playing`.
 
-#### `sound`: Sound
-- **What:** loads a sound (wav, ogg, mp3) from the project's files, or plays one. After Open window.
-- **Settings:** Mode (Load / Play). **Inputs:** `path: string` (Load), `sound` (Play). **Output:** `sound` (Load; `jump`).
+### 4.13b Files
+
+#### `read_file`: Read file
+- **What:** reads a whole text file (a path from the project folder, or absolute) into a string; `""` when it can't be read.
+- **Inputs:** `path: string = assets/hello.txt`. **Output:** `text: string`.
+- **Notes:** Run starts programs from the project folder (`--cd`), so `assets/…` paths work there and in exported projects run from their folder.
+
+#### `write_file`: Write file
+- **What:** writes text to a file, replacing it (Write) or adding to its end (Append).
+- **Settings:** Mode. **Inputs:** `path: string = output.txt`, `text: string`. **Output:** `ok: bool` (optional).
+
+#### `file_exists`: File exists
+- **What:** whether a file can be opened for reading.
+- **Inputs:** `path: string`. **Output:** `result: bool` (`found`).
+
+### 4.13c System
+
+#### `args`: Program Arguments
+- **What:** what the program was started with: how many arguments (Count), one by position (At index, from 0), the value of `--name=value` or `--name value` (Option), or whether `--name` was given (Flag).
+- **Settings:** Get. **Inputs:** `index: int = 0` (At index), `name: string = name` (Option, Flag). **Output:** `result` (`arg`): int, string or bool.
+- **Notes:** C-Bricks' own flags (section 6) are taken out first; after `--` everything is the program's. In the editor, Project Settings ▸ run arguments.
+
+#### `quit`: Exit program
+- **What:** ends the program at once with an exit code (0: success). When program ends still runs.
+- **Inputs:** `code: int = 0`. **Exits:** none.
+
+#### `time`: Get Time
+- **What:** seconds since the Unix epoch, `time(NULL)`.
+- **Output:** `seconds: int` (`now`).
+- **When:** timestamps, measuring long waits. (In games use Game info.)
+
+#### `sleep`: Sleep
+- **What:** waits a number of milliseconds.
+- **Inputs:** `ms: int = 500`.
+- **When:** text animations, polling. (In a Game loop, don't: use the frame time.)
+
+#### `env`: Environment variable
+- **What:** an environment variable's text, `""` when it isn't set.
+- **Inputs:** `name: string = HOME`. **Output:** `value: string` (`env_value`).
+
+#### `run_command`: Run command
+- **What:** runs a command in the system's shell and waits for it.
+- **Inputs:** `command: string`. **Output:** `code: int` (its exit code; −1 where there's no shell, e.g. WASI).
+
+#### `terminal`: Terminal
+- **What:** controls the terminal with ANSI codes (Windows 10+ too): Clear screen, Color (the text that follows, or its background), Reset, Move cursor (row, column from 1, 1), Hide / Show cursor.
+- **Settings:** Do; Color (16 colors, when Color); Background (when Color).
+- **Inputs:** `row`, `column: int = 1` (Move cursor).
+- **When:** text games and dashboards in a terminal. (The editor's Console shows colors too.)
 
 ### 4.14 3D
 
@@ -971,7 +977,6 @@ Graphics bricks make windowed programs with [raylib](https://www.raylib.com) 5.5
 | Gem Collector | 3D: Set camera, Draw 3D, Draw shape, all the mesh bricks, Vector, Constants, functions, Format; WASD, collect gems before the time runs out, R to play again |
 | Arena | A networked first-person shooter (single-player offline; H hosts on port 7000, J joins 127.0.0.1:7000; or `--host` / `--server` / `--join ... --name`). Each player gets a **Fighter** (`scenes/fighter.cbscene`: Player Joined, Instance scene, Give To) holding two Script objects (user's design): **Input** (a LocalScript: on its owner's machine only, it reads mouse look (Mouse mode Captured, Mouse Movement) and WASD (Key Direction), sends them every frame with Fire Server `input`, and runs that player's camera (their own yaw / pitch at once), HUD and kick, hiding its own body) and **Brain** (a Script: where the rules run, On Client Fired keeps each player's input on their Fighter, When frame starts moves every Fighter (Move and collide against solid walls and crates), shoots (Raycast, Call method damage, Sparks the world copies to everyone) and brings caught players back after 3 s). Enemies chase the nearest Fighter (Nearest object) and bite (a `hurt` method: Fire Clients One player shakes the bitten player's camera). Environment fog. **The HUD is UI** (2026-11-07): a Stats Panel with the score Label and a health Bar, the crosshair Label in the middle, a Message Panel counting down while caught; the Input script sets them each frame. **A title menu** (2026-11-08): a Title Panel with a Menu VBox of Buttons (Play, Host, Join, Quit; When button clicked in main: no class needed), shown at the start and on **Esc** (Open window's Escape closes is off), the mouse captured only in the game, Host / Join disabled in a network game; started with `--join` / `--host` it goes straight into the game. **Tab** shows the scoreboard: a Panel, a VBox of HBox rows (name, score, health) sorted by score (keys `score * 100 + player`, List Sort + Reverse). **Game feel:** a hit marker over the crosshair when your shot lands (the server's `hit` remote to the shooter only; red: a kill), a red flash when bitten (`hurt`), a health bar floating over each enemy (a thin Shape3D child the server sizes: synced). Tests: `arena_menu` (starts on the menu; a `--click` on Play), `--scores` shows the scoreboard in tests. Tests: `arena_shot`, `arena_auto` (single-player, `--autofire`), `arena_net` (a dedicated server and two clients) |
 | Net Gems | A network game for 2-5 players (offline: alone; H hosts on port 7000, J joins 127.0.0.1:7000; or `--host 7000`, `--server 7000`, `--join 127.0.0.1:7000 --name ada`), and the do-it-yourself starter player: the server's Player Joined instances `scenes/hero.cbscene` (a Runner with a Welcome Client script) and Gives it To the player (a lane and a colour by their number); the Welcome runs on its owner's machine; a Runner moves with Player Direction (blank: its owner) on the server; Gems score (a Synced score), Fire Clients `picked` / `winner` (first to 10; scores reset); each machine's camera follows its own runner and its HUD lists everyone's score (Text2Ds in the group `local`); Player Left removes what they own (Owned by) |
-| Gem Hunt | Objects: a world file (camera, sun, floor, walls in a Spatial3D, the player, a HUD Text2D), a Player class (Every frame: WASD, the camera follows, the HUD), a Gem class (spins; When touched by the Player: Call method add_point, then jumps elsewhere); main is three bricks |
 
 ---
 
@@ -1020,7 +1025,7 @@ Graphics (2D and 3D) build for this computer, Windows and the Web from here, and
 
 **Graphics settings** (2026-11-11; **Project Settings ▸ Graphics**, `[graphics]` in project.cbproj; the raylib backend reads them as `CB_*` defines in cbricks.h, the MS-DOS renderer ignores them; the MS-DOS and editor previews don't show them yet):
 - **Shading:** *Lit* (the sun, ambient light and fog: the default), *Toon* (the sun's light in three steps), *Unlit* (flat colours), *Wireframe* (3D only; not on the Web).
-- **Splatting** (point splatting): *No splatting* (default), *Mixed* (every Shape3D and Mesh3D gets a **Splat** checkbox in Properties, off by default; the checkbox is hidden in the other two modes) or *Full splatting* (every shape and mesh, and Draw shape / Draw mesh too). A splatted model is drawn as screen-facing round or square discs scattered over its triangles, **splat width** world units across (they shrink with distance), **per unit²** splats per square world unit of surface (the object's scale counts: a big floor and a small box get the same spacing; at most 150 000 points a model), picked once per model and scale, then lit in C with the same sun, ambient and fog as solid shapes (Toon / Unlit apply too). Splats take the object's colour (a mesh's vertex colours too). Wireframe and splats together: the splats are drawn. A mesh rebuilt by Finish mesh / Set mesh vertices gets new points.
+- **Splatting** (point splatting): *No splatting* (default), *Mixed* (every Shape3D and Mesh3D gets a **Splat** checkbox in Properties, off by default; the checkbox is hidden in the other two modes) or *Full splatting* (every shape and mesh, and Draw shape / Draw mesh too). A splatted model is drawn as screen-facing round or square discs scattered over its triangles, **splat width** world units across (they shrink with distance), **per unit²** splats per square world unit of surface (the object's scale counts: a big floor and a small box get the same spacing; at most 150 000 points a model: a bigger one, like a huge floor, gets fewer points evenly over its whole surface, each bigger), picked once per model and scale, then lit with the same sun, ambient and fog as solid shapes (Toon / Unlit apply too; on the GPU, in a vertex shader). Splats take the object's colour (a mesh's vertex colours too). Wireframe and splats together: the splats are drawn. A mesh rebuilt by Finish mesh / Set mesh vertices gets new points. **Speed:** the points live in GPU vertex buffers (uploaded once per model and scale) and a vertex shader transforms, lights and fogs them, so a frame costs the processor a few draw calls however many points there are; an object entirely off the screen is skipped. If the GPU has no vertex arrays or the shader fails, the points are lit and drawn by a C loop instead (slower, same picture). The **quality follows the frame time**: when a frame takes over 12% longer than the Open window's frame rate allows, every object draws a smaller share of its points (down to 5%), each grown to cover the same area (chunkier splats, no lag); when frames are fast again the points return. Many splatted objects, a high density or a small splat width are what make it slow.
 - **Pixel size:** Off, 2, 3, 4, 6 or 8: the whole frame (2D, 3D and the UI) is drawn into a window-size / N texture and stretched up with hard pixels; the program sees the small size (Game info's width and height, the mouse), the window turns resizable, MSAA is ignored. A Screenshot is the small frame.
 - **Window:** Fixed size, Resizable, Fullscreen (a borderless window the size of the screen) or Borderless window. **Quality:** MSAA 4x, VSync.
 - Tests: `gfx_*` cases (`tests/make_gfx_cases.py`).
@@ -1064,3 +1069,66 @@ Portable hosted C99, standard library only (plus `chdir`, and sockets in network
 - **Adding a brick:** the def, its C, its summary, its line(s) in its palette group's suite (`tests/make_suites.py`: every brick and mode, checked by the runner's `coverage`), and an entry here. `tests/run_tests.gd` fails when a brick has no `#### \`type\`` heading in this file, or isn't in its suite.
 - **Watches** are `scripts/watches.gd` (`CBWatches`): a paused variable's text read back by its type, then Godot's `Expression` over them (the runner's `watches` check tests both).
 - **Tests:** `godot --headless --path . -s res://tests/run_tests.gd` (the cases), `godot --path . --resolution 1600x900 -s res://tests/ui_check.gd` (the real window, with screenshots). `DEBUG.md` has the process.
+
+## 10. File formats (for tools and scripts that write projects)
+The editor reads and writes these; a script (or a Claude session) can too. Files are JSON (scripts, scenes) or Godot's config format (`project.cbproj`). Older versions are upgraded on open (`Ops.normalize`, `CBProject.upgrade_*`); write the current one. `cbricks check DIR` (no window) lists the project's Problems, but it does not catch every wrong name (10.2). `tests/make_*.py` are worked generators (their `node()` / `link()` helpers are a ready pattern).
+
+### 10.1 Project folder
+`project.cbproj` marks the folder as a project (`CBProject.is_project`). Every `.cbricks` under it is a script, every `.cbscene` a scene, every `.c` / `.h` your own C (10.4); anything else is an asset. `.build/` is output.
+```
+[project]
+name="Hello World"
+version="1.0"
+[run]
+args=""
+[build]
+target="native"
+```
+More sections appear when used: `[graphics]` (Project Settings > Graphics), `[debug]` (watches), `main_scene` (the Main scene, default `main.cbscene`).
+
+### 10.2 Script: `.cbricks` (version 4)
+```json
+{ "format": "c-bricks", "version": 4, "target": "native", "next_id": 3,
+  "nodes": [
+    { "id": 1, "type": "start", "pos": [32, 96], "size": [0, 0], "fields": {}, "args": {}, "outs": {},
+      "links": { "out": [2] } },
+    { "id": 2, "type": "print", "pos": [240, 96], "size": [0, 0], "fields": { "newline": true },
+      "args": { "value": { "type": "string", "value": "Hello" } }, "outs": {},
+      "links": { "next": [] } } ],
+  "frames": [] }
+```
+- **`links`**: exit group name -> brick ids, **in firing order** (each chain runs to its end, then the next). The group names are per brick (`groups` in `scripts/node_defs.gd`; each brick's entry in section 4 lists its exits): `start: out`, `window: next`, `game_loop: frame / done`, `if: true / false / next`, `for: loop / done`, `draw3d: draw / next`, `call_c: next`, most actions `next`, `quit` none. Wiring a brick into an exit appends its id.
+- **`args`** (the brick's inputs): `{"type": "int", "value": "960"}` (a typed value; **the value is always a string**) or `{"var": "name"}` (a variable). Types are in section 3.
+- **`outs`** (the brick's results): `{"var": "name", "use": false}`. **`use`: `false` makes a new variable of that name (the editor's New variable…), `true` puts the result into an existing one (Into).**
+- **`fields`**: the brick's settings (Mode, option names, flags), by field name; `call_c`'s are `name`, `returns` (`void` allowed), `args` (a list of `[name, type]`) and `header`.
+- **`frames`**: comment frames `{id, title, color: "#rrggbb", pos, size, nodes: [ids], fit}`; optional `view: {scroll: [x, y], zoom}`.
+- `next_id` is greater than every id in the file (and the frames'). Positions are on a 16-pixel grid; `Ops.tidy` lays a generated file out (needs the canvas for the real brick sizes: `tests/layout_example.gd`).
+- **Wrong names are not reported (known gap, BUGS.md):** `cbricks check` (and Build) passed a file with an unknown brick type, an unknown exit group and a link to a missing id, without a Problem. Write only names from `node_defs.gd` and ids that exist; look at the result in the editor.
+
+### 10.3 Scene: `.cbscene` (version 4)
+```json
+{ "format": "c-bricks-scene", "version": 4, "next_id": 3,
+  "objects": [
+    { "id": 1, "class": "Spatial3D", "name": "Main", "parent": 0, "fields": {} },
+    { "id": 2, "class": "Shape3D", "name": "Floor", "parent": 1,
+      "fields": { "size": "20, 0.2, 20", "position": "0, -0.1, 0", "color": "#5aa846" } } ] }
+```
+`parent: 0` is the root (one per scene). `fields` are strings, as typed in Properties. Other keys an object may carry: `groups`, `meta`, `script` (a Script object), and `{"scene": "rel/path.cbscene"}` entries for copies of other scenes. Classes: section 4.6 and 2.10.
+
+### 10.4 Your own `.c` / `.h`
+Every `.c` and `.h` in the project folder is compiled in (so a test program with its own `main()` inside the folder breaks the build: keep tools outside, or in another folder). Subfolders work, but files are **flattened by file name** into `.build/src`: two files with one name in different folders clash (`util.c` twice), and so does a file named like a generated one (`cbricks.h`, `cbricks_runtime.c`...). Both are Problems. Your files `#include "cbricks.h"` for the runtime (section 11) and are called with the **Call C function** brick (or call the generated functions, which `cbricks.h` declares).
+
+## 11. API for your own C (`cbricks.h`)
+The same functions the bricks use; `.build/src/cbricks.h` (made by every build) is the authority and is commented; the runtime's code is `scripts/runtime/`. Strings are `const char *` and live until the program ends (never free them); lists are `cb_list`, maps `cb_map`. Functions taking `int file, int brick` report errors naming the brick (pass 0, 0 from your own code). Programs are hosted C99: use `cb_*` for what a brick does, the C library for the rest.
+
+- **Program:** `cb_arg_count`, `cb_arg(i)`, `cb_option("name")` (`--name value`), `cb_flag("name")`, `cb_read_file`, `cb_write_file(path, text, append)`, `cb_file_exists`, `cb_assert`, `cb_sleep_ms`, `cb_env`, `cb_run`, `cb_now`.
+- **Text:** `cb_join`, `cb_format(fmt, ...)` (printf into a kept string), `cb_len`, `cb_substr`, `cb_find`, `cb_replace`, `cb_upper`, `cb_lower`, `cb_trim`, `cb_split`, `cb_join_list`, `cb_to_int`, `cb_to_float`, `cb_starts_with`, `cb_ends_with`.
+- **Lists and maps:** `cb_list_new(elem_size)`, `cb_list_add` (returns the new slot), `cb_list_at(list, i, file, brick)`, `cb_list_insert`, `cb_list_remove`, `cb_list_clear`, `cb_list_reverse`; `cb_map_new`, `cb_map_put`, `cb_map_get`, `cb_map_find`, `cb_map_remove`, `cb_map_keys`, `cb_map_values`; `cb_alloc(size)` (zeroed, kept).
+- **Vectors:** `Vector2` / `Vector3` (`x y z` floats) with `cb_v3`, `cb_v3_add / sub / scale / length / normalize / lerp / dot / cross`, and `cb_v2_*` alike.
+- **Objects:** `cb_new(&Class_class)`, `cb_destroy`, `cb_set_parent`, `cb_is_a`, `cb_as`, `cb_children`, `cb_find_object`, groups `cb_group_add / remove`, `cb_in_group`, `cb_objects_in_group`, metadata `cb_meta_*`, `cb_world()`.
+- **Window and input** (graphics projects): `cb_open_window(w, h, title, fps, esc_closes)`, `cb_window_end`, `cb_close_window`, `cb_loop_go` (the Game loop's test), `cb_frame_time` (seconds since the last frame, 0 paused), `cb_game_time`, `cb_screen_width / height`, `cb_fps`; keys `cb_key_down / pressed / released(CB_KEY_*)`; mouse `cb_mouse_x / y / down / pressed(CB_MOUSE_*)`, `cb_mouse_wheel`, `cb_mouse_motion`, `cb_mouse_over_ui`, `cb_cursor(mode)`; **there is no typed-character (text entry) query and no mouse-released query yet**: build on key codes.
+- **2D drawing:** `cb_color("RED" | "#rrggbb")`, `cb_clear`, `cb_draw_rect / rect_lines / circle / line / text / texture / sprite`, turned: `cb_draw_rect_turned`, `cb_draw_text_turned`, `cb_begin_2d` / `cb_end_2d`; `cb_load_texture`.
+- **3D drawing** (between `cb_begin_3d` and `cb_end_3d`; `cb_camera(position, target, fov, ortho)` first): `cb_draw_shape(kind, at, size, turn, color)`, `cb_draw_line3d`, `cb_draw_grid`, `cb_draw_wire_box`, `cb_draw_mesh(mesh, at, size, turn, tint)` (**turn is degrees round the up axis only**), lights `cb_set_light`, `cb_set_light_color`, `cb_set_fog`, `cb_set_ambient`. Lines have no depth bias: a line lying on a surface can dash (pull its endpoints a little toward the camera).
+- **Meshes:** `cb_mesh_new`, `cb_mesh_begin`, `cb_mesh_triangle(mesh, a, b, c, color)`, `cb_mesh_quad`, `cb_mesh_shape`, `cb_mesh_finish(mesh, smooth, both_sides, 0, 0)`. **`cb_mesh_triangle`'s front is the side where a, b, c go round clockwise** (the Add to mesh brick's rule: `(0,0,0) (1,0,0) (0,0,1)` faces up); counter-clockwise faces get reversed lighting (and vanish with One side). Colour only per triangle; no per-vertex normals or texture coordinates in this API.
+- **Screenshots:** `bool cb_screenshot(path)` writes a PNG **exactly at `path`** (relative = from the working directory) and returns whether it did. Call it **after** everything is drawn: early in a frame it saves the cleared background. It includes the UI and the post effects.
+- **Sound:** `cb_sound_load`, `cb_sound_play`, `cb_music_*`.

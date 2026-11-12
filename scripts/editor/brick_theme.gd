@@ -23,16 +23,18 @@ const CATEGORY_COLORS: Dictionary = {
 	"objects": Color(1.0, 0.67, 0.57),
 	"network": Color(0.55, 0.85, 1.0),
 	"ui": Color(0.56, 0.94, 0.59),
-	"program": Color(0.56, 1.0, 0.86),
+	"game": Color(0.56, 1.0, 0.86),
+	"audio": Color(0.9, 0.95, 0.55),
+	"files": Color(0.6, 0.9, 1.0),
 	"debug": Color(1.0, 0.7, 0.7),
 	"advanced": Color(0.85, 0.75, 1.0),
 }
-const CATEGORY_ORDER: PackedStringArray = ["events", "flow", "output", "input", "variables", "functions", "objects", "ui", "network", "logic", "math", "text", "data", "program", "system", "graphics", "3d", "debug", "advanced"]
+const CATEGORY_ORDER: PackedStringArray = ["events", "flow", "output", "input", "variables", "functions", "objects", "ui", "network", "logic", "math", "text", "data", "game", "graphics", "audio", "files", "system", "3d", "debug", "advanced"]
 ## Short names for the palette's category buttons (the list's headers use the full ones).
 const CATEGORY_SHORT: Dictionary = {"output": "In / Out", "data": "Data", "debug": "Debug"}
 const CATEGORY_TITLES: Dictionary = {
 	"events": "Events", "flow": "Flow", "output": "Input / Output", "input": "User Input", "variables": "Variables",
-	"functions": "Functions", "objects": "Objects", "ui": "UI", "network": "Network", "logic": "Logic", "math": "Math", "text": "Text", "data": "Lists, Maps & Records", "system": "System", "graphics": "Graphics", "3d": "3D", "program": "Program", "debug": "Debug / Testing", "advanced": "Advanced",
+	"functions": "Functions", "objects": "Objects", "ui": "UI", "network": "Network", "logic": "Logic", "math": "Math", "text": "Text", "data": "Lists, Maps & Records", "system": "System", "graphics": "Graphics", "3d": "3D", "game": "Game", "audio": "Audio", "files": "Files", "debug": "Debug / Testing", "advanced": "Advanced",
 }
 
 ## The code editor background, text and accent of Godot's default editor theme.

@@ -753,13 +753,15 @@ static void cb_world_draw_ui(void) {
     }
 }
 
-/* A screenshot of the frame so far with the UI on it (the UI is otherwise drawn as the frame
+/* A PNG of the frame so far with the UI on it, written exactly at `path` (relative paths are
+   from the working directory); true when the file was written. Call it after everything is
+   drawn: at the start of a frame it saves the cleared background. Also (the UI is otherwise drawn as the frame
    ends): for tests' C Code bricks, which take screenshots mid-frame. */
-void cb_screenshot(const char *path) {
+bool cb_screenshot(const char *path) {
     cb_be_flush();
     cb_world_draw_ui();
     cb_be_flush();
-    cb_be_screenshot(path);
+    return cb_be_screenshot(path);
 }
 
 /* Draws the world, if it has anything in it: the sky, 3D from its Camera3D, then 2D. (The

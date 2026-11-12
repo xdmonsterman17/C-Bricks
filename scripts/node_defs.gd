@@ -238,14 +238,14 @@ const DEFS := {
 		"desc": "Prints the prompt, then reads what's typed on stdin: a whole number, a number, or a line of text (Read).",
 	},
 	"time": {
-		"title": "Get Time", "cat": "output", "kind": "action",
+		"title": "Get Time", "cat": "system", "kind": "action",
 		"outs": [["seconds", INT, "now"]],
 		"groups": ["next"],
 		"desc": "Seconds since the Unix epoch, time(NULL).",
 	},
 	# ---------------------------------------------------------------- Program
 	"args": {
-		"title": "Program Arguments", "cat": "program", "kind": "action",
+		"title": "Program Arguments", "cat": "system", "kind": "action",
 		"mode": "what", "mode_titles": {"Count": "Argument count", "At index": "Argument", "Option": "Option value", "Flag": "Has flag"},
 		"fields": [["what", "option", "Option", ["Count", "At index", "Option", "Flag"], "Get"]],
 		"args": [["index", INT, "0", false, {"what": ["At index"]}], ["name", STRING, "name", false, {"what": ["Option", "Flag"]}]],
@@ -254,20 +254,20 @@ const DEFS := {
 		"desc": "What the program was started with: how many arguments, one by position (from 0), the value of --name=value (or --name value), or whether --name was given (Get). C-Bricks' own flags (--trace, --seed...) are taken out first.",
 	},
 	"quit": {
-		"title": "Exit program", "cat": "program", "kind": "action",
+		"title": "Exit program", "cat": "system", "kind": "action",
 		"args": [["code", INT, "0"]],
 		"groups": [],
 		"desc": "Ends the program at once with an exit code (0: success). When program ends still runs.",
 	},
 	"read_file": {
-		"title": "Read file", "cat": "program", "kind": "action",
+		"title": "Read file", "cat": "files", "kind": "action",
 		"args": [["path", STRING, "assets/hello.txt"]],
 		"outs": [["text", STRING, "text"]],
 		"groups": ["next"],
 		"desc": "Reads a whole text file (a path from the project folder, or absolute) into a string. \"\" when it can't be read.",
 	},
 	"write_file": {
-		"title": "Write file", "cat": "program", "kind": "action",
+		"title": "Write file", "cat": "files", "kind": "action",
 		"mode": "mode", "mode_titles": {"Write": "Write file", "Append": "Append to file"},
 		"fields": [["mode", "option", "Write", ["Write", "Append"], "Mode"]],
 		"args": [["path", STRING, "output.txt"], ["text", STRING, "Hello!\\n"]],
@@ -276,7 +276,7 @@ const DEFS := {
 		"desc": "Writes text to a file, replacing it (Write) or adding to its end (Append). Ok: whether it worked.",
 	},
 	"file_exists": {
-		"title": "File exists", "cat": "program", "kind": "action",
+		"title": "File exists", "cat": "files", "kind": "action",
 		"args": [["path", STRING, "assets/hello.txt"]],
 		"outs": [["result", BOOL, "found"]],
 		"groups": ["next"],
@@ -686,24 +686,24 @@ const DEFS := {
 	},
 	# ---------------------------------------------------------------- Graphics (raylib)
 	"window": {
-		"title": "Open window", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Open window", "cat": "game", "kind": "action", "graphics": true,
 		"fields": [["esc_closes", "check", true, null, "Escape closes"]],
 		"args": [["width", INT, "800"], ["height", INT, "450"], ["title", STRING, "My game"], ["fps", INT, "60"]],
 		"groups": ["next"],
 		"desc": "Opens the program's window (and its sound) at a frame rate. Escape closes (on: raylib's way, Escape ends the Game loop; off: Escape is a key like any other, e.g. for a pause menu: Close window ends the game then). Then a Game loop draws in it. Graphics bricks use raylib: they build for this computer, Windows and macOS / the web where their toolchains are installed.",
 	},
 	"game_loop": {
-		"title": "Game loop", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Game loop", "cat": "game", "kind": "action", "graphics": true,
 		"groups": ["frame", "done"],
 		"desc": "Runs the Frame chains once per frame (draw there: Clear, Draw...) until the window is closed (or Escape); then closes it and runs Done.",
 	},
 	"close_window": {
-		"title": "Close window", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Close window", "cat": "game", "kind": "action", "graphics": true,
 		"groups": ["next"],
 		"desc": "Ends the Game loop as if the window's close button was pressed: the frame under way finishes (the rest of its chains run), then the Game loop closes the window and runs its Done. A Wait under way ends early. A dedicated server (no window) ends its Game loop the same way. Open window clears it, so a later window opens as usual.",
 	},
 	"pause": {
-		"title": "Pause game", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Pause game", "cat": "game", "kind": "action", "graphics": true,
 		"mode": "do", "mode_titles": {"Pause": "Pause game", "Resume": "Resume game", "Is paused": "Paused?", "Set time scale": "Set time scale", "Time scale": "Time scale"},
 		"fields": [["do", "option", "Pause", ["Pause", "Resume", "Is paused", "Set time scale", "Time scale"], "Do"]],
 		"args": [["scale", FLOAT, "1", false, {"do": ["Set time scale"]}]],
@@ -927,7 +927,7 @@ const DEFS := {
 		"desc": "How the mouse behaves (Brickscript's Mouse mode): Visible (the usual pointer), Captured (hidden and kept in the window, for mouse look: read how it moves with Mouse position (Movement)), Hidden (only not shown). After Open window.",
 	},
 	"game_info": {
-		"title": "Game info", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Game info", "cat": "game", "kind": "action", "graphics": true,
 		"mode": "what", "mode_titles": {"Frame time": "Frame time", "Time": "Time since start", "Width": "Window width", "Height": "Window height", "FPS": "Frames per second"},
 		"fields": [["what", "option", "Frame time", ["Frame time", "Time", "Width", "Height", "FPS"], "Get"]],
 		"outs": [["result", ANY, "dt"]],
@@ -942,7 +942,7 @@ const DEFS := {
 		"desc": "Loads an image (png, jpg, bmp...) from the project's files, to draw with Draw texture. After Open window.",
 	},
 	"music": {
-		"title": "Music", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Music", "cat": "audio", "kind": "action", "graphics": true,
 		"mode": "do", "mode_titles": {"Load": "Load music", "Play": "Play music", "Stop": "Stop music", "Pause": "Pause music", "Resume": "Resume music", "Volume": "Music volume", "Playing": "Music playing?"},
 		"fields": [
 			["do", "option", "Play", ["Load", "Play", "Stop", "Pause", "Resume", "Volume", "Playing"], "Do"],
@@ -958,7 +958,7 @@ const DEFS := {
 		"desc": "Streamed music (raylib's music streams: ogg, mp3, wav, flac, xm, mod), read from the file a little at a time instead of loaded whole like a Sound. Load it from the project's files (Loop: start again at its end), Play it from the start, Stop, Pause, Resume, set its Volume (0 to 1), or ask whether it's Playing. It plays while the Game loop runs (Wait too). After Open window.",
 	},
 	"sound": {
-		"title": "Sound", "cat": "graphics", "kind": "action", "graphics": true,
+		"title": "Sound", "cat": "audio", "kind": "action", "graphics": true,
 		"mode": "mode", "mode_titles": {"Load": "Load sound", "Play": "Play sound"},
 		"fields": [["mode", "option", "Play", ["Load", "Play"], "Mode"]],
 		"args": [["path", STRING, "assets/jump.wav", false, {"mode": ["Load"]}], ["sound", RECORD, "", true, {"mode": ["Play"]}]],

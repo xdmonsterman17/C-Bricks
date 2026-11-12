@@ -54,10 +54,10 @@ MyGame/
   - **Math and logic:** Math, **Formula** (any C expression), Math Function, Min / Max, Random, **Vector** (Make, Split, Add, Subtract, Scale, Length, Normalize, Distance, Lerp, Dot, Cross); Compare, Logic. Variable (Add) adds vectors too.
   - **Text:** Join, Format (`"{} has {} points"`), Length, Substring, Find, Replace, Upper / Lower case, Trim, Split, Join list, To text / int / float, Starts / Ends with.
   - **Lists, Maps & Records:** List (Make, Add, Insert, Get, Set, Remove, Length, Find, Contains, Clear, Sort, Reverse), **Map** (Make, Set, Get, Get or (a default for a missing key), Has, Remove, Count, Keys, Values, Clear; keys keep the order they were added in), Define Record, Make record, Record field (Get / Set). A wrong list index or a missing map key (with Get) stops the program with an error naming the brick. To loop over a map, loop over its Keys with For each item.
-  - **Input / Output:** Print (lists, maps and records print as `[1, 2]` / `{"a": 1}` / `Point(x: 1, y: 2)`), Read input, Get Time.
-  - **Program:** Program Arguments, Exit program, Read / Write file, File exists.
-  - **System:** Sleep, Environment variable, Run command, Terminal (clear, colors, cursor).
-  - **Graphics** and **3D (raylib):** see below.
+  - **Input / Output:** Print (lists, maps and records print as `[1, 2]` / `{"a": 1}` / `Point(x: 1, y: 2)`), Read input.
+  - **Game** (raylib): Open window, Game loop, Pause game, Close window, Game info. **Graphics:** Clear, Draw, Draw 2D view, Load texture, Graphics setting. **Audio:** Sound, Music. **3D:** see below.
+  - **Files:** Read file, Write file, File exists.
+  - **System:** Program Arguments, Exit program, Get Time, Sleep, Environment variable, Run command, Terminal (clear, colors, cursor).
   - **Debug / Testing:** Assert, Debug log.
   - **Advanced:** C Code, #include, **Call C function** (the C library's, or your own: every `.c` / `.h` in the project folder is compiled in).
 

@@ -1,0 +1,1634 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 163,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					101,
+					102,
+					103,
+					104,
+					106,
+					107,
+					108,
+					110,
+					111,
+					112,
+					114,
+					115,
+					116,
+					117,
+					118,
+					119,
+					160
+				]
+			}
+		},
+		{
+			"id": 101,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "Game suite"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 102,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Pause"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 103,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p1",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 104,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause.Pause] {}"
+			},
+			"args": {
+				"first": {
+					"var": "p1"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_104",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					105
+				]
+			}
+		},
+		{
+			"id": 105,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_104"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 106,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Resume"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 107,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Is paused"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "p2",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 108,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause.Resume] {}"
+			},
+			"args": {
+				"first": {
+					"var": "p2"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_108",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					109
+				]
+			}
+		},
+		{
+			"id": 109,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_108"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 110,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "0.5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 111,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Time scale"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ts",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 112,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[pause.Time scale] {}"
+			},
+			"args": {
+				"first": {
+					"var": "ts"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_112",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					113
+				]
+			}
+		},
+		{
+			"id": 113,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_112"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 114,
+			"type": "pause",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"do": "Set time scale"
+			},
+			"args": {
+				"scale": {
+					"type": "float",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 115,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Captured"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 116,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Hidden"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 117,
+			"type": "mouse_mode",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Visible"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 118,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[mouse_mode] Captured, Hidden, Visible"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 119,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 120,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key down",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_down",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 121,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key pressed",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_pressed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 122,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Key released",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_key_released",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 123,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse down",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_down",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 124,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Mouse pressed",
+				"key": "SPACE",
+				"button": "LEFT"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "in_mouse_pressed",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 125,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Position"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "mx",
+					"use": false
+				},
+				"y": {
+					"var": "my",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 126,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Movement"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "dx",
+					"use": false
+				},
+				"y": {
+					"var": "dy",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 127,
+			"type": "mouse",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Wheel"
+			},
+			"args": {},
+			"outs": {
+				"x": {
+					"var": "wheel",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 128,
+			"type": "key_direction",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"left": "A",
+				"right": "D",
+				"forward": "W",
+				"back": "S"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "keys",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 129,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Frame time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_frame_time",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 130,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_time",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 131,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Width"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_width",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 132,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Height"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_height",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 133,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "FPS"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gi_fps",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 134,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Width] {}"
+			},
+			"args": {
+				"first": {
+					"var": "gi_width"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_134",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					135
+				]
+			}
+		},
+		{
+			"id": 135,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_134"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 136,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Height] {}"
+			},
+			"args": {
+				"first": {
+					"var": "gi_height"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_136",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					137
+				]
+			}
+		},
+		{
+			"id": 137,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_136"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 138,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Key down] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_key_down"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_138",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					139
+				]
+			}
+		},
+		{
+			"id": 139,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_138"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 140,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[input.Mouse pressed] {}"
+			},
+			"args": {
+				"first": {
+					"var": "in_mouse_pressed"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_140",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					141
+				]
+			}
+		},
+		{
+			"id": 141,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_140"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 142,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[mouse.Wheel] {}"
+			},
+			"args": {
+				"first": {
+					"var": "wheel"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_142",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					143
+				]
+			}
+		},
+		{
+			"id": 143,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_142"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 144,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[key_direction] {}"
+			},
+			"args": {
+				"first": {
+					"var": "keys"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_144",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					145
+				]
+			}
+		},
+		{
+			"id": 145,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_144"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 146,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">"
+			},
+			"args": {
+				"a": {
+					"var": "gi_time"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "t_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 147,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "t_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_147",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					148
+				]
+			}
+		},
+		{
+			"id": 148,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_147"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 149,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">="
+			},
+			"args": {
+				"a": {
+					"var": "gi_frame_time"
+				},
+				"b": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "ft_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 150,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.Frame time] {}"
+			},
+			"args": {
+				"first": {
+					"var": "ft_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_150",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					151
+				]
+			}
+		},
+		{
+			"id": 151,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_150"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 152,
+			"type": "compare",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": ">="
+			},
+			"args": {
+				"a": {
+					"var": "gi_fps"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "fps_ok",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 153,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[game_info.FPS] {}"
+			},
+			"args": {
+				"first": {
+					"var": "fps_ok"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_153",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					154
+				]
+			}
+		},
+		{
+			"id": 154,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_153"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 155,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[game_loop] 3 frames drawn"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 156,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 157,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "3"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					134,
+					136,
+					138,
+					140,
+					142,
+					144,
+					146,
+					147,
+					149,
+					150,
+					152,
+					153,
+					155,
+					158,
+					159
+				]
+			}
+		},
+		{
+			"id": 158,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 159,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"type": "string",
+					"value": "[close_window] asked; the frame goes on"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 160,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					120,
+					121,
+					122,
+					123,
+					124,
+					125,
+					126,
+					127,
+					128,
+					129,
+					130,
+					131,
+					132,
+					133,
+					156,
+					157
+				],
+				"done": [
+					161
+				]
+			}
+		},
+		{
+			"id": 161,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "[close_window.Done] {}"
+			},
+			"args": {
+				"first": {
+					"var": "frames"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "line_161",
+					"use": false
+				}
+			},
+			"links": {
+				"next": [
+					162
+				]
+			}
+		},
+		{
+			"id": 162,
+			"type": "print",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"newline": true
+			},
+			"args": {
+				"value": {
+					"var": "line_161"
+				}
+			},
+			"outs": {},
+			"links": {}
+		}
+	]
+}
