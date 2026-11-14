@@ -103,6 +103,8 @@ bool cb_key_pressed(int key) { return cb_be_key_pressed(key); }
 bool cb_key_released(int key) { return cb_be_key_released(key); }
 bool cb_mouse_down(int button) { return cb_be_mouse_down(button); }
 bool cb_mouse_pressed(int button) { return cb_be_mouse_pressed(button); }
+bool cb_mouse_released(int button) { return cb_be_mouse_released(button); }
+int cb_char_typed(void) { return cb_be_char_typed(); }
 int cb_mouse_x(void) { return (int)cb_be_mouse_pos().x; }
 int cb_mouse_y(void) { return (int)cb_be_mouse_pos().y; }
 double cb_mouse_wheel(void) { return cb_be_mouse_wheel(); }
@@ -161,6 +163,12 @@ void cb_camera(Vector3 position, Vector3 target, double fov, bool ortho) {
 
 void cb_begin_3d(void) { cb_be_begin_3d(cb_cam.position, cb_cam.target, cb_cam.fov, cb_cam.ortho); }
 void cb_end_3d(void) { cb_be_end_3d(); }
+
+/* A line that lies on a surface: both ends are pulled toward the camera by 0.4 % of their distance, so it wins the depth test. */
+static Vector3 cb_pull_to_camera(Vector3 p) {
+    return cb_v3(p.x + (cb_cam.position.x - p.x) * 0.004f, p.y + (cb_cam.position.y - p.y) * 0.004f, p.z + (cb_cam.position.z - p.z) * 0.004f);
+}
+void cb_draw_line3d_biased(Vector3 a, Vector3 b, cb_rgba c) { cb_be_line3d(cb_pull_to_camera(a), cb_pull_to_camera(b), c); }
 
 static Vector3 cb_shake_offset(double dt);
 

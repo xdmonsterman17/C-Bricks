@@ -5,7 +5,7 @@ extends RefCounted
 ##
 ## Template placeholders: {src} source file, {out} output file, {dir} output directory.
 
-const TARGETS := [
+const BUILTIN_TARGETS := [
 	{
 		"id": "native", "name": "This computer (native)", "ext": "", "ext_windows": ".exe",
 		"candidates": [
@@ -192,11 +192,16 @@ static var _which_cache := {}
 static var overrides := {}   # target id -> command template
 
 
+## Every target: the built-in ones, then the loaded plugins' (TargetPlugins).
+static func targets() -> Array:
+	return BUILTIN_TARGETS + TargetPlugins.targets()
+
+
 static func target(id: String) -> Dictionary:
-	for t in TARGETS:
+	for t in targets():
 		if t.id == id:
 			return t
-	return TARGETS[0]
+	return BUILTIN_TARGETS[0]
 
 
 static func can_execute() -> bool:
@@ -644,11 +649,13 @@ static func dos_output(run: Dictionary) -> String:
 ## drawing, input, sound, the UI, the scene), "3d", "network". A brick needing more is a problem
 ## naming it (ProjectBuild.target_problems).
 static func caps(id: String) -> Array:
-	if id == "dos":
-		return ["graphics", "3d", "network"]  # (text, 2D, the UI, sound, 3D and UDP networking through Watt-32)
-	var c := ["network"]
-	if not raylib_flags(id).is_empty():
-		c.append_array(["graphics", "3d"])
+	var t := target(id)
+	var c: Array = Array(t.get("caps", [])) if t.has("plugin") else ["network"]
+	var bk := TargetPlugins.backend(TargetPlugins.backend_for(id))
+	if not bk.is_empty() and (bk.id != "raylib" or not raylib_flags(id).is_empty()):
+		for x in bk.caps:
+			if not x in c:
+				c.append(x)
 	return c
 
 
@@ -753,7 +760,7 @@ static func raylib_key(id: String, template := "") -> String:
 static func build_key(id: String, srcs: Array, template: String, graphics: bool) -> String:
 	var ctx := HashingContext.new()
 	ctx.start(HashingContext.HASH_MD5)
-	ctx.update(("%s|%s|%s|%s" % [id, template, RAYLIB_VERSION, raylib_key(id, template) if graphics and id != "dos" else ""]).to_utf8_buffer())
+	ctx.update(("%s|%s|%s|%s|%s" % [id, template, RAYLIB_VERSION, raylib_key(id, template) if graphics and TargetPlugins.backend_for(id) == "raylib" else "", str(target(id).get("defines", [])) + str(target(id).get("libs", []))]).to_utf8_buffer())
 	if id == "dos":
 		ctx.update(FileAccess.get_file_as_bytes(CWSDSTUB))  # (DOS programs carry CWSDPMI)
 		if _dos_net(srcs):
@@ -793,7 +800,7 @@ static func cached_build(id: String, srcs: Array, out_dir: String, base: String,
 					_stamp(out, key)
 					return {"ok": true, "exit": 0, "output": "", "command": "", "out": out, "cached": place[1]}
 	var extra := {}
-	if graphics and id != "dos":  # (MS-DOS draws with its own backend: no raylib)
+	if graphics and TargetPlugins.backend_for(id) == "raylib":  # (the other backends draw by themselves)
 		var rl := build_raylib(id, template)
 		if not rl.ok:
 			return {"ok": false, "exit": -1, "output": rl.output, "command": "", "out": out, "cached": ""}
@@ -863,6 +870,8 @@ static func compile(id: String, src, out_dir: String, base: String, template := 
 	argv.remove_at(0)
 	argv.append_array(PackedStringArray(extra.get("objs", [])))
 	argv.append_array(PackedStringArray(extra.get("flags", [])))
+	argv.append_array(PackedStringArray(target(id).get("defines", [])))
+	argv.append_array(PackedStringArray(target(id).get("libs", [])))
 	if id == "dos" and _dos_net(src):  # networking: Watt-32's BSD sockets (thirdparty/watt32)
 		var watt := watt_dir()
 		argv.append_array(PackedStringArray(["-I" + watt.path_join("inc"), "-L" + watt.path_join("lib"), "-lwatt", "-lm"]))

@@ -1045,6 +1045,49 @@ Graphics (2D and 3D) build for this computer, Windows and the Web from here, and
 
 ---
 
+### 7.1 Target device plugins
+
+A **plugin** adds a target for a new system. It is a folder with a `target.cfg` and a C **backend** (`backend.c`): the one file that does what the platform does for C-Bricks (window, input, drawing, and what it can of textures, sound, 3D). `scripts/runtime/cb_backend.h` (`CB_BACKEND_API 1`) lists every function; it is copied into a graphics project as `cb_backend.h`.
+
+- **Required core** (~35 functions): `cb_be_open / close / should_close / ready / begin_frame / end_frame / flush / width / height / fps / frame_time / time`, the keyboard and mouse (`key_*`, `mouse_*`, `char_typed`, `cursor`), `clear`, `rect`, `rect_lines`, `circle`, `line`, `text`, `text_size`.
+- **Optional groups**, declared by `#define CB_BE_HAVE_<GROUP> 1` at the top of `backend.c` and implemented in full: `2D_EXTRA` (rounded rectangles, gradient, 2D camera), `TEXTURES`, `SOUND` (sounds and music), `3D` (view, transforms, 3D lines, shapes, meshes, lights, fog), `LOOK` (post effects, shading / splat settings), `TARGETS` (render targets), `SCREENSHOT`. A group you don't declare gets do-nothing defaults (`cb_be_stubs.c`): textures and sounds load as "not loaded", nothing is drawn or played. So a first version of a backend can run a program.
+- Backends use C-Bricks' types (`cb_rgba`, `cb_rect`, `Vector2` / `Vector3`, the `cb_texture` / `cb_sound` / `cb_music` handles, `CB_KEY_*`), stay C99 and `-pedantic` clean, and print + `exit(3)` on a fatal problem.
+
+**target.cfg**
+
+```ini
+[plugin]
+id="my-box"            ; lowercase, digits, - _ ; not a built-in target's name
+title="My Box"
+version="1"
+api=1                  ; must equal CB_BACKEND_API
+description="..."
+
+[target]               ; optional: adds an entry to the Target list
+name="My Box"
+ext="-my-box"
+candidates=["mycc -O2 {src} -o {out} -lm"]   ; compilers, first installed wins; {src} and {out} required
+run=["mybox-emulator {out}"]
+caps=["graphics"]      ; what its programs can do: graphics, 3d, network
+defines=["-DMYBOX"]    ; appended to the compile command
+libs=["-lmybox"]
+
+[backend]
+file="backend.c"
+targets=["my-box"]     ; targets that pick it with Automatic (default: this plugin's target; "*" = any)
+except=[]
+caps=["graphics"]
+sources=["font.c"]     ; more files it needs (.c are compiled in)
+
+[hooks]                ; optional scripts (run, package) inside the plugin folder; trusted code, NOT RUN YET
+```
+
+A project's plugins are in **`<project>/plugins/<id>/`**, listed in `project.cbproj` as `[plugins]` `id=version`; they load when the project opens or builds, add their Target to the list, and are not built as the program's own C. **Manage plugins...** (the start page, beside Recent Projects) keeps the library (`user://plugins/<id>/`): *Install from folder...*, *Install the null-terminal kit*, *Remove from library*; and for a Recent project: *Add the library's selected plugin*, *Update* (shown when the library's version differs from the project's copy), *Remove from project*. A project keeps its own copy, so removing a plugin from the library doesn't break it.
+
+**The bring-up kit** (`plugin_examples/null-terminal/`): a working plugin with the required core only: it prints `window:`, `text:` and `frame N` lines and ends after `CB_NULL_FRAMES` (default 3) frames. Copy it, rename the id, and replace the functions one by one. Built-in plugins MS-DOS and raylib use the same format (`plugins/`).
+
+**Not yet:** the hooks do not run; `cbricks build` and an exported C project know only the built-in targets; the Graphics backend setting lists only the built-in backends.
+
 ## 8. The generated C (what's in `.build/src/`)
 
 | File | Holds |
@@ -1116,7 +1159,7 @@ More sections appear when used: `[graphics]` (Project Settings > Graphics), `[de
 `parent: 0` is the root (one per scene). `fields` are strings, as typed in Properties. Other keys an object may carry: `groups`, `meta`, `script` (a Script object), and `{"scene": "rel/path.cbscene"}` entries for copies of other scenes. Classes: section 4.6 and 2.10.
 
 ### 10.4 Your own `.c` / `.h`
-Every `.c` and `.h` in the project folder is compiled in (so a test program with its own `main()` inside the folder breaks the build: keep tools outside, or in another folder). Subfolders work, but files are **flattened by file name** into `.build/src`: two files with one name in different folders clash (`util.c` twice), and so does a file named like a generated one (`cbricks.h`, `cbricks_runtime.c`...). Both are Problems. Your files `#include "cbricks.h"` for the runtime (section 11) and are called with the **Call C function** brick (or call the generated functions, which `cbricks.h` declares).
+Every `.c` and `.h` in the project folder is compiled in, **except what `.cbignore` lists**: a text file in the project folder, one pattern a line (`#` comments): `tools/` (a folder and everything under it), `*_test.c` (a pattern, matched against the path and the file name), or a path / file name. Ignored files stay in the project and the export but aren't compiled, so tests with their own `main()` can live inside the folder. Subfolders work, but files are **flattened by file name** into `.build/src`: two files with one name in different folders clash (`util.c` twice: the Problem says another file of that name is already in the project), and so does a file named like a generated one (`cbricks.h`, `cbricks_runtime.c`...). Both are Problems. Your files `#include "cbricks.h"` for the runtime (section 11) and are called with the **Call C function** brick (or call the generated functions, which `cbricks.h` declares).
 
 ## 11. API for your own C (`cbricks.h`)
 The same functions the bricks use; `.build/src/cbricks.h` (made by every build) is the authority and is commented; the runtime's code is `scripts/runtime/`. Strings are `const char *` and live until the program ends (never free them); lists are `cb_list`, maps `cb_map`. Functions taking `int file, int brick` report errors naming the brick (pass 0, 0 from your own code). Programs are hosted C99: use `cb_*` for what a brick does, the C library for the rest.
@@ -1126,9 +1169,9 @@ The same functions the bricks use; `.build/src/cbricks.h` (made by every build) 
 - **Lists and maps:** `cb_list_new(elem_size)`, `cb_list_add` (returns the new slot), `cb_list_at(list, i, file, brick)`, `cb_list_insert`, `cb_list_remove`, `cb_list_clear`, `cb_list_reverse`; `cb_map_new`, `cb_map_put`, `cb_map_get`, `cb_map_find`, `cb_map_remove`, `cb_map_keys`, `cb_map_values`; `cb_alloc(size)` (zeroed, kept).
 - **Vectors:** `Vector2` / `Vector3` (`x y z` floats) with `cb_v3`, `cb_v3_add / sub / scale / length / normalize / lerp / dot / cross`, and `cb_v2_*` alike.
 - **Objects:** `cb_new(&Class_class)`, `cb_destroy`, `cb_set_parent`, `cb_is_a`, `cb_as`, `cb_children`, `cb_find_object`, groups `cb_group_add / remove`, `cb_in_group`, `cb_objects_in_group`, metadata `cb_meta_*`, `cb_world()`.
-- **Window and input** (graphics projects): `cb_open_window(w, h, title, fps, esc_closes)`, `cb_window_end`, `cb_close_window`, `cb_loop_go` (the Game loop's test), `cb_frame_time` (seconds since the last frame, 0 paused), `cb_game_time`, `cb_screen_width / height`, `cb_fps`; keys `cb_key_down / pressed / released(CB_KEY_*)`; mouse `cb_mouse_x / y / down / pressed(CB_MOUSE_*)`, `cb_mouse_wheel`, `cb_mouse_motion`, `cb_mouse_over_ui`, `cb_cursor(mode)`; **there is no typed-character (text entry) query and no mouse-released query yet**: build on key codes.
+- **Window and input** (graphics projects): `cb_open_window(w, h, title, fps, esc_closes)`, `cb_window_end`, `cb_close_window`, `cb_loop_go` (the Game loop's test), `cb_frame_time` (seconds since the last frame, 0 paused), `cb_game_time`, `cb_screen_width / height`, `cb_fps`; keys `cb_key_down / pressed / released(CB_KEY_*)`; mouse `cb_mouse_x / y / down / pressed / released(CB_MOUSE_*)`, `cb_mouse_wheel`, `cb_mouse_motion`, `cb_mouse_over_ui`, `cb_cursor(mode)`; **`int cb_char_typed(void)`** is the text-entry query: the next typed character (Unicode code point; raylib, so Shift, layout and repeat as the OS gives them; MS-DOS: a US keyboard) or 0 when the queue is empty; call it in a loop each frame (Enter, Tab and Backspace are keys, not characters: use `cb_key_pressed`).
 - **2D drawing:** `cb_color("RED" | "#rrggbb")`, `cb_clear`, `cb_draw_rect / rect_lines / circle / line / text / texture / sprite`, turned: `cb_draw_rect_turned`, `cb_draw_text_turned`, `cb_begin_2d` / `cb_end_2d`; `cb_load_texture`.
-- **3D drawing** (between `cb_begin_3d` and `cb_end_3d`; `cb_camera(position, target, fov, ortho)` first): `cb_draw_shape(kind, at, size, turn, color)`, `cb_draw_line3d`, `cb_draw_grid`, `cb_draw_wire_box`, `cb_draw_mesh(mesh, at, size, turn, tint)` (**turn is degrees round the up axis only**), lights `cb_set_light`, `cb_set_light_color`, `cb_set_fog`, `cb_set_ambient`. Lines have no depth bias: a line lying on a surface can dash (pull its endpoints a little toward the camera).
+- **3D drawing** (between `cb_begin_3d` and `cb_end_3d`; `cb_camera(position, target, fov, ortho)` first): `cb_draw_shape(kind, at, size, turn, color)`, `cb_draw_line3d`, `cb_draw_line3d_biased` (the same line with both ends pulled 0.4 % toward the camera, so it wins the depth test against the surface it lies on), `cb_draw_grid`, `cb_draw_wire_box`, `cb_draw_mesh(mesh, at, size, turn, tint)` (turn = degrees round the up axis), `cb_draw_mesh_rot(mesh, at, size, rot, tint)` (`rot` = Vector3 of degrees about X, Y and Z: Z first, then X, then Y, so `(0, turn, 0)` is `cb_draw_mesh`'s turn; both backends), lights `cb_set_light`, `cb_set_light_color`, `cb_set_fog`, `cb_set_ambient`.
 - **Meshes:** `cb_mesh_new`, `cb_mesh_begin`, `cb_mesh_triangle(mesh, a, b, c, color)`, `cb_mesh_quad`, `cb_mesh_shape`, `cb_mesh_finish(mesh, smooth, both_sides, 0, 0)`. **`cb_mesh_triangle`'s front is the side where a, b, c go round clockwise** (the Add to mesh brick's rule: `(0,0,0) (1,0,0) (0,0,1)` faces up); counter-clockwise faces get reversed lighting (and vanish with One side). Colour only per triangle; no per-vertex normals or texture coordinates in this API.
 - **Screenshots:** `bool cb_screenshot(path)` writes a PNG **exactly at `path`** (relative = from the working directory) and returns whether it did. Call it **after** everything is drawn: early in a frame it saves the cleared background. It includes the UI and the post effects.
 - **Sound:** `cb_sound_load`, `cb_sound_play`, `cb_music_*`.

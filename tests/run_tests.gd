@@ -161,6 +161,21 @@ func _init() -> void:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		_check_api_md()
+	if only.is_empty() or "plugins" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_plugins()
+	if only.is_empty() or "plugin_build" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_plugin_build()
+	if only.is_empty() or "plugin_library" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_plugin_library()
 	_lines.insert(4, "**%d of %d case(s) passed.** %d program(s) reused from the cache (their C unchanged).\n" % [count - _failed, count, _cached])
 	_times.sort_custom(func(a, b): return a[1] > b[1])
 	_lines.append("")
@@ -474,6 +489,124 @@ static func _diff(want: String, got: String) -> String:
 
 
 ## API.md has an entry ("#### `type`: Title") for every brick in NodeDefs.DEFS.
+## Target plugins (TargetPlugins): the built-ins load from their target.cfg, Automatic picks by target, and a bad manifest
+## says what is wrong.
+func _check_plugins() -> void:
+	var problems := []
+	for id in ["dos", "raylib"]:
+		if TargetPlugins.backend(id).is_empty():
+			problems.append("built-in plugin '%s' did not load" % id)
+	if TargetPlugins.backend_for("dos") != "dos" or TargetPlugins.backend_for("native") != "raylib" or TargetPlugins.backend_for("web") != "raylib":
+		problems.append("backend_for: dos -> dos, other targets -> raylib")
+	var good := "[plugin]\nid=\"my-box\"\napi=1\n[target]\nname=\"My box\"\ncandidates=[\"mycc {src} -o {out}\"]\ncaps=[\"graphics\"]\n[backend]\nfile=\"../../scripts/runtime/cb_be_raylib.c\"\n"
+	var r := TargetPlugins.parse(good, "res://plugins/x")
+	if not r.ok or r.plugin.target.name != "My box" or r.plugin.backend.targets != ["my-box"]:
+		problems.append("a good manifest should parse (a backend with no targets = the plugin's own): %s" % str(r))
+	var bad := {
+		"[plugin]\nid=\"Bad Id\"\napi=1\n[target]\ncandidates=[\"cc {src} -o {out}\"]": "id",
+		"[plugin]\nid=\"a\"\napi=2\n[target]\ncandidates=[\"cc {src} -o {out}\"]": "api",
+		"[plugin]\nid=\"a\"\napi=1\n[target]\ncandidates=[\"cc {src}\"]": "{out}",
+		"[plugin]\nid=\"a\"\napi=1\n[target]\ncandidates=[\"cc {src} -o {out}\"]\ncaps=[\"smell\"]": "caps",
+		"[plugin]\nid=\"native\"\napi=1\n[target]\ncandidates=[\"cc {src} -o {out}\"]": "built-in",
+		"[plugin]\nid=\"a\"\napi=1\n[backend]\nfile=\"nope.c\"\ntargets=[\"a\"]": "does not exist",
+		"[plugin]\nid=\"a\"\napi=1\n[target]\ncandidates=[\"cc {src} -o {out}\"]\n[hooks]\nrun=\"../evil.sh\"": "inside",
+		"[plugin]\nid=\"a\"\napi=1": "needs",
+	}
+	for text in bad:
+		var b := TargetPlugins.parse(text, "res://plugins/x")
+		if b.ok or not str(b.error).contains(bad[text]):
+			problems.append("a bad manifest (%s) should be refused naming it: %s" % [bad[text], str(b.error)])
+	_finish("plugins", problems, [])
+
+
+## A project built for a plugin's own target (plugin_examples/null-terminal, the bring-up kit): added to a copy of an
+## example, the Target appears, the backend + stubs compile warning-free, the program runs through it; removing the
+## plugin takes the Target away.
+func _check_plugin_build() -> void:
+	var problems := []
+	var dir := ProjectSettings.globalize_path("user://plugin_test")
+	if DirAccess.dir_exists_absolute(dir):
+		TargetPlugins.remove_tree(dir)
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/bouncing_ball"), dir)
+	var kit := ProjectSettings.globalize_path("res://plugin_examples/null-terminal")
+	var why := TargetPlugins.add_to_project(dir, kit)
+	TargetPlugins.use_project(dir)
+	if why != "":
+		problems.append("add_to_project: " + why)
+	elif Toolchains.target("null-terminal").id != "null-terminal" or not FileAccess.file_exists(dir.path_join("plugins/null-terminal/backend.c")):
+		problems.append("the plugin's Target should exist and its folder be copied into the project")
+	elif TargetPlugins.project_plugins(dir).get("null-terminal", "") != "1":
+		problems.append("project.cbproj [plugins] should list null-terminal = 1: %s" % str(TargetPlugins.project_plugins(dir)))
+	else:
+		var r := ProjectBuild.generate(dir, {}, "null-terminal")
+		if not r.errors.is_empty() or r.backend != "null-terminal":
+			problems.append("generate for the plugin's target: errors %s, backend %s" % [str(r.errors), str(r.get("backend"))])
+		elif r.user_c.any(func(f): return str(f).begins_with("plugins/")):
+			problems.append("a plugin's C must not be built as the program's own C: %s" % str(r.user_c))
+		else:
+			var srcs := ProjectBuild.write(r, dir.path_join(".build/src"))
+			var b := Toolchains.compile("null-terminal", srcs, dir.path_join(".build/null"), "prog", "cc -std=c99 -O1 -Wall -Wextra -pedantic {src} -o {out} -lm", {})
+			if not b.ok or str(b.output).strip_edges() != "":
+				problems.append("the null-terminal build: %s" % str(b.output).left(1500))
+			else:
+				var out := []
+				var code := OS.execute(str(b.out), [], out, true)
+				var text := "".join(out)
+				if code != 0 or not text.contains("window: ") or not text.contains("frame 3"):
+					problems.append("running through the null backend: exit %d, output %s" % [code, text.left(400)])
+	TargetPlugins.remove_from_project(dir, "null-terminal")
+	TargetPlugins.use_project(dir)
+	if Toolchains.targets().any(func(t): return t.id == "null-terminal") or TargetPlugins.project_plugins(dir).has("null-terminal"):
+		problems.append("remove_from_project should take the Target and the [plugins] entry away")
+	TargetPlugins.use_project("")
+	TargetPlugins.remove_tree(dir)
+	_finish("plugin_build", problems, [])
+
+
+## The plugin library (Manage plugins): install, usage by projects, an update flag when the library's copy differs,
+## uninstall (a project keeps its own copy).
+func _check_plugin_library() -> void:
+	var problems := []
+	var keep := TargetPlugins.library_path
+	TargetPlugins.library_path = "user://test_plugin_library"
+	var lib := TargetPlugins.library_dir()
+	if DirAccess.dir_exists_absolute(lib):
+		TargetPlugins.remove_tree(lib)
+	var dir := ProjectSettings.globalize_path("user://plugin_lib_project")
+	if DirAccess.dir_exists_absolute(dir):
+		TargetPlugins.remove_tree(dir)
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/hello_world"), dir)
+	var kit := ProjectSettings.globalize_path("res://plugin_examples/null-terminal")
+	if not TargetPlugins.library().is_empty():
+		problems.append("a fresh library should be empty")
+	var why := TargetPlugins.install(kit)
+	if why != "" or TargetPlugins.library().size() != 1:
+		problems.append("install: %s, library %d" % [why, TargetPlugins.library().size()])
+	if TargetPlugins.install(ProjectSettings.globalize_path("res://plugins/raylib")) == "":
+		problems.append("a built-in plugin's id can't be installed")
+	var installed := lib.path_join("null-terminal")
+	why = TargetPlugins.add_to_project(dir, installed)
+	if why != "" or not TargetPlugins.usage([dir]).has("null-terminal"):
+		problems.append("add_to_project from the library: %s" % why)
+	if TargetPlugins.update_available(dir, "null-terminal") != "":
+		problems.append("no update expected right after adding")
+	var cfg := lib.path_join("null-terminal/target.cfg")
+	FileAccess.open(cfg, FileAccess.WRITE).store_string(FileAccess.get_file_as_string(cfg).replace("version=\"1\"", "version=\"2\""))
+	if TargetPlugins.update_available(dir, "null-terminal") != "2":
+		problems.append("the library's version 2 should be flagged as an update for the project's version 1")
+	TargetPlugins.add_to_project(dir, installed)
+	if TargetPlugins.update_available(dir, "null-terminal") != "" or str(TargetPlugins.project_plugins(dir).get("null-terminal")) != "2":
+		problems.append("updating copies the library's version in")
+	TargetPlugins.uninstall("null-terminal")
+	if not TargetPlugins.library().is_empty() or not FileAccess.file_exists(dir.path_join("plugins/null-terminal/target.cfg")):
+		problems.append("uninstall empties the library; the project keeps its copy")
+	TargetPlugins.use_project("")
+	TargetPlugins.library_path = keep
+	TargetPlugins.remove_tree(dir)
+	TargetPlugins.remove_tree(lib)
+	_finish("plugin_library", problems, [])
+
+
 func _check_api_md() -> void:
 	var api := FileAccess.get_file_as_string("res://API.md")
 	var missing := []

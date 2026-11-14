@@ -7,6 +7,14 @@
    implements the same functions. Added to projects that use graphics bricks. */
 #include "raylib.h"
 #include "rlgl.h"  /* transforms, back-face culling, the render batch */
+/* the optional groups of cb_backend.h this backend implements */
+#define CB_BE_HAVE_2D_EXTRA 1
+#define CB_BE_HAVE_TEXTURES 1
+#define CB_BE_HAVE_SOUND 1
+#define CB_BE_HAVE_3D 1
+#define CB_BE_HAVE_LOOK 1
+#define CB_BE_HAVE_TARGETS 1
+#define CB_BE_HAVE_SCREENSHOT 1
 #include "cbricks.h"
 
 static Color RL(cb_rgba c) {
@@ -286,6 +294,7 @@ bool cb_be_key_released(int key) { return IsKeyReleased(key); }
 bool cb_be_mouse_down(int button) { return IsMouseButtonDown(button); }
 bool cb_be_mouse_pressed(int button) { return IsMouseButtonPressed(button); }
 bool cb_be_mouse_released(int button) { return IsMouseButtonReleased(button); }
+int cb_be_char_typed(void) { return GetCharPressed(); }
 Vector2 cb_be_mouse_pos(void) { Vector2 p = GetMousePosition(); p.x /= cb_pixel_v; p.y /= cb_pixel_v; return p; }
 Vector2 cb_be_mouse_delta(void) { Vector2 p = GetMouseDelta(); p.x /= cb_pixel_v; p.y /= cb_pixel_v; return p; }
 double cb_be_mouse_wheel(void) { return (double)GetMouseWheelMove(); }
@@ -1325,6 +1334,29 @@ void cb_draw_mesh(cb_mesh *m, Vector3 at, Vector3 size, double turn, cb_rgba rgb
     DrawModelEx(m->model, at, cb_v3(0, 1, 0), (float)turn, size, tint);
     if (m->both)
         rlEnableBackfaceCulling();
+}
+
+/* Turned about all three axes (degrees): Z first, then X, then Y, so (0, turn, 0) is cb_draw_mesh's turn. */
+void cb_draw_mesh_rot(cb_mesh *m, Vector3 at, Vector3 size, Vector3 rot, cb_rgba rgba) {
+    Color tint = RL(rgba);
+    if (!m || !m->built || m->model.meshes[0].vertexCount == 0)
+        return;
+    rlPushMatrix();
+    rlTranslatef(at.x, at.y, at.z);
+    rlRotatef((float)rot.y, 0, 1, 0);
+    rlRotatef((float)rot.x, 1, 0, 0);
+    rlRotatef((float)rot.z, 0, 0, 1);
+    rlScalef(size.x, size.y, size.z);
+    if (cb_splat_now) {
+        cb_splat_draw(m, &m->model.meshes[0], rgba);
+    } else {
+        if (m->both)
+            rlDisableBackfaceCulling();
+        DrawModelEx(m->model, cb_v3(0, 0, 0), cb_v3(0, 1, 0), 0.0f, cb_v3(1, 1, 1), tint);
+        if (m->both)
+            rlEnableBackfaceCulling();
+    }
+    rlPopMatrix();
 }
 
 cb_list *cb_mesh_points(const cb_mesh *m) {

@@ -1,0 +1,75 @@
+{
+ "format": "c-bricks",
+ "version": 4,
+ "target": "native",
+ "next_id": 4,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "start",
+   "pos": [
+    232,
+    96
+   ],
+   "size": [
+    0,
+    0
+   ],
+   "fields": {},
+   "args": {},
+   "outs": {},
+   "links": {
+    "out": [
+     2
+    ],
+    "bogus": [
+     3
+    ]
+   }
+  },
+  {
+   "id": 2,
+   "type": "prnt",
+   "pos": [
+    432,
+    96
+   ],
+   "size": [
+    0,
+    0
+   ],
+   "fields": {},
+   "args": {},
+   "outs": {},
+   "links": {}
+  },
+  {
+   "id": 3,
+   "type": "print",
+   "pos": [
+    632,
+    96
+   ],
+   "size": [
+    0,
+    0
+   ],
+   "fields": {
+    "newline": true
+   },
+   "args": {
+    "value": {
+     "type": "string",
+     "value": "x"
+    }
+   },
+   "outs": {},
+   "links": {
+    "next": [
+     99
+    ]
+   }
+  }
+ ],
+ "frames": []
+}

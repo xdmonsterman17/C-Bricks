@@ -77,7 +77,14 @@ var _left_split: VSplitContainer = null   # Scene above FileSystem
 var _left_area: Control = null         # the left column: Scene / FileSystem, or the palette (Node)
 var _palette_frame: Control = null
 var _screens: Dictionary = {}         # "2D" / "3D" / "Script" -> its area
-var _screen_buttons: Dictionary = {}
+var _screen_buttons: Dictionary = {}  # screen -> its button (2D and 3D share one)
+var _group_shown: Dictionary = {}     # a group's first screen -> the screen its button shows
+const SCREEN_GROUPS := [["2D", "3D"], ["Script"]]
+const SCREEN_INFO := {
+	"2D": ["2D", "file_image", "The game window and its Labels (2D)"],
+	"3D": ["3D", "file_mesh", "The world in 3D: select and move its objects"],
+	"Script": ["Bricks", "script", "The scripts' bricks (C-Bricks' visual scripting)"],
+}
 var _screen := "Script"               # the main screen showing (saved)
 var _view_3d: WorldView3D = null
 var _view_2d: WorldView2D = null
@@ -188,9 +195,7 @@ func _ready() -> void:
 			_world_dock.show_scenes(_scene_paths, context.scene_path, CBProject.world_path(project_dir)))
 	_left_split.add_child(_framed(_dock_box("FileSystem", "project", _dock, "The project's folder: scripts and assets"), 4))
 	context.on_world_changed = _on_world_changed
-	context.on_new_scene = func() -> void:
-		if has_project():
-			_dock._ask_new_scene("")
+	context.on_new_scene = _new_untitled_scene
 	context.on_script_object_renamed = _on_script_object_renamed
 	context.script_side = func(rel: String) -> String: return str(_script_graph(project_dir.path_join(rel)).get("side", "Shared"))
 	context.on_script_side = _set_script_side
@@ -223,12 +228,12 @@ func _ready() -> void:
 	var switcher := HBoxContainer.new()
 	switcher.alignment = BoxContainer.ALIGNMENT_CENTER
 	middle.add_child(switcher)
-	for which in [["2D", "2D", "file_image", "The game window and its Labels (2D)"], ["3D", "3D", "file_mesh", "The world in 3D: select and move its objects"], ["Script", "Bricks", "script", "The scripts' bricks (C-Bricks' visual scripting)"]]:
+	# One button per group of screens (user, 2026-11-14): 2D and 3D share one that shows the one in
+	# use; clicking it while it is the screen showing toggles to the other, clicking it from another
+	# group's screen only goes back to the one it showed. (Bricks will share one with Scripts.)
+	for group in SCREEN_GROUPS:
 		var b := Button.new()
-		b.text = which[1]
-		b.icon = context.brick_theme.icon(which[2])
 		b.toggle_mode = true
-		b.tooltip_text = which[3]
 		# Not `flat` (a flat Button draws no stylebox): the others look flat by their own boxes.
 		var off := StyleBoxEmpty.new()
 		off.set_content_margin_all(4)
@@ -251,9 +256,11 @@ func _ready() -> void:
 		b.add_theme_color_override(&"font_pressed_color", BrickTheme.ACCENT)
 		b.add_theme_color_override(&"font_hover_pressed_color", BrickTheme.ACCENT)
 		b.add_theme_color_override(&"icon_pressed_color", BrickTheme.ACCENT)
-		b.pressed.connect(switch_screen.bind(which[0]))
+		b.pressed.connect(_group_pressed.bind(group))
 		switcher.add_child(b)
-		_screen_buttons[which[0]] = b
+		for which in group:
+			_screen_buttons[which] = b
+		_group_shown[group[0]] = group[0]
 
 	_tab_bar = TabBar.new()
 	_tab_bar.tab_close_display_policy = TabBar.CLOSE_BUTTON_SHOW_ALWAYS
@@ -327,11 +334,10 @@ func _ready() -> void:
 	get_window().files_dropped.connect(func(files: PackedStringArray) -> void: _dock.import_files(files))
 	get_window().min_size = Vector2i(640, 420)
 	close_project()
-	# example copies no longer in Recent Projects (left over) go
+	# example copies left over (a crash) go: an unsaved example is never kept
 	var scratch := ProjectSettings.globalize_path(EXAMPLE_SCRATCH)
 	for d in (DirAccess.get_directories_at(scratch) if DirAccess.dir_exists_absolute(scratch) else PackedStringArray()):
-		if not scratch.path_join(d) in _recent:
-			_remove_tree(scratch.path_join(d))
+		_remove_tree(scratch.path_join(d))
 	# a project folder (or its project.cbproj) on the command line opens instead of the last one
 	# (`cbricks DIR`); user args after `--` count too
 	var wanted := ""
@@ -367,13 +373,15 @@ func open_project(dir: String) -> void:
 		_forget_recent(dir)
 		return
 	close_project()
+	_drop_untitled(dir)  # (left by a crash)
 	project_dir = dir
 	var cf := CBProject.load_config(dir)
+	TargetPlugins.use_project(dir)  # (its target plugins join the Target list)
 	var tid := str(cf.get_value("build", "target", "native"))
 	_dos_open = tid == "dos"  # a project that targets MS-DOS keeps working: the target shows for as long as it's open
 	_fill_targets()
-	for i in Toolchains.TARGETS.size():
-		if Toolchains.TARGETS[i].id == tid:
+	for i in Toolchains.targets().size():
+		if Toolchains.targets()[i].id == tid:
 			_target.select(_target.get_item_index(i))
 	_trace_btn.set_pressed_no_signal(bool(cf.get_value("run", "trace", false)))
 	_watches = PackedStringArray(cf.get_value("debug", "watches", PackedStringArray()))
@@ -409,6 +417,7 @@ func open_project(dir: String) -> void:
 
 
 func close_project() -> void:
+	var closing := project_dir
 	if has_project():
 		save_all()
 	_scene_paths.clear()
@@ -429,6 +438,12 @@ func close_project() -> void:
 	_compile_problems.clear()
 	project_dir = ""
 	_build = {}
+	TargetPlugins.use_project("")
+	if _target != null:
+		_fill_targets()  # (the project's plugin targets leave the list)
+	if closing != "":
+		_drop_copy(closing)  # an example's copy that wasn't saved as a project is deleted
+		_drop_untitled(closing)
 	if _dock != null:
 		_dock.set_project("")
 	_show_body(false)
@@ -552,6 +567,7 @@ func save() -> void:
 	if has_graph():
 		_save_tab(_tab())
 		_set_status("status_success", "Saved %s" % _tab().path.get_file())
+	_save_untitled_scenes()
 
 
 func save_all() -> void:
@@ -866,9 +882,9 @@ func _program_name() -> String:
 func _fill_targets() -> void:
 	var keep := _target.get_selected_id() if _target.item_count > 0 else 0
 	_target.clear()
-	for i in Toolchains.TARGETS.size():
-		if Toolchains.TARGETS[i].id != "dos" or _show_dos or _dos_open:
-			_target.add_item(Toolchains.TARGETS[i].name, i)
+	for i in Toolchains.targets().size():
+		if Toolchains.targets()[i].id != "dos" or _show_dos or _dos_open:
+			_target.add_item(Toolchains.targets()[i].name, i)
 	var at := _target.get_item_index(keep)
 	_target.select(maxi(at, 0))
 	_update_target_state()
@@ -888,7 +904,7 @@ func _set_show_dos(on: bool) -> void:
 
 
 func _current_target() -> String:
-	return Toolchains.TARGETS[_target.get_selected_id()].id
+	return Toolchains.targets()[_target.get_selected_id()].id
 
 
 func _busy() -> bool:
@@ -1054,7 +1070,7 @@ func build_all() -> void:
 		return
 	# Each target gets its own generated C (MS-DOS draws with its own backend, the rest with raylib's).
 	var srcs_by := {}
-	for t in Toolchains.TARGETS:
+	for t in Toolchains.targets():
 		if t.id == "native" or (t.id == "dos" and not (_show_dos or _dos_open)) or Toolchains.resolve_command(t.id) == "" or not ProjectBuild.target_problems(_build, t.id).is_empty():
 			continue
 		var kind := "dos" if t.id == "dos" else "native"
@@ -1070,7 +1086,7 @@ func build_all() -> void:
 	var graphics: bool = _build.get("graphics", false)
 	_thread.start(func() -> void:
 		var results := []
-		for t in Toolchains.TARGETS:
+		for t in Toolchains.targets():
 			if t.id == "native":
 				continue
 			var cmd := Toolchains.resolve_command(t.id)
@@ -1672,12 +1688,12 @@ func _set_busy(b: bool) -> void:
 func _update_target_state() -> void:
 	if not Toolchains.can_execute() or _target == null:
 		return
-	for i in Toolchains.TARGETS.size():
+	for i in Toolchains.targets().size():
 		var at := _target.get_item_index(i)
 		if at < 0:
 			continue
-		var ok := Toolchains.resolve_command(Toolchains.TARGETS[i].id) != ""
-		_target.set_item_text(at, Toolchains.TARGETS[i].name + ("" if ok else "  (not installed)"))
+		var ok := Toolchains.resolve_command(Toolchains.targets()[i].id) != ""
+		_target.set_item_text(at, Toolchains.targets()[i].name + ("" if ok else "  (not installed)"))
 	var id := _current_target()
 	if _run_btn != null:  # (the first fill runs while the toolbar is still being built)
 		_run_btn.visible = Toolchains.resolve_runner(id) != ""
@@ -1897,6 +1913,8 @@ func _set_project_value(section: String, key: String, value) -> void:
 
 
 func _add_recent(dir: String) -> void:
+	if _is_example_copy(dir):  # (user, 2026-11-14: only saved projects are Recent; an example's copy goes when it closes)
+		return
 	_recent.erase(dir)
 	_recent.insert(0, dir)
 	while _recent.size() > MAX_RECENT:
@@ -1912,10 +1930,64 @@ func _forget_recent(dir: String) -> void:
 	refresh_start()
 
 
-## An example copy no longer in Recent Projects goes (only those: never a project of yours).
+## An example's copy that isn't open any more goes (only those: never a project of yours).
 func _drop_copy(dir: String) -> void:
 	if dir.begins_with(ProjectSettings.globalize_path(EXAMPLE_SCRATCH)) and dir != project_dir and DirAccess.dir_exists_absolute(dir):
 		_remove_tree(dir)
+
+
+## Scenes made with New scene and not saved yet live in the project's hidden .untitled folder
+## (no file name until Save asks for one: user, 2026-11-14); they go when their tab or the project closes.
+func _drop_untitled(dir: String) -> void:
+	var u := dir.path_join(CBProject.UNTITLED_DIR)
+	if DirAccess.dir_exists_absolute(u):
+		_remove_tree(u)
+
+
+func _new_untitled_scene() -> void:
+	if not has_project():
+		return
+	var u := project_dir.path_join(CBProject.UNTITLED_DIR)
+	DirAccess.make_dir_recursive_absolute(u)
+	var n := 1
+	while FileAccess.file_exists(u.path_join("untitled-%d.%s" % [n, CBProject.SCENE_EXT])):
+		n += 1
+	var to := u.path_join("untitled-%d.%s" % [n, CBProject.SCENE_EXT])
+	CBProject.write_scene(to, CBProject.new_world())  # empty: its first node added is its root
+	open_scene(to)
+	_set_status("status_info", "A new scene: Save asks for its file name.")
+
+
+## Save: each unsaved scene asks where it goes (one after another; Cancel stops).
+func _save_untitled_scenes() -> void:
+	for p in _scene_paths:
+		if CBProject.is_untitled_scene(p):
+			_dock._ask_name("Save scene", "new-scene.cbscene", func(name: String) -> void:
+				_name_untitled(p, name)
+				_save_untitled_scenes())
+			return
+
+
+func _name_untitled(from: String, name: String) -> void:
+	name = CBProject.safe_name(name.trim_suffix("." + CBProject.SCENE_EXT), "scene") + "." + CBProject.SCENE_EXT
+	var to := project_dir.path_join(name)
+	if FileAccess.file_exists(to):
+		_set_status("status_error", "%s already exists: pick another name." % name)
+		return
+	if DirAccess.rename_absolute(from, to) != OK:
+		_set_status("status_error", "Couldn't save %s." % name)
+		return
+	var i := _scene_paths.find(from)
+	if i >= 0:
+		_scene_paths[i] = to
+	if _scene_hist.has(from):
+		_scene_hist[to] = _scene_hist[from]
+		_scene_hist.erase(from)
+	if context.scene_path == from:
+		context.scene_path = to
+	_dock.refresh()
+	_world_dock.show_scenes(_scene_paths, context.scene_path, CBProject.world_path(project_dir))
+	_set_status("status_success", "Saved scene %s" % name)
 
 
 func _is_example_copy(dir: String) -> bool:
@@ -1962,6 +2034,12 @@ func _quit() -> void:
 	stop_program()
 	save_all()
 	_save_settings()
+	if has_project():  # (an example copy and unsaved scenes are never kept)
+		_drop_untitled(project_dir)
+		var copy := project_dir
+		project_dir = ""
+		_drop_copy(copy)
+		project_dir = copy
 	if _thread != null:
 		_thread.wait_to_finish()
 	for t in _tabs:
@@ -1985,11 +2063,14 @@ func _load_settings() -> void:
 	var cf := ConfigFile.new()
 	cf.load(SETTINGS)
 	_recent = PackedStringArray(cf.get_value("projects", "recent", []))
+	for i in range(_recent.size() - 1, -1, -1):  # (older versions kept example copies here)
+		if _is_example_copy(_recent[i]):
+			_recent.remove_at(i)
 	_screen = str(cf.get_value("ui", "main_screen", "Script"))
 	_show_dos = bool(cf.get_value("ui", "show_dos", false))
 	for k in _panel_sizes:
 		_panel_sizes[k] = int(cf.get_value("ui", k + "_size", _panel_sizes[k]))
-	for t in Toolchains.TARGETS:
+	for t in Toolchains.targets():
 		var v := str(cf.get_value("overrides", t.id, ""))
 		if v != "":
 			Toolchains.overrides[t.id] = v
@@ -2187,7 +2268,7 @@ func _commands_tab() -> Control:
 	grid.name = "Grid"
 	grid.columns = 3
 	vb.add_child(grid)
-	for t in Toolchains.TARGETS:
+	for t in Toolchains.targets():
 		var saved = Toolchains.overrides.get(t.id, "")
 		Toolchains.overrides.erase(t.id)
 		var detected := Toolchains.resolve_command(t.id)
@@ -2216,7 +2297,7 @@ func _save_settings_from_dialog() -> void:
 	if grid == null:
 		return
 	Toolchains.overrides.clear()
-	for t in Toolchains.TARGETS:
+	for t in Toolchains.targets():
 		var v := (grid.get_node(t.id) as LineEdit).text.strip_edges()
 		if v != "":
 			Toolchains.overrides[t.id] = v
@@ -2492,7 +2573,7 @@ func _refresh_backend_rows() -> void:
 	var used := ProjectBuild.resolve_backend(pick, target)
 	(_project_dialog.find_child("PDosRow", true, false) as Control).visible = used == "dos"
 	var why := ProjectBuild.backend_problem(used, target) if pick != "auto" else ""
-	var info := "Builds for %s with %s." % [Toolchains.target(target).name, ProjectBuild.BACKEND_NAMES[used]]
+	var info := "Builds for %s with %s." % [Toolchains.target(target).name, ProjectBuild.backend_name(used)]
 	if why != "":
 		info += "\nProblem: " + why
 	(_project_dialog.find_child("PBackendInfo", true, false) as Label).text = info
@@ -2786,7 +2867,19 @@ func _build_start(parent: Control) -> void:
 		var head := Label.new()
 		head.text = spec[0]
 		head.add_theme_font_size_override(&"font_size", 16)
-		side.add_child(head)
+		if spec[0] == "Recent Projects":  # Manage plugins sits beside the heading (user, 2026-11-14)
+			var head_row := HBoxContainer.new()
+			head.size_flags_horizontal = SIZE_EXPAND_FILL
+			head_row.add_child(head)
+			var manage := Button.new()
+			manage.text = "Manage plugins..."
+			manage.name = "ManagePlugins"
+			manage.tooltip_text = "Target device plugins: install them, see which projects use them, add them to a project."
+			manage.pressed.connect(_open_plugins)
+			head_row.add_child(manage)
+			side.add_child(head_row)
+		else:
+			side.add_child(head)
 		var il := ItemList.new()
 		il.custom_minimum_size.y = 340
 		il.tooltip_text = spec[1]
@@ -2801,6 +2894,18 @@ func _build_start(parent: Control) -> void:
 				if button == MOUSE_BUTTON_LEFT:
 					_open_start_item.call_deferred(il, i))
 			il.item_activated.connect(func(i: int) -> void: _open_start_item(il, i))
+
+
+var _plugins_dialog: PluginsDialog = null
+
+
+func _open_plugins() -> void:
+	if _plugins_dialog == null:
+		_plugins_dialog = PluginsDialog.new()
+		add_child(_plugins_dialog)
+		_plugins_dialog.setup(func() -> Array: return Array(_recent))
+		_plugins_dialog.changed.connect(_fill_targets)
+	_plugins_dialog.open()
 
 
 func refresh_start() -> void:
@@ -3096,10 +3201,23 @@ func close_scene(path: String) -> void:
 		return
 	var i := _scene_paths.find(path)
 	_scene_paths.erase(path)
+	if CBProject.is_untitled_scene(path):
+		DirAccess.remove_absolute(path)  # never saved: gone with its tab
+		_scene_hist.erase(path)
 	if context.scene_path == path:
 		open_scene(_scene_paths[clampi(i - 1, 0, _scene_paths.size() - 1)], false)
 	else:
 		_world_dock.show_scenes(_scene_paths, context.scene_path, CBProject.world_path(project_dir))
+
+
+## A screen button was clicked: from another group's screen it shows what the button last showed;
+## on its own group's screen it moves on to the group's next one (2D <-> 3D).
+func _group_pressed(group: Array) -> void:
+	var shown: String = _group_shown.get(group[0], group[0])
+	if _screen in group and group.size() > 1:
+		switch_screen(group[(group.find(shown) + 1) % group.size()])
+	else:
+		switch_screen(shown)
 
 
 ## Shows one of the main screens: "2D", "3D" or "Script" (Godot's).
@@ -3109,8 +3227,15 @@ func switch_screen(which: String) -> void:
 	_screen = which
 	for k in _screens:
 		_screens[k].visible = k == which
-	for k in _screen_buttons:
-		_screen_buttons[k].set_pressed_no_signal(k == which)
+	for group in SCREEN_GROUPS:
+		if which in group:
+			_group_shown[group[0]] = which
+		var shown: String = _group_shown.get(group[0], group[0])
+		var gb: Button = _screen_buttons[group[0]]
+		gb.text = str(SCREEN_INFO[shown][0])
+		gb.icon = context.brick_theme.icon(SCREEN_INFO[shown][1])
+		gb.tooltip_text = str(SCREEN_INFO[shown][2]) + ("  (click again for %s)" % " / ".join(group.filter(func(w): return w != shown).map(func(w): return SCREEN_INFO[w][0])) if group.size() > 1 else "")
+		gb.set_pressed_no_signal(which in group)
 	if _node_bar != null:
 		_node_bar.visible = which == "Script"  # the script tabs and brick tools only under Node
 	if _palette_frame != null:

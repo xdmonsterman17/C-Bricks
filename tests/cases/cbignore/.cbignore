@@ -1,0 +1,3 @@
+# tests and tools live here but are not part of the program
+tools/
+*_test.c

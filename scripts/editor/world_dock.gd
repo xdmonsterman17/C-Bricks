@@ -382,8 +382,9 @@ func show_scenes(paths: Array, current: String, main: String) -> void:
 	_scene_tabs.set_block_signals(true)  # (filling it changes its tab: not a pick)
 	_scene_tabs.clear_tabs()
 	for p in _scene_list:
-		_scene_tabs.add_tab(str(p).get_file().get_basename(), context.brick_theme.icon("star" if p == main else "scene"))
-		_scene_tabs.set_tab_tooltip(_scene_tabs.tab_count - 1, CBProject.rel_path(context.project_dir, p) + ("  (the Main scene: the world starts with it)" if p == main else ""))
+		var fresh := CBProject.is_untitled_scene(str(p))
+		_scene_tabs.add_tab("Untitled " + str(p).get_file().get_basename().trim_prefix("untitled-") + " *" if fresh else str(p).get_file().get_basename(), context.brick_theme.icon("star" if p == main else "scene"))
+		_scene_tabs.set_tab_tooltip(_scene_tabs.tab_count - 1, "Not saved yet: Save (Ctrl+S) asks for its file name" if fresh else CBProject.rel_path(context.project_dir, p) + ("  (the Main scene: the world starts with it)" if p == main else ""))
 	_scene_tabs.current_tab = maxi(0, _scene_list.find(current))
 	_scene_tabs.set_block_signals(false)
 

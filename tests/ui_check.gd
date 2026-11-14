@@ -87,6 +87,18 @@ func _process(_delta: float) -> bool:
 			_check(con.position.x >= _panel._left_area.get_global_rect().end.x - 1 and con.end.x <= _panel._inspector.get_global_rect().position.x + 1, "the bottom panel sits between the left column and Properties")
 			_panel.switch_screen("Script")
 			_check(_panel._screen_buttons.size() == 3 and _panel._screen == "Script" and _panel._palette.is_visible_in_tree(), "2D / 3D / Script screens; the Script screen shows the palette beside the canvas")
+			# One button for 2D / 3D (user, 2026-11-14): from Bricks it returns to the last one; on it, it toggles.
+			var wb: Button = _panel._screen_buttons["3D"]
+			_check(_panel._screen_buttons["2D"] == wb, "2D and 3D share one button")
+			_panel.switch_screen("3D")
+			wb.pressed.emit()
+			_check(_panel._screen == "2D" and wb.text == "2D", "clicking the 2D / 3D button on 2D / 3D toggles to the other")
+			wb.pressed.emit()
+			_check(_panel._screen == "3D" and wb.text == "3D", "... and back")
+			_panel.switch_screen("Script")
+			wb.pressed.emit()
+			_check(_panel._screen == "3D", "clicked from Bricks it goes to the one it showed, without toggling")
+			_panel.switch_screen("Script")
 			_check(_panel._build.errors.is_empty(), "the project generates without problems")
 			_check(_panel._build.files.has("scripts__util.c") and _panel._build.files.has("cbricks.h"), "one .c per script, plus cbricks.h")
 			_panel._trace_btn.button_pressed = true
@@ -295,7 +307,7 @@ func _after_remote_brick() -> void:
 	_check(scene.contains("cb_scene_new(&cls_Shape3D_class, ") and scene.contains("cb_v3(1, 2, 3)"), "the world file becomes C (cbricks_scene.c)")
 	# Target capabilities (2026-11-08): MS-DOS can't do the scene (graphics, 3D) yet: Problems
 	# name the object; Build stops; back to this computer, they're gone.
-	var dos_i := Toolchains.TARGETS.map(func(t): return t.id).find("linux-riscv64")  # (no raylib there: no graphics, no 3D; MS-DOS can do them all now)
+	var dos_i := Toolchains.targets().map(func(t): return t.id).find("linux-riscv64")  # (no raylib there: no graphics, no 3D; MS-DOS can do them all now)
 	var dos_at: int = _panel._target.get_item_index(dos_i)
 	_panel._target.select(dos_at)
 	_panel._target.item_selected.emit(dos_at)
@@ -669,10 +681,13 @@ func _after_tree_click(label: Dictionary) -> void:
 		_check(str(CBProject.read_world(_dir).objects[0].get("name", "")) == "Arena" and _panel._world_dock._tree.get_root().get_text(0).begins_with("Arena  (Spatial3D)"), "the root is the scene tree's top row, renamed")
 		_check(str(_panel._build.get("files", {}).get("cbricks_scene.c", "")).contains("if (!parent_) cb_world_adopt(root);"), "the Main scene's root becomes the world (cb_world_adopt)")
 		# New scene (the Scene dock's button): a safe file name, opened, its root as the top row.
+		# (user, 2026-11-14) no file name is asked until Save: it is "Untitled 1 *" in a hidden folder
 		_panel.context.on_new_scene.call()
-		_panel._dock._name_action.call("My Level")
-		_panel._dock._name_dialog.hide()
-		_check(FileAccess.file_exists(_dir.path_join("my-level.cbscene")) and _panel.context.scene_path.ends_with("my-level.cbscene"), "New scene makes my-level.cbscene and opens it")
+		var fresh: String = _panel.context.scene_path
+		_check(CBProject.is_untitled_scene(fresh) and FileAccess.file_exists(fresh) and not _panel._dock._name_dialog.visible and not CBProject.list_entries(_dir).has("my-level.cbscene"), "New scene opens an untitled scene without asking for a file name")
+		_check(_panel._world_dock._scene_tabs.get_tab_title(_panel._world_dock._scene_tabs.current_tab).begins_with("Untitled"), "its tab says Untitled (not saved)")
+		_panel._name_untitled(fresh, "My Level")
+		_check(FileAccess.file_exists(_dir.path_join("my-level.cbscene")) and not FileAccess.file_exists(fresh) and _panel.context.scene_path.ends_with("my-level.cbscene"), "Save names it: my-level.cbscene, in the project, still open")
 		_check(_panel._world_dock._tree.get_root().get_text(0).begins_with("(empty"), "a new scene starts with no root (%s)" % _panel._world_dock._tree.get_root().get_text(0))
 		_panel.context.show_world_object({})
 		_panel._world_dock._add_object("Spatial3D")
@@ -906,14 +921,9 @@ func _examples_are_scratch() -> void:
 	var res_files := DirAccess.get_files_at("res://examples/hello_world").size()
 	_panel.open_example("res://examples/hello_world")
 	var first: String = _panel.project_dir
-	_check(_panel._is_example() and first.begins_with(OS.get_user_data_dir()) and first in _panel._recent, "an example opens as a new copy, listed in Recent Projects (%s)" % first)
+	_check(_panel._is_example() and first.begins_with(OS.get_user_data_dir()) and not first in _panel._recent, "an example opens as a new copy that is not in Recent Projects (%s)" % first)
 	_panel.switch_screen("3D")
 	_panel._world_dock._add_object("Spatial3D")  # a change, kept in the copy
-	_panel.open_example("res://examples/hello_world")
-	var second: String = _panel.project_dir
-	_check(second != first and CBProject.read_scene(CBProject.world_path(second)).objects.is_empty(), "the example again: another new copy, as the example is (%s)" % second.get_file())
-	_panel.open_project(first)
-	_check(_panel.project_dir == first and CBProject.read_scene(CBProject.world_path(first)).objects.size() > 0, "the first copy, opened from Recent Projects, carries on where it was left")
 	_panel.save()
 	_check(_panel._new_dialog.visible and _panel._new_dialog.title == "Save Example as a Project", "Save on an example copy asks where to keep it as a project")
 	_panel._new_dialog.hide()
@@ -921,16 +931,21 @@ func _examples_are_scratch() -> void:
 	_remove_dir(parent)
 	var saved: String = _panel.save_example_as(parent, "My Hello")
 	_check(saved != "" and _panel.project_dir == saved and not _panel._is_example() and CBProject.read_scene(CBProject.world_path(saved)).objects.size() > 0, "Save as project copies it with the change and goes on there")
-	_check(saved in _panel._recent and not first in _panel._recent and not DirAccess.dir_exists_absolute(first), "your project takes the copy's place in Recent Projects (the copy is gone)")
+	_check(saved in _panel._recent and not first in _panel._recent and not DirAccess.dir_exists_absolute(first), "the saved project is in Recent Projects (the copy is gone)")
 	_check(DirAccess.get_files_at("res://examples/hello_world").size() == res_files and not FileAccess.file_exists("res://examples/hello_world/main.cbscene"), "the example itself is unchanged")
+	# An example copy that is never saved goes when it closes.
+	_panel.open_example("res://examples/hello_world")
+	var second: String = _panel.project_dir
+	_check(CBProject.read_scene(CBProject.world_path(second)).objects.is_empty(), "the example again: a new copy (%s)" % second.get_file())
 	_panel.close_project()
+	_check(not DirAccess.dir_exists_absolute(second) and not second in _panel._recent, "an unsaved example copy is deleted when it closes")
 	_panel.refresh_start()
 	var titles: Array = _panel.find_children("*", "Label", true, false).filter(func(l): return (l as Label).is_visible_in_tree()).map(func(l): return (l as Label).text)
 	var recent_has_copy := false
 	for k in _panel._start_list.item_count:
 		if str(_panel._start_list.get_item_text(k)).contains("example copy"):
 			recent_has_copy = true
-	_check("Recent Projects" in titles and "Example Projects" in titles and recent_has_copy and _panel._example_list.item_count >= 8, "the start page: Recent Projects (an example copy marked) and Example Projects")
+	_check("Recent Projects" in titles and "Example Projects" in titles and not recent_has_copy and _panel._example_list.item_count >= 8, "the start page: Recent Projects (no example copies) and Example Projects")
 	var at := _frame
 	_wait_for = func() -> bool: return _frame > at + 10
 	_then = func() -> void:
@@ -940,6 +955,59 @@ func _examples_are_scratch() -> void:
 			_panel._drop_copy(d)
 		_remove_dir(parent)
 		_panel.open_project(back_to)
+		_panel.switch_screen("Script")
+		_plugins_window()
+
+
+## Manage plugins (user, 2026-11-14): the button beside Recent Projects opens the library; install the kit, add it to a project
+## (the project's Target list gains it), update flag, remove.
+func _plugins_window() -> void:
+	var keep_lib := TargetPlugins.library_path
+	TargetPlugins.library_path = "user://ui_check_plugin_library"
+	TargetPlugins.remove_tree(TargetPlugins.library_dir())
+	var proj := ProjectSettings.globalize_path("user://ui_check_plugin_project")
+	TargetPlugins.remove_tree(proj)
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/hello_world"), proj)
+	_panel.close_project()
+	_panel._recent = PackedStringArray([proj])
+	_panel.refresh_start()
+	var btn: Button = _panel.find_child("ManagePlugins", true, false)
+	_check(btn != null and btn.is_visible_in_tree(), "the start page has a Manage plugins button beside Recent Projects")
+	btn.pressed.emit()
+	var dlg: PluginsDialog = _panel._plugins_dialog
+	_check(dlg != null and dlg.visible, "Manage plugins opens its window")
+	var lib: ItemList = dlg.find_child("PluginLibrary", true, false)
+	_check(lib.item_count == 1 and lib.is_item_disabled(0), "an empty library says so")
+	(dlg.find_child("InstallKit", true, false) as Button).pressed.emit()
+	_check(lib.item_count == 1 and not lib.is_item_disabled(0) and lib.get_item_text(0).contains("null-terminal"), "installing the kit lists it: %s" % lib.get_item_text(0))
+	lib.select(0)
+	lib.item_selected.emit(0)
+	var projects: OptionButton = dlg.find_child("PluginProject", true, false)
+	_check(projects.item_count == 1, "the project list is the Recent Projects")
+	(dlg.find_child("AddToProject", true, false) as Button).pressed.emit()
+	var plist: ItemList = dlg.find_child("ProjectPlugins", true, false)
+	_check(plist.item_count == 1 and plist.get_item_text(0).contains("null-terminal") and FileAccess.file_exists(proj.path_join("plugins/null-terminal/target.cfg")), "adding it puts a copy in the project and lists it: %s" % plist.get_item_text(0))
+	_check(lib.get_item_text(0).contains("used by 1 project"), "the library shows which projects use a plugin: %s" % lib.get_item_text(0))
+	var cfg := TargetPlugins.library_dir().path_join("null-terminal/target.cfg")
+	FileAccess.open(cfg, FileAccess.WRITE).store_string(FileAccess.get_file_as_string(cfg).replace("version=\"1\"", "version=\"2\""))
+	dlg.refresh()
+	_check(plist.get_item_text(0).contains("update available: v2"), "a newer library version is flagged: %s" % plist.get_item_text(0))
+	var at := _frame
+	_wait_for = func() -> bool: return _frame > at + 10
+	_then = func() -> void:
+		_shot("manage_plugins")
+		plist.select(0)
+		(dlg.find_child("RemoveFromProject", true, false) as Button).pressed.emit()
+		_check(not TargetPlugins.project_plugins(proj).has("null-terminal") and not DirAccess.dir_exists_absolute(proj.path_join("plugins/null-terminal")), "Remove from project takes the entry and the copy away")
+		lib.select(0)
+		(dlg.find_child("RemovePlugin", true, false) as Button).pressed.emit()
+		_check(TargetPlugins.library().is_empty(), "Remove from library empties it")
+		dlg.hide()
+		TargetPlugins.remove_tree(proj)
+		TargetPlugins.remove_tree(TargetPlugins.library_dir())
+		TargetPlugins.library_path = keep_lib
+		_panel._recent = PackedStringArray()
+		_panel.open_project(_dir)
 		_panel.switch_screen("Script")
 		_toolchains_window()
 

@@ -599,9 +599,13 @@ static func normalize(graph: Dictionary) -> Dictionary:
 		_upgrade_class_names(graph)
 	var next := 1
 	var kept := []
+	var dropped := []
 	for n in graph.get("nodes", []):
+		var was_type := str(n.get("type", ""))
+		var was_id := _to_id(n.get("id", 0))
 		n = _upgrade_node(n)
 		if n.is_empty():
+			dropped.append({"id": was_id, "type": was_type})
 			continue
 		n.id = _to_id(n.get("id", 0))
 		next = maxi(next, n.id + 1)
@@ -629,6 +633,8 @@ static func normalize(graph: Dictionary) -> Dictionary:
 			n.outs[o] = {"var": str(v), "use": false} if not v is Dictionary else {"var": str(v.get("var", "")), "use": bool(v.get("use", false))}
 		kept.append(n)
 	graph.nodes = kept
+	# Bricks of a type that doesn't exist are dropped; the build reports them (CodeGen._check_file).
+	graph["_dropped"] = dropped
 	# Untyped literals (older files): typed from their input, or guessed from the text.
 	for n in graph.nodes:
 		var lay := layout(graph, n)

@@ -15,6 +15,7 @@ extends RefCounted
 const FILE := "project.cbproj"
 const SCRIPT_EXT := "cbricks"
 const BUILD_DIR := ".build"
+const PLUGINS_DIR := "plugins"   # the project's target plugins: plugins/<id>/target.cfg (TargetPlugins)
 ## Scenes: objects (and copies of other scenes); the Main scene is the world's start.
 const SCENE_EXT := "cbscene"
 const MAIN_SCENE := "main.cbscene"
@@ -215,6 +216,7 @@ static func write_script(path: String, graph: Dictionary) -> Error:
 	if fa == null:
 		return FileAccess.get_open_error()
 	var data: Dictionary = graph.duplicate(true)
+	data.erase("_dropped")
 	fa.store_string(JSON.stringify(data, "\t"))
 	fa.close()
 	return OK
@@ -272,6 +274,40 @@ static func list_assets(dir: String) -> PackedStringArray:
 			continue
 		out.append(rel)
 	return out
+
+
+## `.cbignore` in the project folder (2026-11-14): one pattern a line, `#` comments. A pattern
+## ending in `/` is a folder (everything under it); one with `*` / `?` is matched against the
+## whole path and the file name; anything else is a path or file name. Ignored .c / .h files
+## stay in the project (and the export) but aren't compiled into the program.
+static func ignore_patterns(dir: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	var path := dir.path_join(".cbignore")
+	if not FileAccess.file_exists(path):
+		return out
+	for line in FileAccess.get_file_as_string(path).split("\n"):
+		var l := line.strip_edges()
+		if l != "" and not l.begins_with("#"):
+			out.append(l.trim_prefix("./").trim_prefix("/"))
+	return out
+
+
+static func is_ignored(rel: String, patterns: PackedStringArray) -> bool:
+	for p in patterns:
+		if p.ends_with("/"):
+			if rel.begins_with(p) or ("/" + rel).contains("/" + p):
+				return true
+		elif rel == p or rel.get_file() == p or rel.match(p) or rel.get_file().match(p):
+			return true
+	return false
+
+
+const UNTITLED_DIR := ".untitled"
+
+
+## A scene made with New scene that has no file name yet (it lives in <project>/.untitled).
+static func is_untitled_scene(path: String) -> bool:
+	return path.contains("/" + UNTITLED_DIR + "/")
 
 
 static func rel_path(dir: String, path: String) -> String:

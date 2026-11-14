@@ -93,6 +93,7 @@ func generate(graph: Dictionary, options: Dictionary = {}) -> Dictionary:
 			_fields[fld[0]] = fld[1]
 	for id in nodes:
 		layouts[id] = T.layout_for(nodes[id].type, _f(id), funcs)
+	_check_file(graph)
 
 	# --- entry points
 	var contexts := []
@@ -454,6 +455,37 @@ func _reset() -> void:
 	_uses_math = false; _uses_rand = false; _uses_time = false; _uses_string = false
 	exit_handlers = []; has_main = false; has_init = false; uses_graphics = false; uses_net = false
 	records = {}; constants = {}; _init_lines = []; _protos = []; _class = ""; _fields = {}; _side = "Shared"
+
+
+## A file written by a tool can name a brick type, an exit or a wire's target that doesn't
+## exist; each is a Problem (2026-11-14), not a brick that quietly drops out.
+func _check_file(graph: Dictionary) -> void:
+	var ids := {}
+	for n in graph.get("nodes", []):
+		ids[int(n.get("id", 0))] = true
+	var all: Array = graph.get("nodes", []).duplicate()
+	for d in graph.get("_dropped", []):
+		all.append({"id": d.id, "type": d.type})
+	for n in all:
+		var id := int(n.get("id", 0))
+		var type := str(n.get("type", ""))
+		if not T.DEFS.has(type):
+			var best := ""
+			var best_d := 4
+			for t in T.DEFS:
+				var d := edit_distance(type, str(t))
+				if d < best_d:
+					best_d = d
+					best = str(t)
+			errors.append({"node": id, "msg": "node %d: there's no brick type '%s'%s" % [id, type, " (did you mean '%s'?)" % best if best != "" else ""]})
+			continue
+		var groups: Array = layouts[id].groups if layouts.has(id) else T.DEFS[type].get("groups", [])
+		for g in n.get("links", {}):
+			if not (g in groups):
+				_err(id, "has an exit called '%s'; its exits are: %s" % [g, ", ".join(PackedStringArray(groups)) if not groups.is_empty() else "none"])
+			for t in n.links[g]:
+				if not ids.has(int(t)):
+					_err(id, "exit '%s' goes to node %d, which isn't in the file" % [g, int(t)])
 
 
 func _f(id: int) -> Dictionary:

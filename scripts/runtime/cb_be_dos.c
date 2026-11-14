@@ -22,6 +22,14 @@
 #ifdef CB_DOS_STRICT
 #define __STRICT_ANSI__ 1
 #endif
+/* the optional groups of cb_backend.h this backend implements */
+#define CB_BE_HAVE_2D_EXTRA 1
+#define CB_BE_HAVE_TEXTURES 1
+#define CB_BE_HAVE_SOUND 1
+#define CB_BE_HAVE_3D 1
+#define CB_BE_HAVE_LOOK 1
+#define CB_BE_HAVE_TARGETS 1
+#define CB_BE_HAVE_SCREENSHOT 1
 #include "cbricks.h"
 #include "cbricks_audio.h"   /* the project's audio files and what they were converted to */
 
@@ -580,6 +588,22 @@ static int cb_dos_scan(int key) {
 }
 
 bool cb_be_key_down(int key) { int s = cb_dos_scan(key); return s >= 0 && (cb_dos_kdown[s] || cb_dos_kpressed[s]); }
+/* Typed characters: a US keyboard's scan codes + Shift, queued as each key goes down. */
+static int cb_dos_chars[32], cb_dos_char_head = 0, cb_dos_char_tail = 0;
+static int cb_dos_scan_char(int s, bool shift) {
+    static const char plain[] = "\0\0001234567890-=\b\tqwertyuiop[]\n\0asdfghjkl;'`\0\\zxcvbnm,./\0*\0 ";
+    static const char upper[] = "\0\000!@#$%^&*()_+\b\tQWERTYUIOP{}\n\0ASDFGHJKL:\"~\0|ZXCVBNM<>?\0*\0 ";
+    if (s < 2 || s > 0x39) return 0;
+    return (unsigned char)(shift ? upper : plain)[s];
+}
+int cb_be_char_typed(void) {
+    int c;
+    if (cb_dos_char_head == cb_dos_char_tail) return 0;
+    c = cb_dos_chars[cb_dos_char_head];
+    cb_dos_char_head = (cb_dos_char_head + 1) % 32;
+    return c;
+}
+
 bool cb_be_key_pressed(int key) { int s = cb_dos_scan(key); return s >= 0 && cb_dos_kpressed[s]; }
 bool cb_be_key_released(int key) { int s = cb_dos_scan(key); return s >= 0 && cb_dos_kreleased[s]; }
 
@@ -767,6 +791,13 @@ void cb_be_begin_frame(void) {
     for (k = 0; k < 128; k++) {
         cb_dos_kpressed[k] = cb_dos_kpress[k]; cb_dos_kpress[k] = 0;
         cb_dos_kreleased[k] = cb_dos_krel[k]; cb_dos_krel[k] = 0;
+    }
+    for (k = 2; k <= 0x39; k++) {
+        int c, next = (cb_dos_char_tail + 1) % 32;
+        if (!cb_dos_kpressed[k] || next == cb_dos_char_head) continue;
+        c = cb_dos_scan_char(k, cb_dos_kdown[0x2A] || cb_dos_kdown[0x36]);
+        if (c == '\n' || c == '\t' || c == '\b' || c == 0) continue;   /* Enter / Tab / Backspace are keys, not characters */
+        cb_dos_chars[cb_dos_char_tail] = c; cb_dos_char_tail = next;
     }
     cb_dos_mouse_poll();
 }
@@ -2986,6 +3017,29 @@ void cb_draw_mesh(cb_mesh *m, Vector3 at, Vector3 size, double turn, cb_rgba tin
     cb_m4 mm;
     if (!m || !m->built || m->vcount == 0) return;
     mm = cb_model(at, size, turn);
+    if (!m->prepared) { free(m->fpos); m->fpos = cb_fix_points(m->pos, m->vcount, m->bound); m->prepared = true; }
+    cb_draw_tris(m->pos, m->fpos, m->bound, m->nrm, m->col, m->idx, m->tcount, &mm, tint, m->both);
+}
+
+static cb_m4 cb_rot_axis(int axis, double deg) {
+    cb_m4 m = cb_m4_id();
+    double a = deg * 3.14159265358979323846 / 180.0, c = cos(a), s = sin(a);
+    if (axis == 0) { m.m[5] = c; m.m[6] = s; m.m[9] = -s; m.m[10] = c; }
+    else if (axis == 1) { m.m[0] = c; m.m[2] = -s; m.m[8] = s; m.m[10] = c; }
+    else { m.m[0] = c; m.m[1] = s; m.m[4] = -s; m.m[5] = c; }
+    return m;
+}
+
+/* Turned about all three axes: Z first, then X, then Y (so (0, turn, 0) is cb_draw_mesh's turn). */
+void cb_draw_mesh_rot(cb_mesh *m, Vector3 at, Vector3 size, Vector3 rot, cb_rgba tint) {
+    cb_m4 ry, rx, rz, r, mm;
+    int i;
+    if (!m || !m->built || m->vcount == 0) return;
+    ry = cb_rot_axis(1, rot.y); rx = cb_rot_axis(0, rot.x); rz = cb_rot_axis(2, rot.z);
+    r = cb_m4_mul(&rx, &rz);
+    mm = cb_m4_mul(&ry, &r);
+    for (i = 0; i < 3; i++) { mm.m[i] *= size.x; mm.m[4 + i] *= size.y; mm.m[8 + i] *= size.z; }
+    mm.m[12] = at.x; mm.m[13] = at.y; mm.m[14] = at.z;
     if (!m->prepared) { free(m->fpos); m->fpos = cb_fix_points(m->pos, m->vcount, m->bound); m->prepared = true; }
     cb_draw_tris(m->pos, m->fpos, m->bound, m->nrm, m->col, m->idx, m->tcount, &mm, tint, m->both);
 }
