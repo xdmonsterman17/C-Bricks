@@ -86,15 +86,15 @@ func _process(_delta: float) -> bool:
 			var con: Rect2 = _panel._bottom.get_global_rect()
 			_check(con.position.x >= _panel._left_area.get_global_rect().end.x - 1 and con.end.x <= _panel._inspector.get_global_rect().position.x + 1, "the bottom panel sits between the left column and Properties")
 			_panel.switch_screen("Script")
-			_check(_panel._screen_buttons.size() == 3 and _panel._screen == "Script" and _panel._palette.is_visible_in_tree(), "2D / 3D / Script screens; the Script screen shows the palette beside the canvas")
+			_check(_panel._screen_buttons.size() == 4 and _panel._screen == "Script" and _panel._palette.is_visible_in_tree(), "2D / 3D / Script screens; the Script screen shows the palette beside the canvas")
 			# One button for 2D / 3D (user, 2026-11-14): from Bricks it returns to the last one; on it, it toggles.
 			var wb: Button = _panel._screen_buttons["3D"]
 			_check(_panel._screen_buttons["2D"] == wb, "2D and 3D share one button")
 			_panel.switch_screen("3D")
 			wb.pressed.emit()
-			_check(_panel._screen == "2D" and wb.text == "2D", "clicking the 2D / 3D button on 2D / 3D toggles to the other")
+			_check(_panel._screen == "2D" and wb.text == "2D/3D", "clicking the 2D / 3D button on 2D / 3D toggles to the other")
 			wb.pressed.emit()
-			_check(_panel._screen == "3D" and wb.text == "3D", "... and back")
+			_check(_panel._screen == "3D" and wb.text == "2D/3D", "... and back (the text stays, the icon follows)")
 			_panel.switch_screen("Script")
 			wb.pressed.emit()
 			_check(_panel._screen == "3D", "clicked from Bricks it goes to the one it showed, without toggling")
@@ -821,7 +821,16 @@ func _scene_editing() -> void:
 	var picked: Dictionary = v2.label_at(want.get_center())
 	_check(int(picked.get("id", -1)) == int(lbl.id), "the 2D screen picks the Label where it's drawn (inside the Panel at the bottom right)")
 	
-	_check(str(_panel._screen_buttons["Script"].text) == "Bricks", "the scripting screen's button says Bricks")
+	_check(str(_panel._screen_buttons["Script"].text) == "Bricks/Code", "the scripting screen's button says Bricks/Code")
+	var bb: Button = _panel._screen_buttons["Script"]
+	var was: String = _panel._screen
+	_check(_panel._screen_buttons["Code"] == bb, "Bricks and Code share one button")
+	_panel.switch_screen("Script")
+	bb.pressed.emit()
+	_check(_panel._screen == "Code" and _panel._screens["Code"].is_visible_in_tree(), "clicking Bricks on Bricks toggles to the Code placeholder")
+	bb.pressed.emit()
+	_check(_panel._screen == "Script", "... and back to Bricks")
+	_panel.switch_screen(was)
 	_panel.context.show_world_object(dock.scene_root())
 	dock._add_object("LocalScript")
 	var ls: Dictionary = _panel.context.world_object

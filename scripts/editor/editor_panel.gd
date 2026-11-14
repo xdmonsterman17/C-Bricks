@@ -79,11 +79,14 @@ var _palette_frame: Control = null
 var _screens: Dictionary = {}         # "2D" / "3D" / "Script" -> its area
 var _screen_buttons: Dictionary = {}  # screen -> its button (2D and 3D share one)
 var _group_shown: Dictionary = {}     # a group's first screen -> the screen its button shows
-const SCREEN_GROUPS := [["2D", "3D"], ["Script"]]
+const SCREEN_GROUPS := [["2D", "3D"], ["Script", "Code"]]
+## A group button's fixed text (only its icon follows the screen showing).
+const GROUP_TEXT := {"2D": "2D/3D", "Script": "Bricks/Code"}
 const SCREEN_INFO := {
 	"2D": ["2D", "file_image", "The game window and its Labels (2D)"],
 	"3D": ["3D", "file_mesh", "The world in 3D: select and move its objects"],
 	"Script": ["Bricks", "script", "The scripts' bricks (C-Bricks' visual scripting)"],
+	"Code": ["Code", "code", "The script as C code (placeholder: not built yet)"],
 }
 var _screen := "Script"               # the main screen showing (saved)
 var _view_3d: WorldView3D = null
@@ -319,7 +322,16 @@ func _ready() -> void:
 	var frame_2d := _framed(_view_2d, 1)
 	frame_2d.set_anchors_preset(PRESET_FULL_RECT)
 	screens.add_child(frame_2d)
-	_screens = {"Script": center, "3D": frame_3d, "2D": frame_2d}
+	var code_frame := PanelContainer.new()  # placeholder for the code editor
+	code_frame.set_anchors_preset(PRESET_FULL_RECT)
+	var code_note := Label.new()
+	code_note.text = "Code view: coming soon"
+	code_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	code_note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	code_note.add_theme_color_override(&"font_color", BrickTheme.LOCAL_COLOR)
+	code_frame.add_child(code_note)
+	screens.add_child(code_frame)
+	_screens = {"Script": center, "3D": frame_3d, "2D": frame_2d, "Code": code_frame}
 	switch_screen(_screen)
 	_inspector = Inspector.new()
 	_inspector.context = context
@@ -3232,7 +3244,7 @@ func switch_screen(which: String) -> void:
 			_group_shown[group[0]] = which
 		var shown: String = _group_shown.get(group[0], group[0])
 		var gb: Button = _screen_buttons[group[0]]
-		gb.text = str(SCREEN_INFO[shown][0])
+		gb.text = str(GROUP_TEXT.get(group[0], SCREEN_INFO[shown][0]))
 		gb.icon = context.brick_theme.icon(SCREEN_INFO[shown][1])
 		gb.tooltip_text = str(SCREEN_INFO[shown][2]) + ("  (click again for %s)" % " / ".join(group.filter(func(w): return w != shown).map(func(w): return SCREEN_INFO[w][0])) if group.size() > 1 else "")
 		gb.set_pressed_no_signal(which in group)
