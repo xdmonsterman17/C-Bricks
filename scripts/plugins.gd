@@ -20,6 +20,7 @@ extends RefCounted
 
 const API := 1
 const BUILTIN_DIRS := ["res://plugins/ms-dos", "res://plugins/raylib"]
+const SETTING_TYPES := ["bool", "int", "choice", "string"]
 const CAPS := ["graphics", "3d", "network"]
 
 static var registry := {}   ## id -> plugin (built-ins first, then the loaded ones)
@@ -59,8 +60,12 @@ static func parse(text: String, dir: String, builtin := false) -> Dictionary:
 	var plugin := {
 		"id": id, "title": str(cfg.get_value("plugin", "title", id)), "version": str(cfg.get_value("plugin", "version", "1")),
 		"api": API, "description": str(cfg.get_value("plugin", "description", "")), "dir": dir, "builtin": builtin,
-		"target": {}, "backend": {}, "hooks": {},
+		"target": {}, "backend": {}, "hooks": {}, "settings": [],
 	}
+	var sets := _settings(cfg)
+	if sets.has("error"):
+		return _bad(str(sets.error))
+	plugin.settings = sets.list
 	if cfg.has_section("target"):
 		var t := _target(cfg, id, builtin)
 		if t.has("error"):
@@ -81,6 +86,29 @@ static func parse(text: String, dir: String, builtin := false) -> Dictionary:
 			return _bad("[hooks] %s must be a file inside the plugin's folder" % k)
 		plugin.hooks[k] = rel
 	return {"ok": true, "error": "", "plugin": plugin}
+
+
+## [setting.<key>] sections: label, type (bool int choice string), default, choices (a choice's list), tooltip.
+static func _settings(cfg: ConfigFile) -> Dictionary:
+	var list := []
+	var re := RegEx.create_from_string("^[a-z][a-z0-9_]*$")
+	for sec in cfg.get_sections():
+		if not sec.begins_with("setting."):
+			continue
+		var key := sec.substr(8)
+		if re.search(key) == null:
+			return {"error": "[%s]: the key must be lowercase letters, digits or _" % sec}
+		var type := str(cfg.get_value(sec, "type", "string"))
+		if not type in SETTING_TYPES:
+			return {"error": "[%s] type '%s' is not one of %s" % [sec, type, ", ".join(SETTING_TYPES)]}
+		var choices := _strings(cfg, sec, "choices")
+		if type == "choice" and choices.is_empty():
+			return {"error": "[%s] a choice needs a choices list" % sec}
+		var st := {"key": key, "label": str(cfg.get_value(sec, "label", key)), "type": type, "choices": choices,
+			"tooltip": str(cfg.get_value(sec, "tooltip", "")), "default": null}
+		st.default = coerce(st, cfg.get_value(sec, "default", null))
+		list.append(st)
+	return {"list": list}
 
 
 static func _bad(why: String) -> Dictionary:
@@ -388,3 +416,106 @@ static func _remove_inside(path: String) -> void:
 	for f in da.get_files():
 		DirAccess.remove_absolute(path.path_join(f))
 	DirAccess.remove_absolute(path)
+
+
+# ------------------------------------------------------------------ plugin settings
+# A plugin's target.cfg lists its settings; a value is the default, or the global one (the
+# editor's: user://plugins-settings/<id>.cfg), or this project's own (project.cbproj [plugin.<id>]),
+# the last one set winning. A build gets them as -DCB_PLUGIN_<ID>_<KEY>=value and as {key}
+# placeholders in the compile and run commands.
+
+## A value made to fit the setting's type (null / junk -> its default; the default of a bad default is the type's zero).
+static func coerce(st: Dictionary, v) -> Variant:
+	var type := str(st.type)
+	match type:
+		"bool":
+			if v is bool:
+				return v
+			return str(v).to_lower() in ["true", "1", "yes", "on"] if v != null else false
+		"int":
+			return int(v) if (v is int or v is float or (v is String and str(v).is_valid_int())) else (int(st.default) if st.get("default") != null else 0)
+		"choice":
+			var ch: Array = st.choices
+			return str(v) if v != null and str(v) in ch else (str(st.default) if st.get("default") != null and str(st.default) in ch else str(ch[0]))
+	return str(v) if v != null else ""
+
+
+static func settings_path(id: String) -> String:
+	return library_dir() + "-settings/" + id + ".cfg"
+
+
+## The explicitly set values: global ("global") or the project's ("project").
+static func set_values(id: String, scope: String, dir := "") -> Dictionary:
+	var out := {}
+	var cf := ConfigFile.new()
+	var sec := "values"
+	if scope == "project":
+		cf = CBProject.load_config(dir)
+		sec = "plugin." + id
+	else:
+		cf.load(settings_path(id))
+	for k in cf.get_section_keys(sec) if cf.has_section(sec) else PackedStringArray():
+		out[k] = cf.get_value(sec, k)
+	return out
+
+
+## Sets (or, with null, clears) one value in a scope.
+static func set_value(id: String, scope: String, key: String, value, dir := "") -> void:
+	var cf := ConfigFile.new()
+	var sec := "values"
+	if scope == "project":
+		cf = CBProject.load_config(dir)
+		sec = "plugin." + id
+	else:
+		cf.load(settings_path(id))
+	if value == null:
+		if cf.has_section_key(sec, key):
+			cf.erase_section_key(sec, key)
+	else:
+		cf.set_value(sec, key, value)
+	if scope == "project":
+		CBProject.save_config(dir, cf)
+	else:
+		DirAccess.make_dir_recursive_absolute(settings_path(id).get_base_dir())
+		cf.save(settings_path(id))
+	Toolchains.clear_cache()
+
+
+## The values a build uses: key -> value, project over global over default. `plugin` is a registry entry's id.
+static func values(id: String, dir := "") -> Dictionary:
+	var out := {}
+	if not registry.has(id):
+		return out
+	if dir == "":
+		dir = active_project
+	var glob := set_values(id, "global")
+	var mine := set_values(id, "project", dir) if dir != "" else {}
+	for st in Array(registry[id].settings):
+		var v = st.default
+		if glob.has(st.key):
+			v = coerce(st, glob[st.key])
+		if mine.has(st.key):
+			v = coerce(st, mine[st.key])
+		out[st.key] = v
+	return out
+
+
+## Where a setting's value comes from: "default", "global" or "project".
+static func source(id: String, key: String, dir := "") -> String:
+	if dir == "":
+		dir = active_project
+	if dir != "" and set_values(id, "project", dir).has(key):
+		return "project"
+	return "global" if set_values(id, "global").has(key) else "default"
+
+
+## The -D arguments for a build's compile (CB_PLUGIN_<ID>_<KEY>; text is quoted).
+static func defines(id: String, dir := "") -> PackedStringArray:
+	var out := PackedStringArray()
+	var vals := values(id, dir)
+	var prefix := "CB_PLUGIN_" + id.to_upper().replace("-", "_") + "_"
+	for st in Array(registry.get(id, {}).get("settings", [])):
+		var v = vals[st.key]
+		var text: String = ("1" if v else "0") if v is bool else (str(v) if v is int else "\"%s\"" % str(v).replace("\\", "\\\\").replace("\"", "\\\""))
+		out.append("-D%s%s=%s" % [prefix, str(st.key).to_upper(), text])
+	return out

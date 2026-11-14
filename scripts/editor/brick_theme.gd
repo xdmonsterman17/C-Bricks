@@ -187,6 +187,19 @@ static func make_app_theme() -> Theme:
 	window.expand_margin_top = 28
 	window.border_width_top = 28
 	window.border_color = Color(0.17, 0.19, 0.23)
+	# dialogs (Toolchains, Project Settings, Manage plugins, New Project, Add Node): the editor's panel,
+	# a border and room around the content
+	var dialog: StyleBoxFlat = flat_box(BASE, 4, 12.0)
+	dialog.border_color = Color(TEXT, 0.2)
+	dialog.set_border_width_all(1)
+	for type: StringName in [&"AcceptDialog", &"ConfirmationDialog"]:
+		t.set_stylebox(&"panel", type, dialog)
+	# "Card": a raised row inside a dialog (a toolchain, a plugin)
+	var card: StyleBoxFlat = flat_box(Color(0.16, 0.18, 0.22), 4, 8.0)
+	card.border_color = Color(TEXT, 0.12)
+	card.set_border_width_all(1)
+	t.set_type_variation(&"Card", &"PanelContainer")
+	t.set_stylebox(&"panel", &"Card", card)
 	t.set_stylebox(&"embedded_border", &"Window", window)
 	t.set_stylebox(&"embedded_unfocused_border", &"Window", window)
 	t.set_color(&"title_color", &"Window", TEXT)

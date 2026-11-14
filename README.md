@@ -89,7 +89,7 @@ raylib is compiled for a target the first time you build for it (a minute or two
 
 Other targets stay text-only. An exported graphics project carries raylib's source, and its Makefile, CMake and scripts build it. Project Settings ▸ Graphics has a few looks for 3D projects: shading (lit, toon, unlit, wireframe), **point splatting** (shapes drawn as clouds of small discs: off, on for the objects you tick, or on for all), a low-res "pixel size", MSAA, VSync and window mode.
 
-raylib sits behind a small backend layer (`cb_backend.h`, implemented by `cb_be_raylib.c`): the bricks and the runtime never call it directly. A new system is a **target plugin**: a `target.cfg` and one C backend file (just the window, input and basic drawing to start; sound, textures and 3D are optional groups). **Manage plugins...** on the start page installs them and adds them to projects; `plugin_examples/null-terminal` is a starting point (see API.md 7.1).
+raylib sits behind a small backend layer (`cb_backend.h`, implemented by `cb_be_raylib.c`): the bricks and the runtime never call it directly. A new system is a **target plugin**: a `target.cfg` and one C backend file (just the window, input and basic drawing to start; sound, textures and 3D are optional groups). **Manage plugins...** on the start page installs them and adds them to projects; `plugin_examples/null-terminal` is a starting point (see API.md 7.1). A plugin can have its own settings, global (Manage plugins) and per project (Project Settings ▸ Plugins).
 
 ## Debugging and testing a program
 

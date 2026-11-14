@@ -3,6 +3,8 @@ extends AcceptDialog
 ## Manage plugins (start page, beside Recent Projects): the global library of target device plugins
 ## (user://plugins), which projects use each, and adding / removing / updating one per project.
 
+const PluginSettingsUI = preload("res://scripts/editor/plugin_settings_ui.gd")
+
 signal changed   ## a project's plugins changed (the editor refreshes its Target list)
 
 var _recent: Callable            ## -> Array of project dirs (Recent Projects)
@@ -15,6 +17,7 @@ var _install_dialog: FileDialog
 var _ids: Array = []             ## the library list's plugin ids
 var _proj_ids: Array = []        ## the project list's plugin ids
 var _confirm: ConfirmationDialog
+var _settings_dlg: ConfirmationDialog = null
 
 
 func setup(recent: Callable) -> void:
@@ -56,6 +59,7 @@ func setup(recent: Callable) -> void:
 	lb.add_child(_button("Install from folder...", _ask_install, "InstallPlugin"))
 	lb.add_child(_button("Install the null-terminal kit", _install_kit, "InstallKit", "The bring-up kit: the smallest working plugin, to copy and change for a new device."))
 	lb.add_child(_button("Remove from library", _remove_library, "RemovePlugin"))
+	lb.add_child(_button("Settings...", _open_settings, "PluginSettings", "The plugin's global settings, for every project that doesn't set its own (Project Settings > Plugins)."))
 	# right: a project
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -88,6 +92,42 @@ func setup(recent: Callable) -> void:
 	add_child(_install_dialog)
 	_confirm = ConfirmationDialog.new()
 	add_child(_confirm)
+
+
+## The selected library plugin's global settings, in a dialog of its own.
+func _open_settings() -> void:
+	var id := _selected_id()
+	var p := {}
+	for q in TargetPlugins.library():
+		if q.id == id:
+			p = q
+	if p.is_empty():
+		_msg.text = "Select a plugin first."
+		return
+	if Array(p.settings).is_empty():
+		_msg.text = "%s has no settings." % p.title
+		return
+	if _settings_dlg != null:
+		_settings_dlg.queue_free()
+	_settings_dlg = ConfirmationDialog.new()
+	_settings_dlg.theme = theme
+	_settings_dlg.title = "%s: global settings" % p.title
+	_settings_dlg.ok_button_text = "Save"
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override(&"separation", 8)
+	var hint := Label.new()
+	hint.text = "Used by every project that doesn't set its own value (Project Settings > Plugins)."
+	hint.modulate.a = 0.7
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.custom_minimum_size.x = 480
+	box.add_child(hint)
+	var state := PluginSettingsUI.build(box, p, "global")
+	_settings_dlg.add_child(box)
+	_settings_dlg.confirmed.connect(func() -> void:
+		PluginSettingsUI.apply(state)
+		_msg.text = "Saved %s's global settings." % p.title)
+	add_child(_settings_dlg)
+	_settings_dlg.popup_centered(Vector2i(560, 0))
 
 
 func _head(text: String) -> Label:
@@ -151,6 +191,8 @@ func _show_detail() -> void:
 		if q.id == id:
 			p = q
 	var bits := [str(p.description)]
+	if not Array(p.settings).is_empty():
+		bits.append("%d setting(s): Settings... (global) or Project Settings > Plugins." % Array(p.settings).size())
 	bits.append("Adds the target \"%s\"." % p.target.name if not p.target.is_empty() else "Adds a backend only (for targets that already exist).")
 	if not p.hooks.is_empty():
 		bits.append("Runs its own scripts (%s): trusted code, asked about when you add it to a project." % ", ".join(PackedStringArray(p.hooks.keys())))

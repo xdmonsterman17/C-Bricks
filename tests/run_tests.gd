@@ -531,6 +531,20 @@ func _check_plugin_build() -> void:
 	var kit := ProjectSettings.globalize_path("res://plugin_examples/null-terminal")
 	var why := TargetPlugins.add_to_project(dir, kit)
 	TargetPlugins.use_project(dir)
+	var keep_lib := TargetPlugins.library_path
+	TargetPlugins.library_path = "user://test_plugin_settings_lib"  # (never the user's own global settings)
+	if why == "":
+		var frames := func() -> int: return int(TargetPlugins.values("null-terminal").get("frames", -1))
+		if frames.call() != 3 or TargetPlugins.source("null-terminal", "frames") != "default":
+			problems.append("a setting starts at its default (3): %s" % str(TargetPlugins.values("null-terminal")))
+		TargetPlugins.set_value("null-terminal", "global", "frames", 4)
+		if frames.call() != 4 or TargetPlugins.source("null-terminal", "frames") != "global":
+			problems.append("a global value overrides the default")
+		TargetPlugins.set_value("null-terminal", "project", "frames", "5", dir)
+		if frames.call() != 5 or TargetPlugins.source("null-terminal", "frames") != "project":
+			problems.append("the project's value overrides the global one (and is made an int): %s" % str(TargetPlugins.values("null-terminal")))
+		if not Array(TargetPlugins.defines("null-terminal")).has("-DCB_PLUGIN_NULL_TERMINAL_FRAMES=5"):
+			problems.append("defines: %s" % str(TargetPlugins.defines("null-terminal")))
 	if why != "":
 		problems.append("add_to_project: " + why)
 	elif Toolchains.target("null-terminal").id != "null-terminal" or not FileAccess.file_exists(dir.path_join("plugins/null-terminal/backend.c")):
@@ -552,8 +566,11 @@ func _check_plugin_build() -> void:
 				var out := []
 				var code := OS.execute(str(b.out), [], out, true)
 				var text := "".join(out)
-				if code != 0 or not text.contains("window: ") or not text.contains("frame 3"):
-					problems.append("running through the null backend: exit %d, output %s" % [code, text.left(400)])
+				if code != 0 or not text.contains("window: ") or not text.contains("frame 5") or text.contains("frame 6"):
+					problems.append("running through the null backend (the frames setting = 5): exit %d, output %s" % [code, text.left(400)])
+	TargetPlugins.set_value("null-terminal", "global", "frames", null)
+	TargetPlugins.remove_tree(ProjectSettings.globalize_path("user://test_plugin_settings_lib-settings"))
+	TargetPlugins.library_path = keep_lib
 	TargetPlugins.remove_from_project(dir, "null-terminal")
 	TargetPlugins.use_project(dir)
 	if Toolchains.targets().any(func(t): return t.id == "null-terminal") or TargetPlugins.project_plugins(dir).has("null-terminal"):

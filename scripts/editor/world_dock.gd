@@ -101,6 +101,7 @@ func _dialog() -> AddDialog:
 		_add_dialog = AddDialog.new()
 		_add_dialog.context = context
 		_add_dialog.dock = self
+		_add_dialog.theme = BrickTheme.make_app_theme()
 		add_child(_add_dialog)
 	return _add_dialog
 

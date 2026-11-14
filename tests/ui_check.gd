@@ -393,6 +393,8 @@ func _target_back_2() -> void:
 	var dlg: Window = _panel._project_dialog  # (its own window: its content is shown in the main one for a frame to be shot)
 	var content: Control = dlg.find_child("PName", true, false).get_parent().get_parent()
 	var holder := PanelContainer.new()
+	holder.theme = _panel.theme  # (as the dialog has it: BrickTheme's AcceptDialog panel behind it)
+	holder.add_theme_stylebox_override(&"panel", _panel.theme.get_stylebox(&"panel", &"AcceptDialog"))
 	root.add_child(holder)
 	holder.position = Vector2(300, 80)
 	content.reparent(holder)
@@ -402,6 +404,7 @@ func _target_back_2() -> void:
 		if ticks[0] == 8:
 			_shot("project_settings")
 			content.reparent(dlg)
+		if ticks[0] >= 9:
 			holder.queue_free()
 		return ticks[0] >= 9
 	_panel._project_dialog.hide()
@@ -830,6 +833,14 @@ func _scene_editing() -> void:
 	_check(_panel._screen == "Code" and _panel._screens["Code"].is_visible_in_tree(), "clicking Bricks on Bricks toggles to the Code placeholder")
 	bb.pressed.emit()
 	_check(_panel._screen == "Script", "... and back to Bricks")
+	_panel._left_swap.pressed.emit()
+	_check(_panel._world_dock.is_visible_in_tree() and _panel._dock.is_visible_in_tree() and not _panel._palette.is_visible_in_tree(), "the swap button on Bricks shows Scene over FileSystem in the left container")
+	_check(_panel._world_dock.get_global_rect().end.y <= _panel._dock.get_global_rect().position.y, "Scene is above FileSystem")
+	_shot("left_trees")
+	_panel._left_swap.pressed.emit()
+	_check(_panel._palette.is_visible_in_tree() and not _panel._world_dock.is_visible_in_tree(), "... and swaps back to the palette")
+	_panel.switch_screen("3D")
+	_check(not _panel._left_head.visible, "the swap button is only on Bricks / Code")
 	_panel.switch_screen(was)
 	_panel.context.show_world_object(dock.scene_root())
 	dock._add_object("LocalScript")
@@ -1005,6 +1016,42 @@ func _plugins_window() -> void:
 	_wait_for = func() -> bool: return _frame > at + 10
 	_then = func() -> void:
 		_shot("manage_plugins")
+		# a plugin's settings (user, 2026-11-14): global in Manage plugins, over them per project in Project Settings
+		lib.select(0)
+		lib.item_selected.emit(0)
+		(dlg.find_child("PluginSettings", true, false) as Button).pressed.emit()
+		var sdlg: ConfirmationDialog = dlg._settings_dlg
+		var gsp := sdlg.find_children("*", "SpinBox", true, false)
+		_check(sdlg != null and sdlg.visible and gsp.size() == 1 and (gsp[0] as SpinBox).value == 3, "Settings... lists the plugin's settings at their defaults (Frames to run = 3)")
+		(gsp[0] as SpinBox).value = 4
+		sdlg.confirmed.emit()
+		_check(int(TargetPlugins.set_values("null-terminal", "global").get("frames", -1)) == 4, "saving the global dialog stores the value")
+		sdlg.hide()
+		dlg.hide()
+		_panel.open_project(proj)
+		_panel._open_project_settings()
+		var psp: Array = _panel._project_dialog.find_child("PPlugins", true, false).find_children("*", "SpinBox", true, false)
+		_check(psp.size() == 1 and (psp[0] as SpinBox).value == 4, "Project Settings > Plugins shows the global value until the project sets its own")
+		(psp[0] as SpinBox).value = 7
+		_panel._save_project_settings()
+		_check(int(TargetPlugins.set_values("null-terminal", "project", proj).get("frames", -1)) == 7 and TargetPlugins.values("null-terminal").frames == 7, "a project's own value is saved in project.cbproj and wins")
+		_panel._open_project_settings()
+		var tags: Array = _panel._project_dialog.find_child("PPlugins", true, false).find_children("*", "Label", true, false).filter(func(l): return (l as Label).text == "set in this project")
+		_check(tags.size() == 1, "the row says it's set in this project")
+		var pd: Window = _panel._project_dialog
+		var at2 := _frame
+		_wait_for = func() -> bool: return _frame > at2 + 10
+		_then = func() -> void:
+			pd.get_texture().get_image().save_png("res://tests/reports/ui_plugin_settings.png")
+			_after_plugin_settings(proj, plist, lib, dlg, keep_lib)
+
+
+func _after_plugin_settings(proj: String, plist: ItemList, lib: ItemList, dlg: PluginsDialog, keep_lib: String) -> void:
+	if true:
+		TargetPlugins.set_value("null-terminal", "global", "frames", null)
+		TargetPlugins.remove_tree(TargetPlugins.library_dir() + "-settings")
+		_panel._project_dialog.hide()
+		_panel.close_project()
 		plist.select(0)
 		(dlg.find_child("RemoveFromProject", true, false) as Button).pressed.emit()
 		_check(not TargetPlugins.project_plugins(proj).has("null-terminal") and not DirAccess.dir_exists_absolute(proj.path_join("plugins/null-terminal")), "Remove from project takes the entry and the copy away")

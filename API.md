@@ -49,7 +49,7 @@ The window follows the Brickscript editor's layout:
 | **Toolbar, row 1** | Project menu · Save · Undo · Redo (the scene's on 2D / 3D, the script's on Bricks) · the project's name · **Target** · status |
 | **The Bricks bar** (only on the Bricks screen, under 2D · 3D · Node) | the script tabs · Close (tab) · Find · Frame (a comment frame) · Arrange |
 | **Toolbar, row 2** | Build · Run · Trace · Build All · Stop · Export · Toolchains (⚙) |
-| **Left** | on 2D / 3D, Godot's docks: **Scene** (the world's tree, 2.10) on top, **FileSystem** (the project's folder) below; on **Node**, the brick palette in their place |
+| **Left** | on 2D / 3D, Godot's docks: **Scene** (the world's tree, 2.10) on top, **FileSystem** (the project's folder) below; one container with a divider between them; on **Bricks / Code** it shows the brick palette, and the button at its top swaps it with the Scene / FileSystem trees (remembered) |
 | **Middle** | the main screens' switcher, **2D · 3D · Node** (Godot's); under it, only on Bricks, the script tabs; then the screen: **Node** = the **canvas**, **3D** = the world in 3D (2.11), **2D** = the game window and its Text2Ds (2.11). The screen you pick is remembered. |
 | **Right** | **Properties**: the selected brick's Inputs and Outputs, or a palette entry's description |
 | **Bottom of the middle** | **Problems** · **Console** · **Generated C** · **Debug**, between the left column and Properties (Godot's bottom panel) |
@@ -1083,6 +1083,8 @@ sources=["font.c"]     ; more files it needs (.c are compiled in)
 ```
 
 A project's plugins are in **`<project>/plugins/<id>/`**, listed in `project.cbproj` as `[plugins]` `id=version`; they load when the project opens or builds, add their Target to the list, and are not built as the program's own C. **Manage plugins...** (the start page, beside Recent Projects) keeps the library (`user://plugins/<id>/`): *Install from folder...*, *Install the null-terminal kit*, *Remove from library*; and for a Recent project: *Add the library's selected plugin*, *Update* (shown when the library's version differs from the project's copy), *Remove from project*. A project keeps its own copy, so removing a plugin from the library doesn't break it.
+
+**Plugin settings** (2026-11-14). `target.cfg` can list settings, one `[setting.<key>]` section each: `label`, `type` (`bool`, `int`, `choice` with `choices=[...]`, `string`), `default`, `tooltip`. A value is the plugin's default, or the **global** one (*Manage plugins* ▸ select a library plugin ▸ *Settings...*, kept in `user://plugins-settings/<id>.cfg`), or the **project's own** (*Project Settings* ▸ *Plugins*, kept in `project.cbproj` `[plugin.<id>]`); the project's wins over the global one, which wins over the default, and *Reset* in a row goes back a level. A build gets each value as `-DCB_PLUGIN_<ID>_<KEY>=value` (`-` in the id becomes `_`; text is quoted, bool is 1 / 0) on the compile line, and as a `{key}` placeholder in the target's compile and run commands. The exported C project (Makefile, CMake, build.sh) does not carry them: it knows built-in targets only. `[hooks]` are still parsed but never run.
 
 **The bring-up kit** (`plugin_examples/null-terminal/`): a working plugin with the required core only: it prints `window:`, `text:` and `frame N` lines and ends after `CB_NULL_FRAMES` (default 3) frames. Copy it, rename the id, and replace the functions one by one. Built-in plugins MS-DOS and raylib use the same format (`plugins/`).
 

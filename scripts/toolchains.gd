@@ -757,10 +757,21 @@ static func raylib_key(id: String, template := "") -> String:
 	return "%s-%s" % [id, (" ".join(compiler_prefix(template)) + "|" + " ".join(PackedStringArray(rf.defines))).md5_text().substr(0, 8)]
 
 
+## A target plugin's settings for a build: {key: value} ({} for a built-in target), and as -D arguments.
+static func plugin_vars(id: String) -> Dictionary:
+	var pid := str(target(id).get("plugin", ""))
+	return TargetPlugins.values(pid) if pid != "" else {}
+
+
+static func plugin_defines(id: String) -> PackedStringArray:
+	var pid := str(target(id).get("plugin", ""))
+	return TargetPlugins.defines(pid) if pid != "" else PackedStringArray()
+
+
 static func build_key(id: String, srcs: Array, template: String, graphics: bool) -> String:
 	var ctx := HashingContext.new()
 	ctx.start(HashingContext.HASH_MD5)
-	ctx.update(("%s|%s|%s|%s|%s" % [id, template, RAYLIB_VERSION, raylib_key(id, template) if graphics and TargetPlugins.backend_for(id) == "raylib" else "", str(target(id).get("defines", [])) + str(target(id).get("libs", []))]).to_utf8_buffer())
+	ctx.update(("%s|%s|%s|%s|%s" % [id, template, RAYLIB_VERSION, raylib_key(id, template) if graphics and TargetPlugins.backend_for(id) == "raylib" else "", str(target(id).get("defines", [])) + str(target(id).get("libs", [])) + str(plugin_defines(id))]).to_utf8_buffer())
 	if id == "dos":
 		ctx.update(FileAccess.get_file_as_bytes(CWSDSTUB))  # (DOS programs carry CWSDPMI)
 		if _dos_net(srcs):
@@ -863,7 +874,9 @@ static func compile(id: String, src, out_dir: String, base: String, template := 
 		return {"ok": false, "exit": -1, "output": "No compiler found for '%s'. Install one of:\n  %s\nor set a custom command in Settings." % [target(id).name, "\n  ".join(target(id).candidates)], "command": "", "out": ""}
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	var out := output_path(id, out_dir, base)
-	var argv := expand(template, {"src": src, "out": out, "dir": out_dir})
+	var vars := plugin_vars(id)
+	vars.merge({"src": src, "out": out, "dir": out_dir}, true)
+	var argv := expand(template, vars)
 	var prog := find_program(argv[0])
 	if prog == "":
 		prog = argv[0]
@@ -871,6 +884,7 @@ static func compile(id: String, src, out_dir: String, base: String, template := 
 	argv.append_array(PackedStringArray(extra.get("objs", [])))
 	argv.append_array(PackedStringArray(extra.get("flags", [])))
 	argv.append_array(PackedStringArray(target(id).get("defines", [])))
+	argv.append_array(plugin_defines(id))
 	argv.append_array(PackedStringArray(target(id).get("libs", [])))
 	if id == "dos" and _dos_net(src):  # networking: Watt-32's BSD sockets (thirdparty/watt32)
 		var watt := watt_dir()

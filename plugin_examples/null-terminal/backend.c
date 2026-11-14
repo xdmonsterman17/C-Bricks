@@ -1,6 +1,7 @@
 /* Null terminal backend: the required core of cb_backend.h and nothing else. Text drawn is printed
    ("text: ..." lines), every other drawing call does nothing, nobody presses a key. The program
-   closes after CB_NULL_FRAMES frames (default 3) so it always ends. */
+   closes after CB_NULL_FRAMES frames (default 3) so it always ends. The plugin's setting "frames"
+   (target.cfg [setting.frames], Project Settings > Plugins) arrives as CB_PLUGIN_NULL_TERMINAL_FRAMES. */
 #include "cbricks.h"
 
 static bool nt_open = false;
@@ -10,6 +11,9 @@ static double nt_time = 0;
 bool cb_be_open(int width, int height, const char *title, int fps, bool esc_closes) {
     const char *env = getenv("CB_NULL_FRAMES");
     (void)esc_closes;
+#ifdef CB_PLUGIN_NULL_TERMINAL_FRAMES
+    nt_limit = CB_PLUGIN_NULL_TERMINAL_FRAMES;
+#endif
     nt_width = width; nt_height = height; nt_fps = fps > 0 ? fps : 60;
     if (env && atoi(env) > 0) nt_limit = atoi(env);
     printf("window: %dx%d \"%s\"\n", width, height, title);

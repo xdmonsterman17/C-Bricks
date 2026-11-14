@@ -16,6 +16,7 @@ const Canvas = preload("res://scripts/editor/canvas.gd")
 const Palette = preload("res://scripts/editor/palette.gd")
 const Inspector = preload("res://scripts/editor/inspector.gd")
 const ProjectDock = preload("res://scripts/editor/project_dock.gd")
+const PluginSettingsUI = preload("res://scripts/editor/plugin_settings_ui.gd")
 const BrickTheme = preload("res://scripts/editor/brick_theme.gd")
 const BrickView = preload("res://scripts/editor/brick_view.gd")
 const T = preload("res://scripts/node_defs.gd")
@@ -75,7 +76,10 @@ var _status: Label = null
 var _dock: ProjectDock = null
 var _left_split: VSplitContainer = null   # Scene above FileSystem
 var _left_area: Control = null         # the left column: Scene / FileSystem, or the palette (Node)
-var _palette_frame: Control = null
+var _palette_frame: Control = null     # the palette (the left container shows it or the trees)
+var _left_head: HBoxContainer = null   # the left container's top row: the swap button (Bricks / Code)
+var _left_swap: Button = null
+var _left_trees := false               # Bricks / Code: show Scene + FileSystem instead of the palette (saved)
 var _screens: Dictionary = {}         # "2D" / "3D" / "Script" -> its area
 var _screen_buttons: Dictionary = {}  # screen -> its button (2D and 3D share one)
 var _group_shown: Dictionary = {}     # a group's first screen -> the screen its button shows
@@ -137,6 +141,7 @@ var _start_list: ItemList = null  # Recent Projects
 var _example_list: ItemList = null  # Example Projects
 var _start_filter: LineEdit = null
 var _file_dialog: FileDialog = null
+var _plugin_settings: Array = []   ## Project Settings' plugin rows (PluginSettingsUI.build's states)
 var _settings_dialog: AcceptDialog = null
 var _tc_manager: ToolchainManager = null  # (the Toolchains window's downloads)
 var _tc_rows := {}  # tool id -> its row's widgets
@@ -180,13 +185,33 @@ func _ready() -> void:
 	_left_area.custom_minimum_size.x = 140
 	_left_area.size_flags_vertical = SIZE_EXPAND_FILL
 	split.add_child(_left_area)
+	# One container for the left column (user, 2026-11-14): a top row with the swap button, then
+	# the palette or the trees (Scene over FileSystem, one divider between them).
+	var left_box := VBoxContainer.new()
+	left_box.add_theme_constant_override(&"separation", 2)
+	_left_area.add_child(_framed(left_box, 4))
+	_left_area.get_child(0).set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	_left_head = HBoxContainer.new()
+	_left_swap = Button.new()
+	_left_swap.flat = false
+	_left_swap.size_flags_horizontal = SIZE_EXPAND_FILL
+	_left_swap.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_left_swap.pressed.connect(func() -> void:
+		_left_trees = not _left_trees
+		_apply_left()
+		_save_settings())
+	_left_head.add_child(_left_swap)
+	left_box.add_child(_left_head)
+	var left_body := Control.new()
+	left_body.size_flags_vertical = SIZE_EXPAND_FILL
+	left_box.add_child(left_body)
 	_left_split = VSplitContainer.new()
 	_left_split.set_anchors_preset(PRESET_FULL_RECT)
-	_left_area.add_child(_left_split)
+	left_body.add_child(_left_split)
 	_world_dock = WorldDock.new()
 	_world_dock.context = context
 	_world_dock.size_flags_vertical = SIZE_EXPAND_FILL
-	_left_split.add_child(_framed(_dock_box("Scene", "file_mesh", _world_dock, "The objects the world starts with (world.cnworld): select one to see it in the 2D / 3D screens and Properties. Bricks find them by name: Object (Find)."), 4))
+	_left_split.add_child(_dock_box("Scene", "file_mesh", _world_dock, "The objects the world starts with (world.cnworld): select one to see it in the 2D / 3D screens and Properties. Bricks find them by name: Object (Find)."))
 	_dock = ProjectDock.new()
 	_dock.context = context
 	_dock.size_flags_vertical = SIZE_EXPAND_FILL
@@ -196,7 +221,7 @@ func _ready() -> void:
 		_recompile()
 		if has_project():  # (the Main scene may have changed)
 			_world_dock.show_scenes(_scene_paths, context.scene_path, CBProject.world_path(project_dir)))
-	_left_split.add_child(_framed(_dock_box("FileSystem", "project", _dock, "The project's folder: scripts and assets"), 4))
+	_left_split.add_child(_dock_box("FileSystem", "project", _dock, "The project's folder: scripts and assets"))
 	context.on_world_changed = _on_world_changed
 	context.on_new_scene = _new_untitled_scene
 	context.on_script_object_renamed = _on_script_object_renamed
@@ -301,9 +326,9 @@ func _ready() -> void:
 	_palette.context = context
 	_palette.size_flags_vertical = SIZE_EXPAND_FILL
 	_palette.add_requested.connect(func(type: String) -> void: _canvas.add_node_in_view(type))
-	_palette_frame = _framed(_palette, 4)
-	_palette_frame.set_anchors_preset(PRESET_FULL_RECT)
-	_left_area.add_child(_palette_frame)
+	_palette_frame = _palette
+	_palette.set_anchors_preset(PRESET_FULL_RECT)
+	_left_split.get_parent().add_child(_palette)
 	var center := VBoxContainer.new()
 	center.set_anchors_preset(PRESET_FULL_RECT)
 	center.add_theme_constant_override(&"separation", 0)
@@ -1170,7 +1195,7 @@ func _run(id: String, out: String) -> void:
 			return
 		_console.append_text("[color=#80b0ff]── running %s in DOSBox-X (its window; a key closes it at the end) ──[/color]\n" % out.get_file())
 		return
-	var argv := Toolchains.expand(runner, {"out": out})
+	var argv := Toolchains.expand(runner, Toolchains.plugin_vars(id).merged({"out": out}, true))
 	var prog := argv[0] if argv[0].is_absolute_path() else Toolchains.find_program(argv[0])
 	argv.remove_at(0)
 	var run_args := _run_args()
@@ -1889,10 +1914,39 @@ func _open_project_settings() -> void:
 	_refresh_look_rows()
 	_refresh_backend_rows()
 	_refresh_dos_options()
+	_fill_plugin_settings()
+	_project_dialog.reset_size()  # (the window shrinks back to its content: it kept the height of an earlier opening)
 	_project_dialog.popup_centered(Vector2i(760, 0))
 
 
+## Project Settings > Plugins: a block per plugin of this project that has settings.
+func _fill_plugin_settings() -> void:
+	var box := _project_dialog.find_child("PPlugins", true, false) as VBoxContainer
+	for c in box.get_children():
+		box.remove_child(c)
+		c.queue_free()
+	_plugin_settings.clear()
+	for id in TargetPlugins.project_plugins(project_dir):
+		var plugin: Dictionary = TargetPlugins.registry.get(id, {})
+		if plugin.is_empty() or Array(plugin.settings).is_empty():
+			continue
+		if box.get_child_count() == 0:
+			_section(box, "Plugins")
+		var l := Label.new()
+		l.text = "%s (%s)" % [plugin.title, id]
+		box.add_child(l)
+		var hint := Label.new()
+		hint.text = "Set here for this project; what isn't set uses the global value (Manage plugins), then the plugin's default."
+		hint.modulate.a = 0.6
+		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		hint.custom_minimum_size.x = 600  # (a wrapping label asks for a tall window at width 0)
+		box.add_child(hint)
+		_plugin_settings.append(PluginSettingsUI.build(box, plugin, "project", project_dir))
+
+
 func _save_project_settings() -> void:
+	for st in _plugin_settings:
+		PluginSettingsUI.apply(st)
 	var cf := CBProject.load_config(project_dir)
 	cf.set_value("project", "name", (_project_dialog.find_child("PName", true, false) as LineEdit).text.strip_edges())
 	cf.set_value("project", "version", (_project_dialog.find_child("PVersion", true, false) as LineEdit).text.strip_edges())
@@ -2079,6 +2133,7 @@ func _load_settings() -> void:
 		if _is_example_copy(_recent[i]):
 			_recent.remove_at(i)
 	_screen = str(cf.get_value("ui", "main_screen", "Script"))
+	_left_trees = bool(cf.get_value("ui", "left_trees", false))
 	_show_dos = bool(cf.get_value("ui", "show_dos", false))
 	for k in _panel_sizes:
 		_panel_sizes[k] = int(cf.get_value("ui", k + "_size", _panel_sizes[k]))
@@ -2093,6 +2148,7 @@ func _save_settings() -> void:
 	cf.load(SETTINGS)
 	cf.set_value("projects", "recent", Array(_recent))
 	cf.set_value("ui", "main_screen", _screen)
+	cf.set_value("ui", "left_trees", _left_trees)
 	cf.set_value("ui", "show_dos", _show_dos)
 	if cf.has_section_key("ui", "preview_sky"):
 		cf.erase_section_key("ui", "preview_sky")  # (the Sky toggle is gone: the Environment decides)
@@ -2141,6 +2197,7 @@ func _toolchains_tab() -> Control:
 		if not (_show_dos or _dos_open) and str(t.id) in ["djgpp", "dosbox-x"]:
 			continue
 		var pc := PanelContainer.new()
+		pc.theme_type_variation = &"Card"
 		var box := VBoxContainer.new()
 		pc.add_child(box)
 		var top := HBoxContainer.new()
@@ -2150,7 +2207,7 @@ func _toolchains_tab() -> Control:
 		top.add_child(icon)
 		var name_l := Label.new()
 		name_l.text = str(t.name)
-		name_l.add_theme_font_size_override("font_size", 16)
+		name_l.add_theme_font_size_override("font_size", 14)
 		top.add_child(name_l)
 		var state := Label.new()
 		state.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -2602,6 +2659,12 @@ func _labeled(parent: Control, label: String, node_name: String, hint: String = 
 	return le
 
 
+## Gives a dialog the editor's theme: windows don't pick it up from their parent on their own.
+func _themed(d: Window) -> Window:
+	d.theme = theme
+	return d
+
+
 func _build_dialogs() -> void:
 	_file_dialog = FileDialog.new()
 	_file_dialog.access = FileDialog.ACCESS_USERDATA if OS.has_feature("web") else FileDialog.ACCESS_FILESYSTEM
@@ -2614,7 +2677,7 @@ func _build_dialogs() -> void:
 	_settings_dialog.ok_button_text = "Save"
 	_settings_dialog.add_cancel_button("Cancel")
 	_settings_dialog.confirmed.connect(_save_settings_from_dialog)
-	add_child(_settings_dialog)
+	add_child(_themed(_settings_dialog))
 	_tc_manager = ToolchainManager.new()
 	_tc_manager.progress.connect(_tc_progress)
 	_tc_manager.finished.connect(_tc_finished)
@@ -2643,7 +2706,7 @@ func _build_dialogs() -> void:
 	nv.add_child(nhint)
 	_new_dialog.add_child(nv)
 	_new_dialog.confirmed.connect(_create_project)
-	add_child(_new_dialog)
+	add_child(_themed(_new_dialog))
 	# the export's progress (a popup with a bar and the file it's on)
 	_progress_dialog = AcceptDialog.new()
 	_progress_dialog.get_ok_button().visible = false
@@ -2658,7 +2721,7 @@ func _build_dialogs() -> void:
 	_progress_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	pvb.add_child(_progress_label)
 	_progress_dialog.add_child(pvb)
-	add_child(_progress_dialog)
+	add_child(_themed(_progress_dialog))
 	_project_dialog = AcceptDialog.new()
 	_project_dialog.title = "Project Settings"
 	_project_dialog.ok_button_text = "Save"
@@ -2783,9 +2846,14 @@ func _build_dialogs() -> void:
 	show_dos.text = "Show MS-DOS (experimental): the target, its examples, DJGPP and DOSBox-X (all projects)"
 	pv.add_child(show_dos)
 	show_dos.toggled.connect(func(_on: bool) -> void: _refresh_dos_options())
+	# Plugins (user, 2026-11-14): the project's target plugins' own settings, over the global ones (filled on open)
+	var plugs := VBoxContainer.new()
+	plugs.name = "PPlugins"
+	plugs.add_theme_constant_override(&"separation", 6)
+	pv.add_child(plugs)
 	_project_dialog.add_child(pv)
 	_project_dialog.confirmed.connect(_save_project_settings)
-	add_child(_project_dialog)
+	add_child(_themed(_project_dialog))
 
 
 ## Puts the dividers where the panels get their saved sizes (a split's offset
@@ -2914,7 +2982,7 @@ var _plugins_dialog: PluginsDialog = null
 func _open_plugins() -> void:
 	if _plugins_dialog == null:
 		_plugins_dialog = PluginsDialog.new()
-		add_child(_plugins_dialog)
+		add_child(_themed(_plugins_dialog))
 		_plugins_dialog.setup(func() -> Array: return Array(_recent))
 		_plugins_dialog.changed.connect(_fill_targets)
 	_plugins_dialog.open()
@@ -3250,14 +3318,27 @@ func switch_screen(which: String) -> void:
 		gb.set_pressed_no_signal(which in group)
 	if _node_bar != null:
 		_node_bar.visible = which == "Script"  # the script tabs and brick tools only under Node
-	if _palette_frame != null:
-		_palette_frame.visible = which == "Script"  # Node: the palette replaces Scene / FileSystem
-		_left_split.visible = which != "Script"
+	_apply_left()
 	if which == "3D" and _view_3d != null:
 		_view_3d.rebuild()
 	elif which == "2D" and _view_2d != null:
 		_view_2d.rebuild(project_dir)
 	_save_settings()
+
+
+## The left container: on 2D / 3D the trees; on Bricks / Code the palette, or the trees when the
+## swap button says so (the button is only there on those two).
+func _apply_left() -> void:
+	if _palette_frame == null:
+		return
+	var scripting := _screen == "Script" or _screen == "Code"
+	var trees := not scripting or _left_trees
+	_palette_frame.visible = not trees
+	_left_split.visible = trees
+	_left_head.visible = scripting
+	_left_swap.text = "Scene / FileSystem" if not trees else "Bricks palette"
+	_left_swap.icon = context.brick_theme.icon("project" if not trees else "script")
+	_left_swap.tooltip_text = "Swap the left column between the brick palette and the Scene / FileSystem trees"
 
 
 ## A dock's title over it (Godot's dock tabs): "Scene", "FileSystem".
