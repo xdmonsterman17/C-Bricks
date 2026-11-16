@@ -51,8 +51,10 @@ func _init() -> void:
 	var only := PackedStringArray()
 	var args := OS.get_cmdline_user_args()
 	for a in args:
-		if a != "--on-screen":
+		if a != "--on-screen" and a != "--dos":
 			only.append(a)
+	# MS-DOS is frozen on main (DECISIONS.md, 2026-11-16): its checks run only with --dos or when named
+	var with_dos := "--dos" in args
 	_be_kind()
 	var display := "the screen (--on-screen)" if "--on-screen" in args else _start_virtual_display()
 	var names := Array(DirAccess.get_directories_at(CASES))
@@ -141,17 +143,17 @@ func _init() -> void:
 		_compile_ms = 0
 		count += 1
 		_check_bundle()
-	if only.is_empty() or "dos" in only:
+	if (only.is_empty() and with_dos) or "dos" in only:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		count += 1
 		_check_dos()
-	if only.is_empty() or "dos_input" in only:
+	if (only.is_empty() and with_dos) or "dos_input" in only:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		count += 1
 		_check_dos_input()
-	if only.is_empty() or "dos_net" in only:
+	if (only.is_empty() and with_dos) or "dos_net" in only:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		count += 1
