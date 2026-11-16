@@ -120,6 +120,9 @@ cb_mesh *cb_mesh_begin(cb_mesh *mesh);
 /* front = the side where a, b, c go round CLOCKWISE (Add to mesh: (0,0,0) (1,0,0) (0,0,1) faces up) */
 void cb_mesh_triangle(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, cb_rgba color);
 void cb_mesh_quad(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, Vector3 d, cb_rgba color);
+/* the same winding (clockwise), with a normal and a texture coordinate (u, v) at each corner: the normals are used as given
+   (not recomputed, not averaged by Smooth); a backend without textured meshes may ignore the texture coordinates */
+void cb_mesh_triangle_nuv(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, Vector3 na, Vector3 nb, Vector3 nc, Vector2 ua, Vector2 ub, Vector2 uc, cb_rgba color);
 void cb_mesh_shape(cb_mesh *mesh, int kind, Vector3 at, Vector3 size, cb_rgba color);
 void cb_mesh_finish(cb_mesh *mesh, bool smooth, bool both_sides, int file, int brick);
 void cb_draw_mesh(cb_mesh *mesh, Vector3 at, Vector3 size, double turn, cb_rgba tint);

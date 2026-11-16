@@ -1,0 +1,2527 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 71,
+	"nodes": [
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "250"
+				}
+			},
+			"fields": {
+				"name": "STEP",
+				"type": "int"
+			},
+			"id": 1,
+			"links": {},
+			"note": "Objects added or removed by one press of UP / DOWN",
+			"outs": {},
+			"pos": [
+				0.0,
+				8080.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "constant"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "20000"
+				}
+			},
+			"fields": {
+				"name": "MOST",
+				"type": "int"
+			},
+			"id": 2,
+			"links": {},
+			"note": "The most objects",
+			"outs": {},
+			"pos": [
+				0.0,
+				8240.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "constant"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "50"
+				}
+			},
+			"fields": {
+				"name": "ACROSS",
+				"type": "int"
+			},
+			"id": 3,
+			"links": {},
+			"note": "Objects in a row of the field",
+			"outs": {},
+			"pos": [
+				0.0,
+				8368.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "constant"
+		},
+		{
+			"args": {
+				"fps": {
+					"type": "int",
+					"value": "1000"
+				},
+				"height": {
+					"type": "int",
+					"value": "540"
+				},
+				"title": {
+					"type": "string",
+					"value": "Stress test"
+				},
+				"width": {
+					"type": "int",
+					"value": "960"
+				}
+			},
+			"fields": {},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"note": "A very high frame cap: the frame rate shown is what the computer can do",
+			"outs": {},
+			"pos": [
+				208.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "window"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"note": "One object: 8 triangles",
+			"outs": {
+				"mesh": {
+					"use": false,
+					"var": "gem"
+				}
+			},
+			"pos": [
+				208.0,
+				208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "begin_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 6,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				352.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 7,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				512.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 8,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				672.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				832.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 10,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				992.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 11,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				1152.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 12,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				1312.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				},
+				"d": {
+					"type": "vector3",
+					"value": "0, 0, 1"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "1, 1, 1"
+				}
+			},
+			"fields": {
+				"kind": "Triangle"
+			},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				1472.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "add_mesh"
+		},
+		{
+			"args": {
+				"mesh": {
+					"var": "gem"
+				}
+			},
+			"fields": {
+				"shading": "Flat",
+				"sides": "One side"
+			},
+			"id": 14,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				1632.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "finish_mesh"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1000"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "count"
+			},
+			"id": 15,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy"
+				}
+			},
+			"pos": [
+				208.0,
+				1760.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"mode": "Set",
+				"name": "what"
+			},
+			"id": 16,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"copy": {
+					"use": false,
+					"var": "copy_2"
+				}
+			},
+			"pos": [
+				208.0,
+				1888.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "var"
+		},
+		{
+			"args": {},
+			"fields": {
+				"what": "Time"
+			},
+			"id": 17,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "t"
+				}
+			},
+			"pos": [
+				432.0,
+				2016.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_info"
+		},
+		{
+			"args": {},
+			"fields": {
+				"what": "FPS"
+			},
+			"id": 18,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "fps"
+				}
+			},
+			"pos": [
+				432.0,
+				2144.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_info"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "UP",
+				"when": "Pressed"
+			},
+			"id": 19,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kup"
+				}
+			},
+			"pos": [
+				432.0,
+				2272.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "DOWN",
+				"when": "Pressed"
+			},
+			"id": 20,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kdn"
+				}
+			},
+			"pos": [
+				432.0,
+				2400.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "SPACE",
+				"when": "Pressed"
+			},
+			"id": 21,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ksp"
+				}
+			},
+			"pos": [
+				432.0,
+				2528.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kup"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 22,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					23
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				2656.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "fmin(count + STEP, MOST)",
+				"type": "int"
+			},
+			"id": 23,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "count"
+				}
+			},
+			"pos": [
+				640.0,
+				2656.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kdn"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 24,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					25
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				2864.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "fmax(count - STEP, 0)",
+				"type": "int"
+			},
+			"id": 25,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "count"
+				}
+			},
+			"pos": [
+				640.0,
+				2864.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "ksp"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 26,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					27
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				3072.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "(what + 1) % 3",
+				"type": "int"
+			},
+			"id": 27,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "what"
+				}
+			},
+			"pos": [
+				640.0,
+				3072.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "ONE",
+				"when": "Pressed"
+			},
+			"id": 28,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kone"
+				}
+			},
+			"pos": [
+				432.0,
+				3280.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kone"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 29,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					30
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				3408.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"shading": "lit",
+				"what": "Shading"
+			},
+			"id": 30,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				3408.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "look"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "TWO",
+				"when": "Pressed"
+			},
+			"id": 31,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ktwo"
+				}
+			},
+			"pos": [
+				432.0,
+				3616.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "ktwo"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 32,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					33
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				3744.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"shading": "toon",
+				"what": "Shading"
+			},
+			"id": 33,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				3744.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "look"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "THREE",
+				"when": "Pressed"
+			},
+			"id": 34,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kthree"
+				}
+			},
+			"pos": [
+				432.0,
+				3952.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kthree"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 35,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					36
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				4080.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"shading": "unlit",
+				"what": "Shading"
+			},
+			"id": 36,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				4080.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "look"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "FOUR",
+				"when": "Pressed"
+			},
+			"id": 37,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kfour"
+				}
+			},
+			"pos": [
+				432.0,
+				4288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kfour"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 38,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					39
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				4416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"shading": "wire",
+				"what": "Shading"
+			},
+			"id": 39,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				4416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "look"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "FIVE",
+				"when": "Pressed"
+			},
+			"id": 40,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kfive"
+				}
+			},
+			"pos": [
+				432.0,
+				4624.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kfive"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 41,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					42
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				4752.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"splat": "off",
+				"what": "Splatting"
+			},
+			"id": 42,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				4752.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "look"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "SIX",
+				"when": "Pressed"
+			},
+			"id": 43,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ksix"
+				}
+			},
+			"pos": [
+				432.0,
+				4960.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "ksix"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 44,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					45
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				5088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"pixel": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"splat": "full",
+				"what": "Splatting"
+			},
+			"id": 45,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				5088.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "look"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "sin(t * 0.25) * 45.0",
+				"type": "float"
+			},
+			"id": 46,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "cx"
+				}
+			},
+			"pos": [
+				432.0,
+				5296.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "cos(t * 0.25) * 45.0",
+				"type": "float"
+			},
+			"id": 47,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "cz"
+				}
+			},
+			"pos": [
+				432.0,
+				5424.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"fov": {
+					"type": "float",
+					"value": "60"
+				},
+				"position": {
+					"type": "vector3",
+					"value": "cx, 26, cz"
+				},
+				"target": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				}
+			},
+			"fields": {
+				"projection": "Perspective"
+			},
+			"id": 48,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				5552.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "camera3d"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "#1b2838"
+				}
+			},
+			"fields": {},
+			"id": 49,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				5712.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "clear"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 50,
+			"links": {
+				"draw": [
+					51,
+					52
+				],
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				5840.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw3d"
+		},
+		{
+			"args": {
+				"at": {
+					"type": "vector3",
+					"value": "0, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#37474f"
+				},
+				"lines": {
+					"type": "int",
+					"value": "20"
+				},
+				"mesh": {
+					"var": ""
+				},
+				"size": {
+					"type": "vector3",
+					"value": "90, 1, 90"
+				},
+				"spacing": {
+					"type": "float",
+					"value": "1"
+				},
+				"to": {
+					"type": "vector3",
+					"value": "0, 2, 0"
+				},
+				"turn": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"shape": "Plane"
+			},
+			"id": 51,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				5840.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "shape3d"
+		},
+		{
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "0"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				},
+				"to": {
+					"var": "count"
+				}
+			},
+			"fields": {},
+			"id": 52,
+			"links": {
+				"done": [],
+				"loop": [
+					53,
+					54,
+					55,
+					56,
+					57,
+					58,
+					60,
+					62
+				]
+			},
+			"note": "Every object: its place on a grid, bobbing and turning",
+			"outs": {
+				"index": {
+					"use": false,
+					"var": "i"
+				}
+			},
+			"pos": [
+				640.0,
+				6016.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "for"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "(i % ACROSS - ACROSS / 2) * 1.6",
+				"type": "float"
+			},
+			"id": 53,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "gx"
+				}
+			},
+			"pos": [
+				864.0,
+				6016.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "(i / ACROSS - ACROSS / 2) * 1.6",
+				"type": "float"
+			},
+			"id": 54,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "gz"
+				}
+			},
+			"pos": [
+				864.0,
+				6144.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "sin(t * 2.0 + i * 0.37) * 1.5 + 2.0",
+				"type": "float"
+			},
+			"id": 55,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "gy"
+				}
+			},
+			"pos": [
+				864.0,
+				6272.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"var": "gx"
+				},
+				"y": {
+					"var": "gy"
+				},
+				"z": {
+					"var": "gz"
+				}
+			},
+			"fields": {
+				"op": "Make"
+			},
+			"id": 56,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "at"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				864.0,
+				6400.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "t * 90.0 + i * 7.0",
+				"type": "float"
+			},
+			"id": 57,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "spin"
+				}
+			},
+			"pos": [
+				864.0,
+				6528.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "what"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "=="
+			},
+			"id": 58,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					59
+				]
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				6656.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"at": {
+					"var": "at"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				},
+				"lines": {
+					"type": "int",
+					"value": "20"
+				},
+				"mesh": {
+					"var": "gem"
+				},
+				"size": {
+					"type": "vector3",
+					"value": "2"
+				},
+				"spacing": {
+					"type": "float",
+					"value": "1"
+				},
+				"to": {
+					"type": "vector3",
+					"value": "0, 2, 0"
+				},
+				"turn": {
+					"var": "spin"
+				}
+			},
+			"fields": {
+				"shape": "Mesh"
+			},
+			"id": 59,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				1072.0,
+				6656.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "shape3d"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "what"
+				},
+				"b": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"fields": {
+				"operator": "=="
+			},
+			"id": 60,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					61
+				]
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				6864.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"at": {
+					"var": "at"
+				},
+				"color": {
+					"type": "string",
+					"value": "#ffb300"
+				},
+				"lines": {
+					"type": "int",
+					"value": "20"
+				},
+				"mesh": {
+					"var": ""
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.7"
+				},
+				"spacing": {
+					"type": "float",
+					"value": "1"
+				},
+				"to": {
+					"type": "vector3",
+					"value": "0, 2, 0"
+				},
+				"turn": {
+					"var": "spin"
+				}
+			},
+			"fields": {
+				"shape": "Sphere"
+			},
+			"id": 61,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				1072.0,
+				6864.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "shape3d"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "what"
+				},
+				"b": {
+					"type": "int",
+					"value": "2"
+				}
+			},
+			"fields": {
+				"operator": "=="
+			},
+			"id": 62,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					63
+				]
+			},
+			"outs": {},
+			"pos": [
+				864.0,
+				7072.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"at": {
+					"var": "at"
+				},
+				"color": {
+					"type": "string",
+					"value": "#ef5350"
+				},
+				"lines": {
+					"type": "int",
+					"value": "20"
+				},
+				"mesh": {
+					"var": ""
+				},
+				"size": {
+					"type": "vector3",
+					"value": "0.6"
+				},
+				"spacing": {
+					"type": "float",
+					"value": "1"
+				},
+				"to": {
+					"type": "vector3",
+					"value": "0, 2, 0"
+				},
+				"turn": {
+					"var": "spin"
+				}
+			},
+			"fields": {
+				"shape": "Box"
+			},
+			"id": 63,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				1072.0,
+				7072.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "shape3d"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "count * (what == 0 ? 8 : (what == 1 ? 256 : 12))",
+				"type": "int"
+			},
+			"id": 64,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "tris"
+				}
+			},
+			"pos": [
+				432.0,
+				7280.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "fps"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"var": "count"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"var": "tris"
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "{} fps     {} objects     ~{} triangles",
+				"op": "Format"
+			},
+			"id": 65,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "hud"
+				}
+			},
+			"pos": [
+				432.0,
+				7408.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				},
+				"columns": {
+					"type": "int",
+					"value": "4"
+				},
+				"frame": {
+					"type": "int",
+					"value": "0"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "40"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"rows": {
+					"type": "int",
+					"value": "1"
+				},
+				"scale": {
+					"type": "float",
+					"value": "1"
+				},
+				"size": {
+					"type": "int",
+					"value": "28"
+				},
+				"text": {
+					"var": "hud"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "14"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "10"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Text"
+			},
+			"id": 66,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				7568.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "#b0bec5"
+				},
+				"columns": {
+					"type": "int",
+					"value": "4"
+				},
+				"frame": {
+					"type": "int",
+					"value": "0"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "40"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"rows": {
+					"type": "int",
+					"value": "1"
+				},
+				"scale": {
+					"type": "float",
+					"value": "1"
+				},
+				"size": {
+					"type": "int",
+					"value": "18"
+				},
+				"text": {
+					"type": "string",
+					"value": "UP / DOWN: more or fewer     SPACE: gem / sphere / box"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "14"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "46"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Text"
+			},
+			"id": 67,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				7728.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "#b0bec5"
+				},
+				"columns": {
+					"type": "int",
+					"value": "4"
+				},
+				"frame": {
+					"type": "int",
+					"value": "0"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "40"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"rows": {
+					"type": "int",
+					"value": "1"
+				},
+				"scale": {
+					"type": "float",
+					"value": "1"
+				},
+				"size": {
+					"type": "int",
+					"value": "18"
+				},
+				"text": {
+					"type": "string",
+					"value": "1-4: shading (lit, toon, unlit, wire)     5 / 6: splatting off / full"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "14"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "70"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Text"
+			},
+			"id": 68,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				7888.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 69,
+			"links": {
+				"done": [],
+				"frame": [
+					17,
+					18,
+					19,
+					20,
+					21,
+					22,
+					24,
+					26,
+					28,
+					29,
+					31,
+					32,
+					34,
+					35,
+					37,
+					38,
+					40,
+					41,
+					43,
+					44,
+					46,
+					47,
+					48,
+					49,
+					50,
+					64,
+					65,
+					66,
+					67,
+					68
+				]
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				2016.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_loop"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 70,
+			"links": {
+				"out": [
+					4,
+					5,
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					16,
+					69
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		}
+	],
+	"version": 4
+}

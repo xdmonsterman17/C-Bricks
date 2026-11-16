@@ -6,18 +6,25 @@
    surface, and the input queries (nothing is typed or released here). */
 int api_probe(void) {
     static int frame = 0;
-    static cb_mesh *m = NULL;
+    static cb_mesh *m = NULL, *shaded = NULL;
     frame++;
     if (!m) {
         m = cb_mesh_new();
         cb_mesh_triangle(m, cb_v3(-1, 0, 0), cb_v3(0, 0, 1), cb_v3(1, 0, 0), cb_color("ORANGE"));
         cb_mesh_finish(m, false, true, 0, 0);
+        /* per-vertex normals and texture coordinates: the corners' normals lean left, up and right (as given, not recomputed) */
+        shaded = cb_mesh_new();
+        cb_mesh_triangle_nuv(shaded, cb_v3(-1, 0, 0), cb_v3(0, 0, 1), cb_v3(1, 0, 0),
+                             cb_v3(-1, 0, 0), cb_v3(0, 1, 0), cb_v3(1, 0, 0),
+                             cb_v2(0, 0), cb_v2(0.5, 1), cb_v2(1, 0), cb_color("WHITE"));
+        cb_mesh_finish(shaded, true, true, 0, 0);
     }
     cb_clear(cb_color("SKYBLUE"));
     cb_camera(cb_v3(0, 3, 4), cb_v3(0, 0, 0), 60.0, false);
     cb_begin_3d();
     cb_draw_mesh_rot(m, cb_v3(0, 0, 0), cb_v3(1, 1, 1), cb_v3(90, 0, 0), cb_color("ORANGE"));
     cb_draw_mesh_rot(m, cb_v3(1.5, 0, 0), cb_v3(1, 1, 1), cb_v3(0, 45, 30), cb_color("GREEN"));
+    cb_draw_mesh(shaded, cb_v3(-1.5, 0, -1.5), cb_v3(1, 1, 1), 0, cb_color("WHITE"));
     cb_draw_line3d_biased(cb_v3(-1, 0, 0), cb_v3(1, 0, 0), cb_color("BLACK"));
     cb_end_3d();
     if (frame < 5)

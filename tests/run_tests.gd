@@ -176,6 +176,11 @@ func _init() -> void:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		_check_arrange()
+	if only.is_empty() or "cli" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_cli()
 	if only.is_empty() or "plugin_hooks" in only:
 		count += 1
 		_case_start = Time.get_ticks_msec()
@@ -618,6 +623,44 @@ func _check_arrange() -> void:
 		problems.append("the arranged project should still generate: %s" % str(after.errors).left(300))
 	TargetPlugins.remove_tree(dir)
 	_finish("arrange", problems, [])
+
+
+## `cbricks check --json` and `export` (scripts/cli.gd, run as a child Godot): a good project reports ok, a broken one
+## names its script / brick / message in the JSON and exits 1, export writes the standalone C project.
+func _check_cli() -> void:
+	var problems := []
+	var dir := ProjectSettings.globalize_path("user://cli_test")
+	var out := ProjectSettings.globalize_path("user://cli_test_export")
+	for d in [dir, out]:
+		if DirAccess.dir_exists_absolute(d):
+			TargetPlugins.remove_tree(d)
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/hello_world"), dir)
+	var run := func(args: Array) -> Dictionary:
+		var o := []
+		var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "-s", "res://scripts/cli.gd", "--"] + args, o, true)
+		var last: Dictionary = {}
+		for line in str(o[0]).split("\n"):
+			if line.begins_with("{"):
+				last = JSON.parse_string(line) if JSON.parse_string(line) is Dictionary else {}
+		return {"code": code, "json": last}
+	var good: Dictionary = run.call(["check", dir, "--json"])
+	if good.code != 0 or not good.json.get("ok", false):
+		problems.append("check --json on a good project: %s" % str(good))
+	var ex: Dictionary = run.call(["export", dir, out, "--json"])
+	if ex.code != 0 or not FileAccess.file_exists(out.path_join("Makefile")) or not DirAccess.dir_exists_absolute(out.path_join("src")):
+		problems.append("export didn't write the C project: %s" % str(ex))
+	var path := dir.path_join("main.cbricks")
+	var text := FileAccess.get_file_as_string(path).replace('"type": "print"', '"type": "no_such_brick"')
+	var fa := FileAccess.open(path, FileAccess.WRITE)
+	fa.store_string(text)
+	fa.close()
+	var bad: Dictionary = run.call(["check", dir, "--json"])
+	var probs: Array = bad.json.get("problems", [])
+	if bad.code != 1 or bad.json.get("ok", true) or probs.is_empty() or str(probs[0].get("script", "")) != "main.cbricks" or str(probs[0].get("msg", "")) == "":
+		problems.append("check --json on a broken project should exit 1 with the problem: %s" % str(bad).left(400))
+	for d in [dir, out]:
+		TargetPlugins.remove_tree(d)
+	_finish("cli", problems, [])
 
 
 ## Plugin hooks: found by target, never trusted unasked, trust is per script content, the run script's Run

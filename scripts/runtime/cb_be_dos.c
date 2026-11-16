@@ -2901,6 +2901,13 @@ static void cb_mesh_add(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, const Vecto
 }
 
 void cb_mesh_triangle(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, cb_rgba color) { cb_mesh_add(m, a, c, b, NULL, color); }   /* (a brick's A B C is clockwise: kept as A C B) */
+/* normals kept, texture coordinates ignored (this backend has no textured meshes) */
+void cb_mesh_triangle_nuv(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, Vector3 na, Vector3 nb, Vector3 nc, Vector2 ua, Vector2 ub, Vector2 uc, cb_rgba color) {
+    Vector3 n[3];
+    n[0] = na; n[1] = nc; n[2] = nb;
+    (void)ua; (void)ub; (void)uc;
+    cb_mesh_add(m, a, c, b, n, color);
+}
 void cb_mesh_quad(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, Vector3 d, cb_rgba color) { cb_mesh_triangle(m, a, b, c, color); cb_mesh_triangle(m, a, c, d, color); }
 
 void cb_mesh_shape(cb_mesh *m, int kind, Vector3 at, Vector3 size, cb_rgba color) {

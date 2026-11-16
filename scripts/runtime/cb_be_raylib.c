@@ -1167,7 +1167,7 @@ void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba colo
    Triangles are collected (Begin / Add), then built into a model (Finish).
    Corners are stored in OpenGL's order (counter-clockwise from the front):
    a brick's A B C (clockwise, Brickscript's way) is kept as A C B. */
-typedef struct cb_tri { Vector3 p[3]; Vector3 n[3]; Color c; int own; } cb_tri;
+typedef struct cb_tri { Vector3 p[3]; Vector3 n[3]; Vector2 uv[3]; Color c; int own; int has_uv; } cb_tri;
 struct cb_mesh { cb_list *tris; Model model; bool built; bool both; bool smooth; };
 
 cb_mesh *cb_mesh_new(void) {
@@ -1202,6 +1202,17 @@ static void cb_mesh_add(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, const Vecto
    brick's rule: (0,0,0) (1,0,0) (0,0,1) faces up). It is stored counter-clockwise (a, c, b). */
 void cb_mesh_triangle(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, cb_rgba color) {
     cb_mesh_add(m, a, c, b, NULL, RL(color));
+}
+
+/* With a normal and a texture coordinate at each corner (clockwise, like cb_mesh_triangle; stored a, c, b). */
+void cb_mesh_triangle_nuv(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, Vector3 na, Vector3 nb, Vector3 nc, Vector2 ua, Vector2 ub, Vector2 uc, cb_rgba color) {
+    Vector3 n[3];
+    cb_tri *t;
+    n[0] = na; n[1] = nc; n[2] = nb;
+    cb_mesh_add(m, a, c, b, n, RL(color));
+    t = (cb_tri *)m->tris->data + (m->tris->count - 1);
+    t->uv[0] = ua; t->uv[1] = uc; t->uv[2] = ub;
+    t->has_uv = 1;
 }
 
 void cb_mesh_quad(cb_mesh *m, Vector3 a, Vector3 b, Vector3 c, Vector3 d, cb_rgba color) {
@@ -1284,7 +1295,7 @@ static void cb_mesh_normals(Mesh *g, bool skip_own, const cb_list *tris) {
 static void cb_put_vertex(Mesh *g, int v, const cb_tri *t, int k) {
     g->vertices[v * 3] = t->p[k].x; g->vertices[v * 3 + 1] = t->p[k].y; g->vertices[v * 3 + 2] = t->p[k].z;
     g->normals[v * 3] = t->n[k].x; g->normals[v * 3 + 1] = t->n[k].y; g->normals[v * 3 + 2] = t->n[k].z;
-    g->texcoords[v * 2] = t->p[k].x; g->texcoords[v * 2 + 1] = t->p[k].z;
+    g->texcoords[v * 2] = t->has_uv ? t->uv[k].x : t->p[k].x; g->texcoords[v * 2 + 1] = t->has_uv ? t->uv[k].y : t->p[k].z;
     g->colors[v * 4] = t->c.r; g->colors[v * 4 + 1] = t->c.g; g->colors[v * 4 + 2] = t->c.b; g->colors[v * 4 + 3] = t->c.a;
 }
 

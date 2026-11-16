@@ -56,6 +56,7 @@ void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba colo
 cb_mesh *cb_mesh_new(void) { return (cb_mesh *)cb_alloc(sizeof(cb_mesh)); }
 cb_mesh *cb_mesh_begin(cb_mesh *mesh) { if (!mesh) mesh = cb_mesh_new(); mesh->triangles = 0; return mesh; }
 void cb_mesh_triangle(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, cb_rgba color) { (void)a; (void)b; (void)c; (void)color; mesh->triangles++; }
+void cb_mesh_triangle_nuv(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, Vector3 na, Vector3 nb, Vector3 nc, Vector2 ua, Vector2 ub, Vector2 uc, cb_rgba color) { (void)a; (void)b; (void)c; (void)na; (void)nb; (void)nc; (void)ua; (void)ub; (void)uc; (void)color; mesh->triangles++; }
 void cb_mesh_quad(cb_mesh *mesh, Vector3 a, Vector3 b, Vector3 c, Vector3 d, cb_rgba color) { (void)a; (void)b; (void)c; (void)d; (void)color; mesh->triangles += 2; }
 void cb_mesh_shape(cb_mesh *mesh, int kind, Vector3 at, Vector3 size, cb_rgba color) { (void)kind; (void)at; (void)size; (void)color; mesh->triangles++; }
 void cb_mesh_finish(cb_mesh *mesh, bool smooth, bool both_sides, int file, int brick) { (void)mesh; (void)smooth; (void)both_sides; (void)file; (void)brick; }

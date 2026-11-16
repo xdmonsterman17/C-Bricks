@@ -134,7 +134,7 @@ var _scene_hist := {}
 const EXAMPLE_SCRATCH := "user://example"
 ## The start page's example groups (an example with Target MS-DOS goes under MS-DOS).
 const EXAMPLE_GROUP_ORDER := ["Text programs", "2D and 3D graphics", "Networking", "MS-DOS"]
-const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
+const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "stress_test": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
 const NEW_HINT := "Makes a folder with project.cbproj and assets/ (no scripts yet: add nodes to the Main scene; running it runs that scene)."
 var _saving_example := false
 var _progress_dialog: AcceptDialog = null
