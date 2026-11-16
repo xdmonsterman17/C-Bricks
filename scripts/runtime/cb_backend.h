@@ -20,6 +20,7 @@
  *   backend is finished. Groups:
  *     CB_BE_HAVE_2D_EXTRA    rounded rectangles, vertical gradient, the 2D camera
  *     CB_BE_HAVE_TEXTURES    textures
+ *     CB_BE_HAVE_FONTS       fonts loaded from a file (without: the default font draws)
  *     CB_BE_HAVE_SOUND       sounds and music
  *     CB_BE_HAVE_3D          the 3D view, transforms, 3D lines, shapes, meshes, lights, fog
  *     CB_BE_HAVE_LOOK        post effects, shading / splat settings (needs 3D to matter)
@@ -81,6 +82,12 @@ void cb_be_end_2d(void);
 /* ======== CB_BE_HAVE_TEXTURES ======== */
 cb_texture cb_be_texture_load(const char *path);   /* PNG; id 0 when it can't be read */
 void cb_be_texture(cb_texture t, cb_rect src, cb_rect dst, Vector2 origin, double rotation, cb_rgba tint);
+
+/* ======== CB_BE_HAVE_FONTS ======== */
+cb_font cb_be_font_load(const char *path, int size);   /* TTF / OTF rasterized at size pixels; id 0 when it can't be read */
+void cb_be_text_font(cb_font f, const char *text, Vector2 at, Vector2 origin, double rotation, double size, cb_rgba c);
+Vector2 cb_be_text_size_font(cb_font f, const char *text, double size);   /* id 0 = the default font */
+void cb_be_fonts_forget_all(void);                     /* before the window closes */
 
 /* ======== CB_BE_HAVE_SOUND ======== */
 cb_sound cb_be_sound_load(const char *path);

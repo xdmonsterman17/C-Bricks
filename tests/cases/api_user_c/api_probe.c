@@ -23,6 +23,17 @@ int api_probe(void) {
     if (frame < 5)
         return 0;
     printf("released %d, typed %d\n", cb_mouse_released(CB_MOUSE_LEFT) ? 1 : 0, cb_char_typed());
+    {   /* fonts: a missing file gives id 0 and the default font; a real TTF (if this computer has one) loads */
+        const char *ttf = "/usr/share/fonts/truetype/freefont/FreeSans.ttf";
+        FILE *probe = fopen(ttf, "rb");
+        cb_font none = cb_load_font("no-such-font.ttf", 20);
+        cb_font real = probe ? cb_load_font(ttf, 24) : none;
+        if (probe)
+            fclose(probe);
+        cb_draw_text_font(real, "Font call", 10, 10, 24, cb_color("BLACK"));
+        printf("font missing %d, same width %d, real %d\n", none.id,
+               cb_text_width_font(none, "abc", 20) > 0 ? 1 : 0, (!probe || real.id > 0) ? 1 : 0);
+    }
     printf("shot %d\n", cb_screenshot("api.png") ? 1 : 0);
     return 1;
 }

@@ -16,6 +16,15 @@ void cb_be_texture(cb_texture t, cb_rect src, cb_rect dst, Vector2 origin, doubl
 }
 #endif
 
+#ifndef CB_BE_HAVE_FONTS
+cb_font cb_be_font_load(const char *path, int size) { cb_font f; (void)path; (void)size; f.id = 0; return f; }
+void cb_be_text_font(cb_font f, const char *text, Vector2 at, Vector2 origin, double rotation, double size, cb_rgba c) {
+    (void)f; cb_be_text(text, at, origin, rotation, size, c);
+}
+Vector2 cb_be_text_size_font(cb_font f, const char *text, double size) { (void)f; return cb_be_text_size(text, size); }
+void cb_be_fonts_forget_all(void) {}
+#endif
+
 #ifndef CB_BE_HAVE_SOUND
 cb_sound cb_be_sound_load(const char *path) { cb_sound s; (void)path; s.id = 0; s.frames = 0; return s; }
 void cb_be_sound_play(cb_sound s) { (void)s; }

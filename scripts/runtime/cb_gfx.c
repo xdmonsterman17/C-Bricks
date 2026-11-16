@@ -89,6 +89,14 @@ void cb_draw_texture(cb_texture t, int x, int y, cb_rgba tint) {
 }
 
 cb_texture cb_load_texture(const char *path) { return cb_be_texture_load(path); }
+
+cb_font cb_load_font(const char *path, int size) { return cb_be_font_load(path, size < 6 ? 6 : size); }
+void cb_draw_text_font(cb_font font, const char *text, int x, int y, int size, cb_rgba c) {
+    cb_be_text_font(font, text, cb_v2(x, y), cb_v2(0, 0), 0, size < 10 ? 10 : size, c);
+}
+int cb_text_width_font(cb_font font, const char *text, int size) {
+    return (int)(cb_be_text_size_font(font, text, size < 10 ? 10 : size).x + 0.5);
+}
 cb_sound cb_sound_load(const char *path) { return cb_be_sound_load(path); }
 void cb_sound_play(cb_sound s) { cb_be_sound_play(s); }
 cb_music cb_music_load(const char *path, bool loop) { return cb_be_music_load(path, loop); }

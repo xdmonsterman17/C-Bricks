@@ -541,6 +541,23 @@ static func tidy(graph: Dictionary, sizes: Dictionary) -> void:
 			st.y += (sizes.get(int(n.id), Vector2(176, 64)) as Vector2).y + gap.y
 
 
+## Brick sizes without a window (2026-11-16: headless Arrange, `cbricks arrange`): a width by the longest of the
+## title and the summary lines, a height by the rows (inputs, results, settings). Close to the real ones, not
+## exact: the editor's Arrange (real sizes) can tighten it later.
+static func estimate_sizes(graph: Dictionary) -> Dictionary:
+	var sizes := {}
+	for n in graph.nodes:
+		var def: Dictionary = T.DEFS.get(n.type, {})
+		var rows: int = (def.get("args", []) as Array).size() + (def.get("outs", []) as Array).size() + ((def.get("fields", []) as Array).size() + 1) / 2
+		sizes[int(n.id)] = Vector2(maxf(176.0, 9.0 * T.title_of(str(n.type), n.get("fields", {})).length() + 60.0), 44.0 + 22.0 * rows)
+	return sizes
+
+
+## Lays a graph out (every chain of events and functions in a column) with estimated sizes.
+static func tidy_estimated(graph: Dictionary) -> void:
+	tidy(graph, estimate_sizes(graph))
+
+
 # ------------------------------------------------------------------ frames
 
 static func add_frame(graph: Dictionary, at: Vector2, ids: Array = []) -> Dictionary:

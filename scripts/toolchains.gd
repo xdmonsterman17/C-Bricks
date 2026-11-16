@@ -408,6 +408,8 @@ static func resolve_command(id: String) -> String:
 
 static func resolve_runner(id: String) -> String:
 	var t := target(id)
+	if not TargetPlugins.hook_for_target(id, "run").is_empty():
+		return "@hook"
 	if id == "dos":
 		return "@dosbox" if find_program("dosbox-x") != "" or find_program("dosbox") != "" else ""
 	for r in t.run:

@@ -2,14 +2,15 @@ extends SceneTree
 ## Headless commands for `cbricks` (no window): build a project, list its problems.
 ##   godot --headless --path <C-Bricks> -s res://scripts/cli.gd -- build DIR [strict]
 ##   godot --headless --path <C-Bricks> -s res://scripts/cli.gd -- check DIR
+##   godot --headless --path <C-Bricks> -s res://scripts/cli.gd -- arrange DIR [script.cbricks ...]
 ## `build`: graph -> C (ProjectBuild) -> native program in DIR/.build/native/<program name>.
 ## `check`: only the graph -> C step: prints warnings and problems.
 ## Exit code: 0 ok, 1 problems / didn't compile, 2 bad arguments. Writes only inside DIR/.build/.
 
 func _init() -> void:
 	var args := OS.get_cmdline_user_args()
-	if args.size() < 2 or not args[0] in ["build", "check"]:
-		printerr("usage: -- build|check <project dir> [strict]")
+	if args.size() < 2 or not args[0] in ["build", "check", "arrange"]:
+		printerr("usage: -- build|check|arrange <project dir> [strict | script paths]")
 		quit(2)
 		return
 	var dir := args[1].simplify_path()
@@ -18,6 +19,25 @@ func _init() -> void:
 	if not CBProject.is_project(dir):
 		printerr("not a C-Bricks project (no project.cbproj): %s" % dir)
 		quit(2)
+		return
+	if args[0] == "arrange":  # lay the scripts out (all, or the ones named: paths relative to DIR) with estimated sizes
+		var names := PackedStringArray(args.slice(2))
+		var done := 0
+		for path in CBProject.list_scripts(dir):
+			if not names.is_empty() and not CBProject.rel_path(dir, path) in names:
+				continue
+			var g := CBProject.read_script(path)
+			if g.is_empty():
+				printerr("not a script: ", path)
+				continue
+			Ops.tidy_estimated(g)
+			if CBProject.write_script(path, g) != OK:
+				printerr("couldn't write ", path)
+				quit(1)
+				return
+			print("arranged ", CBProject.rel_path(dir, path))
+			done += 1
+		quit(0 if done > 0 else 1)
 		return
 	var r: Dictionary = ProjectBuild.generate(dir)
 	for w in r.warnings:

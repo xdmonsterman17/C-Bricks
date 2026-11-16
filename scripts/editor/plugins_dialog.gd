@@ -195,7 +195,7 @@ func _show_detail() -> void:
 		bits.append("%d setting(s): Settings... (global) or Project Settings > Plugins." % Array(p.settings).size())
 	bits.append("Adds the target \"%s\"." % p.target.name if not p.target.is_empty() else "Adds a backend only (for targets that already exist).")
 	if not p.hooks.is_empty():
-		bits.append("Runs its own scripts (%s): trusted code, asked about when you add it to a project." % ", ".join(PackedStringArray(p.hooks.keys())))
+		bits.append("Runs its own scripts (%s): trusted code, asked about when you add it to a project and again before a script first runs." % ", ".join(PackedStringArray(p.hooks.keys())))
 	var users := Array(TargetPlugins.usage(_recent.call()).get(id, []))
 	if not users.is_empty():
 		bits.append("Used by: " + ", ".join(PackedStringArray(users.map(func(d): return CBProject.project_name(str(d))))))

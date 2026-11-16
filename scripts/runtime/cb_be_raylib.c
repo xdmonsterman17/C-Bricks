@@ -10,6 +10,7 @@
 /* the optional groups of cb_backend.h this backend implements */
 #define CB_BE_HAVE_2D_EXTRA 1
 #define CB_BE_HAVE_TEXTURES 1
+#define CB_BE_HAVE_FONTS 1
 #define CB_BE_HAVE_SOUND 1
 #define CB_BE_HAVE_3D 1
 #define CB_BE_HAVE_LOOK 1
@@ -127,6 +128,7 @@ bool cb_be_open(int width, int height, const char *title, int fps, bool esc_clos
 }
 
 void cb_be_close(void) {
+    cb_be_fonts_forget_all();
     cb_be_music_forget_all();
     CloseAudioDevice();
     CloseWindow();
@@ -362,6 +364,50 @@ void cb_be_texture(cb_texture t, cb_rect src, cb_rect dst, Vector2 origin, doubl
     if (t.id <= 0 || t.id > cb_tex_n)
         return;
     DrawTexturePro(cb_texs[t.id - 1], RR(src), RR(dst), origin, (float)rotation, RL(tint));
+}
+
+/* ---- fonts: handles (cb_font.id) to raylib's; Latin-1 glyphs, bilinear; unloaded before the window closes
+   (UnloadFont after CloseWindow crashes) ---- */
+static Font *cb_fonts = NULL;
+static int cb_font_n = 0;
+
+cb_font cb_be_font_load(const char *path, int size) {
+    cb_font h;
+    int cps[224], i;
+    Font f;
+    h.id = 0;
+    if (!FileExists(path))
+        return h;
+    for (i = 0; i < 224; i++)
+        cps[i] = 32 + i;
+    f = LoadFontEx(path, size, cps, 224);
+    if (f.texture.id == 0 || f.texture.id == GetFontDefault().texture.id)
+        return h;
+    SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
+    cb_fonts = (Font *)realloc((void *)cb_fonts, sizeof(Font) * (size_t)(cb_font_n + 1));
+    if (!cb_fonts) { fputs("out of memory\n", stderr); exit(3); }
+    cb_fonts[cb_font_n++] = f;
+    h.id = cb_font_n;
+    return h;
+}
+
+static Font cb_font_of(cb_font f) { return f.id > 0 && f.id <= cb_font_n ? cb_fonts[f.id - 1] : GetFontDefault(); }
+
+void cb_be_text_font(cb_font f, const char *text, Vector2 at, Vector2 origin, double rotation, double size, cb_rgba c) {
+    DrawTextPro(cb_font_of(f), text, at, origin, (float)rotation, (float)size, (float)size / 10, RL(c));
+}
+
+Vector2 cb_be_text_size_font(cb_font f, const char *text, double size) {
+    return MeasureTextEx(cb_font_of(f), text, (float)size, (float)size / 10);
+}
+
+void cb_be_fonts_forget_all(void) {
+    int i;
+    for (i = 0; i < cb_font_n; i++)
+        UnloadFont(cb_fonts[i]);
+    free((void *)cb_fonts);
+    cb_fonts = NULL;
+    cb_font_n = 0;
 }
 
 /* ---- sounds ---- */

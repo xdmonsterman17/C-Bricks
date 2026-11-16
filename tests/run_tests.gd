@@ -171,6 +171,16 @@ func _init() -> void:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		_check_plugin_build()
+	if only.is_empty() or "arrange" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_arrange()
+	if only.is_empty() or "plugin_hooks" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_plugin_hooks()
 	if only.is_empty() or "plugin_library" in only:
 		count += 1
 		_case_start = Time.get_ticks_msec()
@@ -578,6 +588,93 @@ func _check_plugin_build() -> void:
 	TargetPlugins.use_project("")
 	TargetPlugins.remove_tree(dir)
 	_finish("plugin_build", problems, [])
+
+
+## Headless Arrange (`cbricks arrange`): every script of an example is laid out with estimated sizes: bricks keep their
+## wiring, no two overlap, and the program is the same C.
+func _check_arrange() -> void:
+	var problems := []
+	var dir := ProjectSettings.globalize_path("user://arrange_test")
+	if DirAccess.dir_exists_absolute(dir):
+		TargetPlugins.remove_tree(dir)
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/gem_collector"), dir)
+	var before := ProjectBuild.generate(dir)
+	for path in CBProject.list_scripts(dir):
+		var g := CBProject.read_script(path)
+		var links := JSON.stringify(g.nodes.map(func(n): return n.get("links", {})))
+		Ops.tidy_estimated(g)
+		if JSON.stringify(g.nodes.map(func(n): return n.get("links", {}))) != links:
+			problems.append("%s: arranging changed the wiring" % path.get_file())
+		var sizes := Ops.estimate_sizes(g)
+		var rects: Array = g.nodes.map(func(n): return Rect2(Vector2(n.pos[0], n.pos[1]), sizes[int(n.id)]))
+		for i in rects.size():
+			for j in range(i + 1, rects.size()):
+				if rects[i].intersects(rects[j]):
+					problems.append("%s: bricks %d and %d overlap after Arrange" % [path.get_file(), int(g.nodes[i].id), int(g.nodes[j].id)])
+					break
+		CBProject.write_script(path, g)
+	var after := ProjectBuild.generate(dir)
+	if not after.errors.is_empty() or before.files.get("main.c", "") == "":
+		problems.append("the arranged project should still generate: %s" % str(after.errors).left(300))
+	TargetPlugins.remove_tree(dir)
+	_finish("arrange", problems, [])
+
+
+## Plugin hooks: found by target, never trusted unasked, trust is per script content, the run script's Run
+## replaces the target's runner, a script runs with the arguments it is promised and its exit code is reported.
+func _check_plugin_hooks() -> void:
+	var problems := []
+	var dir := ProjectSettings.globalize_path("user://plugin_hooks_test")
+	if DirAccess.dir_exists_absolute(dir):
+		TargetPlugins.remove_tree(dir)
+	var kit := dir.path_join("kit")
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://plugin_examples/null-terminal"), kit)
+	var cfg := FileAccess.get_file_as_string(kit.path_join("target.cfg")) + "\n[hooks]\nrun=\"run.sh\"\npackage=\"scripts/package.sh\"\n"
+	var fa := FileAccess.open(kit.path_join("target.cfg"), FileAccess.WRITE)
+	fa.store_string(cfg)
+	fa.close()
+	DirAccess.make_dir_recursive_absolute(kit.path_join("scripts"))
+	var write := func(rel: String, text: String) -> void:
+		var f := FileAccess.open(kit.path_join(rel), FileAccess.WRITE)
+		f.store_string(text)
+		f.close()
+	write.call("run.sh", "echo \"run $1 $2 $3\"\n")
+	write.call("scripts/package.sh", "echo \"package $3\"\nexit 7\n")
+	var keep_trust := TargetPlugins.trust_file
+	TargetPlugins.trust_file = "user://plugin_hooks_trust.cfg"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(TargetPlugins.trust_file))
+	var r := TargetPlugins.load_dir(kit)
+	if not r.ok or r.plugin.hooks.get("run", "") != "run.sh" or r.plugin.hooks.get("package", "") != "scripts/package.sh":
+		problems.append("the manifest's [hooks] should parse: %s" % str(r))
+	else:
+		TargetPlugins.register(r.plugin)
+		var run := TargetPlugins.hook_for_target("null-terminal", "run")
+		var pack := TargetPlugins.hook_for_target("null-terminal", "package")
+		if run.is_empty() or pack.is_empty() or not TargetPlugins.hook_for_target("native", "run").is_empty():
+			problems.append("hook_for_target: the plugin's target has both hooks, native has none")
+		elif Toolchains.resolve_runner("null-terminal") != "@hook":
+			problems.append("a run hook should be the target's runner (got '%s')" % Toolchains.resolve_runner("null-terminal"))
+		else:
+			if TargetPlugins.hook_trusted(run):
+				problems.append("a hook must not be trusted before the user says so")
+			TargetPlugins.trust_hook(run)
+			if not TargetPlugins.hook_trusted(run) or TargetPlugins.hook_trusted(pack):
+				problems.append("trusting the run script trusts it (and not the package script)")
+			var res := TargetPlugins.run_hook(run, TargetPlugins.hook_args("prog", "proj", PackedStringArray(["--x"])))
+			if not res.ok or str(res.output).strip_edges() != "run prog proj --x":
+				problems.append("the run script is told PROGRAM PROJECT_DIR args: %s" % str(res))
+			var res2 := TargetPlugins.run_hook(pack, TargetPlugins.hook_args("prog", "proj", PackedStringArray(["out"])))
+			if res2.ok or res2.exit != 7 or str(res2.output).strip_edges() != "package out":
+				problems.append("the package script gets OUT_DIR third and its exit code (7) is reported: %s" % str(res2))
+			write.call("run.sh", "echo changed\n")
+			if TargetPlugins.hook_trusted(TargetPlugins.hook_for_target("null-terminal", "run")):
+				problems.append("an edited script must be asked about again")
+			TargetPlugins.untrust_hook(run)
+		TargetPlugins.unregister("null-terminal")
+	TargetPlugins.trust_file = keep_trust
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://plugin_hooks_trust.cfg"))
+	TargetPlugins.remove_tree(dir)
+	_finish("plugin_hooks", problems, [])
 
 
 ## The plugin library (Manage plugins): install, usage by projects, an update flag when the library's copy differs,

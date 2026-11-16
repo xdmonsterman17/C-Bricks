@@ -18,6 +18,7 @@ const Inspector = preload("res://scripts/editor/inspector.gd")
 const ProjectDock = preload("res://scripts/editor/project_dock.gd")
 const PluginSettingsUI = preload("res://scripts/editor/plugin_settings_ui.gd")
 const BrickTheme = preload("res://scripts/editor/brick_theme.gd")
+const CodeEditor = preload("res://scripts/editor/code_editor.gd")
 const BrickView = preload("res://scripts/editor/brick_view.gd")
 const T = preload("res://scripts/node_defs.gd")
 
@@ -45,6 +46,10 @@ var _recent: PackedStringArray = []
 var _show_dos := false
 var _dos_open := false  # the open project targets MS-DOS: shown while it's open, without changing the setting
 var _thread: Thread = null
+var _export_menu: MenuButton = null
+var _code: CodeEditor = null            # the Code screen: the project's own C / text files
+var _hook_dialog: ConfirmationDialog = null
+var _package_after := false   ## Export > Package: the build that just started is followed by the plugin's package script
 var _proc: Dictionary = {}
 var _stderr_tail: String = ""
 var _trace_re := RegEx.create_from_string(TRACE_LINE)
@@ -90,7 +95,7 @@ const SCREEN_INFO := {
 	"2D": ["2D", "file_image", "The game window and its Labels (2D)"],
 	"3D": ["3D", "file_mesh", "The world in 3D: select and move its objects"],
 	"Script": ["Bricks", "script", "The scripts' bricks (C-Bricks' visual scripting)"],
-	"Code": ["Code", "code", "The script as C code (placeholder: not built yet)"],
+	"Code": ["Code", "code", "The project's own C and text files (double-click one in the FileSystem dock)"],
 }
 var _screen := "Script"               # the main screen showing (saved)
 var _view_3d: WorldView3D = null
@@ -215,7 +220,7 @@ func _ready() -> void:
 	_dock = ProjectDock.new()
 	_dock.context = context
 	_dock.size_flags_vertical = SIZE_EXPAND_FILL
-	_dock.script_activated.connect(open_script)
+	_dock.script_activated.connect(open_path)
 	_dock.path_changed.connect(_on_path_changed)
 	_dock.changed.connect(func() -> void:
 		_recompile()
@@ -347,14 +352,12 @@ func _ready() -> void:
 	var frame_2d := _framed(_view_2d, 1)
 	frame_2d.set_anchors_preset(PRESET_FULL_RECT)
 	screens.add_child(frame_2d)
-	var code_frame := PanelContainer.new()  # placeholder for the code editor
+	_code = CodeEditor.new()
+	_code.make_highlighter = _c_highlighter
+	_code.font = Inspector._mono()
+	_code.saved.connect(func(_p: String) -> void: _recompile())
+	var code_frame := _framed(_code, 1)
 	code_frame.set_anchors_preset(PRESET_FULL_RECT)
-	var code_note := Label.new()
-	code_note.text = "Code view: coming soon"
-	code_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	code_note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	code_note.add_theme_color_override(&"font_color", BrickTheme.LOCAL_COLOR)
-	code_frame.add_child(code_note)
 	screens.add_child(code_frame)
 	_screens = {"Script": center, "3D": frame_3d, "2D": frame_2d, "Code": code_frame}
 	switch_screen(_screen)
@@ -464,6 +467,8 @@ func close_project() -> void:
 		t.undo.free()
 	_tabs.clear()
 	_cur = -1
+	if _code != null:
+		_code.close_all()
 	if _tab_bar != null:
 		_tab_bar.clear_tabs()
 	context.graph = {}
@@ -522,6 +527,20 @@ static func _remove_tree(path: String) -> void:
 
 
 # ======================================================================= scripts (tabs)
+
+## A file chosen in the FileSystem dock: scripts and scenes as before, C / text files in the Code screen.
+func open_path(path: String) -> void:
+	if CodeEditor.is_text_file(path) and path.get_extension().to_lower() != CBProject.SCRIPT_EXT:
+		open_code(path)
+	else:
+		open_script(path)
+
+
+func open_code(path: String, line := 0) -> void:
+	_code.project_dir = project_dir
+	switch_screen("Code")
+	_code.open_file(path, line)
+
 
 func open_script(path: String) -> void:
 	if path.get_file() == CBProject.WORLD_FILE or path.get_extension() == CBProject.SCENE_EXT:
@@ -601,6 +620,10 @@ func save() -> void:
 		save_all()
 		_ask_save_example()
 		return
+	if _screen == "Code" and _code != null and _code.current_path() != "":
+		_code.save_all()
+		_set_status("status_success", "Saved %s" % _code.current_path().get_file())
+		return
 	if has_graph():
 		_save_tab(_tab())
 		_set_status("status_success", "Saved %s" % _tab().path.get_file())
@@ -608,6 +631,8 @@ func save() -> void:
 
 
 func save_all() -> void:
+	if _code != null:
+		_code.save_all()
 	for t in _tabs:
 		if t.dirty:
 			_save_tab(t)
@@ -654,6 +679,7 @@ func _on_script_object_renamed(o: Dictionary) -> void:
 
 
 func _on_path_changed(from: String, to: String) -> void:
+	_code.path_changed(from, to)
 	for i in range(_tabs.size() - 1, -1, -1):
 		var p: String = _tabs[i].path
 		if p == from or p.begins_with(from + "/"):
@@ -816,7 +842,7 @@ func _recompile() -> void:
 	_problems.create_item()
 	var count_errors := 0
 	for p in _compile_problems:
-		_add_problem("status_error" if p.kind == "error" else "status_warning", p.msg, p.script, p.node)
+		_add_problem("status_error" if p.kind == "error" else "status_warning", p.msg, p.script, p.node, 0, str(p.get("file", "")), int(p.get("line", 0)))
 	for e in _build.errors + _target_problems:
 		_add_problem("status_error", _where(e.script) + e.msg if not str(e.script).ends_with(CBProject.SCENE_EXT) else e.msg, e.script, e.node, int(e.get("world_id", 0)))
 		count_errors += 1
@@ -845,13 +871,13 @@ func _where(script: String) -> String:
 
 
 ## One problem: a row of the Problems list (a Tree, so long problems wrap).
-func _add_problem(icon_name: String, text: String, script: String, node_id: int, world_id := 0) -> void:
+func _add_problem(icon_name: String, text: String, script: String, node_id: int, world_id := 0, file := "", line := 0) -> void:
 	var it := _problems.create_item(_problems.get_root())
 	it.set_text(0, text)
 	it.set_icon(0, context.brick_theme.icon(icon_name))
 	it.set_autowrap_mode(0, TextServer.AUTOWRAP_WORD_SMART)
-	it.set_metadata(0, [script, node_id, world_id])
-	it.set_tooltip_text(0, "Click to show the brick." if node_id > 0 else "")
+	it.set_metadata(0, [script, node_id, world_id, file, line])
+	it.set_tooltip_text(0, "Click to show the brick." if node_id > 0 else ("Click to show the line in the Code screen." if file != "" else ""))
 
 
 ## The text of the index-th problem ("" if there's none).
@@ -866,6 +892,9 @@ func _on_problem_selected(index: int = -1) -> void:
 	if it == null or not it.get_metadata(0) is Array:
 		return
 	var m: Array = it.get_metadata(0)
+	if m.size() > 4 and str(m[3]) != "":
+		open_code(str(m[3]), int(m[4]))
+		return
 	if m[0] == "":
 		return
 	if str(m[0]).get_extension() in [CBProject.SCENE_EXT, "cnworld"]:
@@ -1036,6 +1065,8 @@ func build(run: bool) -> void:
 func _on_built(id: String, r: Dictionary, run: bool) -> void:
 	_join_thread()
 	_set_busy(false)
+	var pack := _package_after
+	_package_after = false
 	if r.command != "":
 		_console.push_color(Color(0.6, 0.6, 0.7)); _console.add_text("$ " + r.command + "\n"); _console.pop()
 	if r.output.strip_edges() != "":
@@ -1052,6 +1083,8 @@ func _on_built(id: String, r: Dictionary, run: bool) -> void:
 	_set_status("status_success", "Built %s" % r.out.get_file())
 	if run:
 		_run(id, r.out)
+	elif pack:
+		_package(id, r.out)
 
 
 ## A C compiler's "scripts__util.c:12:5: error: ..." lines, put on their bricks.
@@ -1063,12 +1096,21 @@ func _map_compiler_output(output: String) -> void:
 	for t in _tabs:
 		t.errors.clear()
 	var re := RegEx.create_from_string(ERROR_LINE)
+	var code_marks := {}
 	for m in re.search_all(output):
 		var cfile := m.get_string(1)
 		var line := m.get_string(2).to_int()
 		var kind := m.get_string(4)
 		var msg := m.get_string(5).strip_edges()
 		var script: String = by_c.get(cfile, "")
+		if script == "":  # the project's own C: the Code screen's line
+			var own := _user_c_path(cfile)
+			if own != "":
+				if not code_marks.has(own):
+					code_marks[own] = []
+				code_marks[own].append({"line": line, "kind": kind, "msg": msg})
+				_compile_problems.append({"script": "", "node": 0, "file": own, "line": line, "msg": "C compiler %s in %s line %d: %s" % [kind, CBProject.rel_path(project_dir, own), line, msg], "kind": kind})
+				continue
 		var id := CodeGen.brick_of_line(_build.files.get(cfile, ""), line)
 		var where := "%s line %d" % [cfile, line]
 		if script != "":
@@ -1084,8 +1126,18 @@ func _map_compiler_output(output: String) -> void:
 			if not n.is_empty():
 				where = "%s, %s (node %d)" % [CBProject.rel_path(project_dir, script), T.title_of(n.type, n.fields), id]
 		_compile_problems.append({"script": script, "node": id, "msg": "C compiler %s in %s: %s" % [kind, where, msg], "kind": kind})
+	if _code != null:
+		_code.set_problems(code_marks)
 	_recompile()
 	_queue_redraw(Context.Redraw.CANVAS)
+
+
+## The project's own .c / .h that the compiler named by its file name (files are built by name): absolute path or "".
+func _user_c_path(file_name: String) -> String:
+	for rel in _build.get("user_c", []):
+		if str(rel).get_file() == file_name:
+			return project_dir.path_join(str(rel))
+	return ""
 
 
 ## The project's C for a target (its graphics backend differs: raylib, or MS-DOS's own), as
@@ -1181,6 +1233,16 @@ func _run(id: String, out: String) -> void:
 	if runner == "":
 		_log_info("Built for another platform: copy %s (and the project's assets) to a %s machine to run it." % [out.get_file(), Toolchains.target(id).name])
 		return
+	if runner == "@hook":  # the plugin's own run script (asked about first, then streamed like a program)
+		var h := TargetPlugins.hook_for_target(id, "run")
+		_with_hook_trust(h, func() -> void:
+			var run_args := _run_args()
+			var c := TargetPlugins.hook_argv(h, TargetPlugins.hook_args(ProjectSettings.globalize_path(out), ProjectSettings.globalize_path(project_dir), run_args))
+			if str(c.prog) == "":
+				_log_error("Can't start %s: its interpreter isn't installed." % str(h.path).get_file())
+				return
+			_start_run(str(c.prog), c.argv, out, run_args))
+		return
 	if runner.begins_with("@open"):
 		OS.shell_open(out)
 		_log_info("Opened in your browser.")
@@ -1200,6 +1262,11 @@ func _run(id: String, out: String) -> void:
 	argv.remove_at(0)
 	var run_args := _run_args()
 	argv.append_array(run_args)
+	_start_run(prog, argv, out, run_args)
+
+
+## Starts the program (or a plugin's run script) with its pipes into the console.
+func _start_run(prog: String, argv: PackedStringArray, out: String, run_args: PackedStringArray) -> void:
 	var p := OS.execute_with_pipe(prog, argv, false)
 	if p.is_empty():
 		_log_error("Couldn't start %s" % prog)
@@ -1216,6 +1283,72 @@ func _run(id: String, out: String) -> void:
 	_console.append_text("[color=#80b0ff]── running %s %s ──[/color]\n" % [out.get_file(), " ".join(shown)])
 	_set_debug_state("Running. Pause (F8) stops it at the next brick; breakpoints (F9) stop it there.")
 	_stdin.grab_focus()
+
+
+## A plugin's script runs with the user's rights, so it never runs unasked: a script that isn't trusted (this
+## plugin, this hook, this exact content) is asked about first; "Always trust this script" remembers it.
+func _with_hook_trust(h: Dictionary, then: Callable) -> void:
+	if TargetPlugins.hook_trusted(h):
+		then.call()
+		return
+	if _hook_dialog == null:
+		_hook_dialog = ConfirmationDialog.new()
+		_hook_dialog.title = "Run a plugin's script?"
+		_hook_dialog.ok_button_text = "Run once"
+		_hook_dialog.add_button("Always trust this script", false, "always")
+		add_child(_themed(_hook_dialog))
+	for c in _hook_dialog.confirmed.get_connections():
+		_hook_dialog.confirmed.disconnect(c.callable)
+	for c in _hook_dialog.custom_action.get_connections():
+		_hook_dialog.custom_action.disconnect(c.callable)
+	_hook_dialog.dialog_text = "The plugin %s wants to run its %s script:\n\n%s\n\nIt can do anything you can on this computer. Only run it if you trust the plugin. (If the script is edited later, you are asked again.)" % [str(h.plugin.title), str(h.hook), str(h.path)]
+	_hook_dialog.confirmed.connect(then)
+	_hook_dialog.custom_action.connect(func(_action: StringName) -> void:
+		TargetPlugins.trust_hook(h)
+		_hook_dialog.hide()
+		then.call())
+	_hook_dialog.popup_centered(Vector2i(620, 0))
+
+
+## Export > Package: builds for the Target, then the plugin's package script makes the distributable.
+func package_project() -> void:
+	var id := _current_target()
+	if TargetPlugins.hook_for_target(id, "package").is_empty():
+		_set_status("status_info", "No plugin has a package script for %s." % Toolchains.target(id).name)
+		return
+	if not _ready_to_build() or not _target_ok():
+		return
+	_package_after = true
+	build(false)
+
+
+func _package(id: String, out: String) -> void:
+	var h := TargetPlugins.hook_for_target(id, "package")
+	if h.is_empty():
+		return
+	_with_hook_trust(h, func() -> void:
+		var dir := ProjectSettings.globalize_path(project_dir).path_join(CBProject.BUILD_DIR).path_join("package").path_join(id)
+		DirAccess.make_dir_recursive_absolute(dir)
+		var args := TargetPlugins.hook_args(ProjectSettings.globalize_path(out), ProjectSettings.globalize_path(project_dir), PackedStringArray([dir]))
+		_log_info("Packaging with %s's script..." % str(h.plugin.title))
+		_set_busy(true)
+		_join_thread()
+		_thread = Thread.new()
+		_thread.start(func() -> void:
+			_package_done.call_deferred(TargetPlugins.run_hook(h, args), dir)))
+
+
+func _package_done(r: Dictionary, dir: String) -> void:
+	_join_thread()
+	_set_busy(false)
+	if str(r.output).strip_edges() != "":
+		_console.push_color(Color(1, 0.75, 0.5) if r.ok else Color(1, 0.5, 0.5)); _console.add_text(str(r.output).strip_edges() + "\n"); _console.pop()
+	if not r.ok:
+		_log_error("The package script failed (exit %d)." % int(r.exit))
+		_set_status("status_error", "Packaging failed: see the console")
+		return
+	_console.append_text("[color=#80e080]Packaged[/color] → [url=file:%s]%s[/url]\n" % [dir, dir])
+	_set_status("status_success", "Packaged to %s" % dir)
 
 
 func _process(_delta: float) -> void:
@@ -1734,6 +1867,10 @@ func _update_target_state() -> void:
 	var id := _current_target()
 	if _run_btn != null:  # (the first fill runs while the toolbar is still being built)
 		_run_btn.visible = Toolchains.resolve_runner(id) != ""
+	if _export_menu != null:
+		var has_pack := not TargetPlugins.hook_for_target(id, "package").is_empty()
+		_export_menu.get_popup().set_item_disabled(2, not has_pack)
+		_export_menu.get_popup().set_item_tooltip(2, "Builds, then runs the plugin's package script" if has_pack else "The Target's plugin has no package script")
 	_target.tooltip_text = "Compiles with: %s" % (Toolchains.resolve_command(id) if Toolchains.resolve_command(id) != "" else "nothing found (see Toolchains)")
 
 
@@ -2467,14 +2604,19 @@ func _build_toolbar(parent: Control) -> void:
 	_stop_btn.disabled = true
 	tools.add_child(VSeparator.new())
 	var export_menu := MenuButton.new()
+	_export_menu = export_menu
 	export_menu.text = "Export"
 	export_menu.flat = true
 	export_menu.icon = context.brick_theme.icon("export")
 	export_menu.get_popup().add_item("C project (src/, assets, Makefile, CMake, scripts)...", 0)
 	export_menu.get_popup().add_item("Only the generated C files...", 1)
+	export_menu.get_popup().add_item("Package for the Target (a plugin's script)...", 2)
+	export_menu.get_popup().set_item_disabled(2, true)
 	export_menu.get_popup().id_pressed.connect(func(id: int) -> void:
 		if id == 0:
 			export_project()
+		elif id == 2:
+			package_project()
 		else:
 			save_all()
 			_recompile()
@@ -3319,6 +3461,8 @@ func switch_screen(which: String) -> void:
 	if _node_bar != null:
 		_node_bar.visible = which == "Script"  # the script tabs and brick tools only under Node
 	_apply_left()
+	if which == "Code" and _code != null:
+		_code.check_external()
 	if which == "3D" and _view_3d != null:
 		_view_3d.rebuild()
 	elif which == "2D" and _view_2d != null:

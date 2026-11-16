@@ -8,6 +8,8 @@ extends VBoxContainer
 
 const Context = preload("res://scripts/editor/context.gd")
 
+const CodeEditor = preload("res://scripts/editor/code_editor.gd")
+
 signal script_activated(path: String)
 ## A file or folder moved (rename) or went away (to = ""): open tabs follow.
 signal path_changed(from: String, to: String)
@@ -188,7 +190,7 @@ func _on_activated() -> void:
 		if it != null:
 			it.collapsed = not it.collapsed
 		return
-	if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT] or path.get_file() == CBProject.WORLD_FILE:
+	if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT] or path.get_file() == CBProject.WORLD_FILE or CodeEditor.is_text_file(path):
 		script_activated.emit(path)
 	else:
 		OS.shell_open(path)
@@ -241,7 +243,7 @@ func _on_menu(id: int) -> void:
 			_status("%s is the Main scene: the world starts with it." % rel)
 			_changed()
 		M_OPEN:
-			if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT]:
+			if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT] or CodeEditor.is_text_file(path):
 				script_activated.emit(path)
 			else:
 				OS.shell_open(path)

@@ -1109,6 +1109,89 @@ static func _remove_dir(path: String) -> void:
 	DirAccess.remove_absolute(path)
 
 
+## The Code screen (2026-11-16): a project's own C opens from the dock's path, edits save, a compiler error lands on its
+## line and clicking the problem shows it.
+func _code_screen_check() -> void:
+	var dir: String = _panel.project_dir
+	if dir == "":
+		_panel.open_project(_dir)
+		dir = _panel.project_dir
+	var path := dir.path_join("ui_code_test.c")
+	var fa := FileAccess.open(path, FileAccess.WRITE)
+	fa.store_string("int ui_code_test(void) {\n    return 1 +;\n}\n")
+	fa.close()
+	_panel._recompile()
+	_panel.open_path(path)
+	_check(_panel._screen == "Code" and _panel._code.current_path() == path and _panel._code.current_text().begins_with("int ui_code_test"), "a .c file chosen in the dock opens in the Code screen")
+	_panel._code.type_text("int ui_code_test(void) {\n    return 2;\n}\n")
+	_check(_panel._code.has_dirty(), "typing marks the file unsaved")
+	_panel.save()
+	_check(not _panel._code.has_dirty() and FileAccess.get_file_as_string(path).contains("return 2;"), "Ctrl+S on the Code screen writes the file")
+	_panel._map_compiler_output("ui_code_test.c:2:12: error: expected expression before ';' token\n")
+	var found := -1
+	for i in 20:
+		if _panel.problem_text(i).contains("ui_code_test.c line 2"):
+			found = i
+			break
+	_check(found >= 0, "a compiler error in the project's own C is a Problem naming the file and line")
+	_panel._settings_dialog.hide()
+	await _panel.get_tree().process_frame
+	await _panel.get_tree().process_frame
+	_shot("code_screen")
+	_panel.switch_screen("Script")
+	_panel._on_problem_selected(found)
+	_check(_panel._screen == "Code" and _panel._code._edit.get_caret_line() == 1, "clicking that problem opens the Code screen at the line (screen %s, line %d)" % [_panel._screen, _panel._code._edit.get_caret_line()])
+	_panel._code.close_file(0)
+	_check(_panel._code.paths().is_empty(), "closing the tab closes the file")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	_panel.switch_screen("Script")
+
+
+## Plugin hooks (2026-11-16): an untrusted script asks first (Run once / Always trust), "Always" remembers it, the Package
+## entry in the Export menu follows the Target.
+func _hooks_check() -> void:
+	var dir := ProjectSettings.globalize_path("user://ui_check_hooks_plugin")
+	TargetPlugins.remove_tree(dir)
+	CBProject.copy_dir(ProjectSettings.globalize_path("res://plugin_examples/null-terminal"), dir)
+	var cfg := FileAccess.get_file_as_string(dir.path_join("target.cfg")) + "\n[hooks]\nrun=\"run.sh\"\npackage=\"package.sh\"\n"
+	var f := FileAccess.open(dir.path_join("target.cfg"), FileAccess.WRITE)
+	f.store_string(cfg)
+	f.close()
+	for n in ["run.sh", "package.sh"]:
+		f = FileAccess.open(dir.path_join(n), FileAccess.WRITE)
+		f.store_string("echo hi\n")
+		f.close()
+	var keep_trust := TargetPlugins.trust_file
+	TargetPlugins.trust_file = "user://ui_check_hooks_trust.cfg"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(TargetPlugins.trust_file))
+	var r := TargetPlugins.load_dir(dir)
+	_check(r.ok, "a plugin with hooks loads (%s)" % str(r.error))
+	if r.ok:
+		TargetPlugins.register(r.plugin)
+		_panel._fill_targets()
+		for i in _panel._target.item_count:
+			if Toolchains.targets()[_panel._target.get_item_id(i)].id == "null-terminal":
+				_panel._target.select(i)
+		_panel._update_target_state()
+		var menu: PopupMenu = _panel._export_menu.get_popup()
+		_check(not menu.is_item_disabled(menu.get_item_index(2)), "Export > Package is enabled when the Target's plugin has a package script")
+		var h := TargetPlugins.hook_for_target("null-terminal", "run")
+		var ran := [0]
+		_panel._with_hook_trust(h, func() -> void: ran[0] += 1)
+		_check(_panel._hook_dialog != null and _panel._hook_dialog.visible and ran[0] == 0, "an untrusted script is asked about first and does not run")
+		_panel._hook_dialog.custom_action.emit(&"always")
+		_check(ran[0] == 1 and TargetPlugins.hook_trusted(h) and not _panel._hook_dialog.visible, "Always trust runs it and remembers it")
+		_panel._with_hook_trust(h, func() -> void: ran[0] += 1)
+		_check(ran[0] == 2, "a trusted script runs without asking")
+		TargetPlugins.unregister("null-terminal")
+		_panel._fill_targets()
+		_panel._update_target_state()
+		_check(menu.is_item_disabled(menu.get_item_index(2)), "...and Package is disabled again on a Target without one")
+	TargetPlugins.trust_file = keep_trust
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://ui_check_hooks_trust.cfg"))
+	TargetPlugins.remove_tree(dir)
+
+
 func _find_object(n: String) -> Dictionary:
 	for o in _panel.context.world.objects:
 		if str(o.name) == n:
@@ -1118,6 +1201,8 @@ func _find_object(n: String) -> Dictionary:
 
 func _finish() -> void:
 	if true:
+			await _code_screen_check()
+			_hooks_check()
 			# With no script open, a pick of a plain object still shows in Properties (it was skipped
 			# because redraws only ran with a graph open: user, 2026-11-09).
 			while not _panel._tabs.is_empty():

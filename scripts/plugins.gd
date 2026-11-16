@@ -12,7 +12,7 @@ extends RefCounted
 ##   [backend]  (optional) file (the C file), targets [the target ids that pick it with Automatic;
 ##              default: this plugin's target; "*" = any target), except [targets "*" does not cover],
 ##              caps [what the programs it builds can do], sources [more .c / .h files it needs]
-##   [hooks]    (optional, trusted code: asked about before it runs) run, package: script paths
+##   [hooks]    (optional, trusted code: asked about before it runs, see "hooks" at the end) run, package: script paths
 ##
 ## A plugin dictionary: {"id", "title", "version", "api", "description", "dir", "builtin",
 ## "target": {} or the Toolchains target dictionary, "backend": {} or {"id", "file", "targets", "caps",
@@ -519,3 +519,93 @@ static func defines(id: String, dir := "") -> PackedStringArray:
 		var text: String = ("1" if v else "0") if v is bool else (str(v) if v is int else "\"%s\"" % str(v).replace("\\", "\\\\").replace("\"", "\\\""))
 		out.append("-D%s%s=%s" % [prefix, str(st.key).to_upper(), text])
 	return out
+
+
+# ======================================================================= hooks (2026-11-15)
+# A plugin's [hooks] are scripts that run on the user's computer with the user's rights: so they never run
+# unasked. `run` replaces the target's `run` commands (Run): `script PROGRAM PROJECT_DIR [program args...]`;
+# `package` makes the Export > Package entry (a distributable: zip, ROM, app bundle):
+# `script PROGRAM PROJECT_DIR OUT_DIR`, OUT_DIR = <project>/.build/package/<target>. A script is trusted per
+# plugin, per hook and per content (sha256): the first run asks, "Always trust" remembers it in
+# user://plugin_trust.cfg, and an edited script asks again. Nothing here ever runs a hook by itself; callers
+# check `hook_trusted` and ask first (the editor does; the command line refuses).
+
+static var trust_file := "user://plugin_trust.cfg"   ## (tests point it elsewhere)
+const HOOK_NAMES := ["run", "package"]
+
+
+## The hook of the plugin that owns `target_id`: {"plugin", "hook", "path"} (the script, absolute), or {}.
+static func hook_for_target(target_id: String, hook: String) -> Dictionary:
+	_builtin()
+	for id in registry:
+		var p: Dictionary = registry[id]
+		if p.target.is_empty() or str(p.target.id) != target_id or not p.hooks.has(hook):
+			continue
+		var path := ProjectSettings.globalize_path(str(p.dir)).path_join(str(p.hooks[hook]))
+		if FileAccess.file_exists(path):
+			return {"plugin": p, "hook": hook, "path": path}
+	return {}
+
+
+static func hook_hash(h: Dictionary) -> String:
+	return FileAccess.get_sha256(str(h.path))
+
+
+static func _trust_key(h: Dictionary) -> String:
+	return "%s/%s" % [str(h.plugin.id), str(h.hook)]
+
+
+static func hook_trusted(h: Dictionary) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(trust_file) != OK:
+		return false
+	return str(cfg.get_value("trusted", _trust_key(h), "")) == hook_hash(h) and hook_hash(h) != ""
+
+
+static func trust_hook(h: Dictionary) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(trust_file)
+	cfg.set_value("trusted", _trust_key(h), hook_hash(h))
+	cfg.save(trust_file)
+
+
+static func untrust_hook(h: Dictionary) -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(trust_file) == OK and cfg.has_section_key("trusted", _trust_key(h)):
+		cfg.erase_section_key("trusted", _trust_key(h))
+		cfg.save(trust_file)
+
+
+## [program, args] that start the script (by its extension: .sh -> sh, .py -> python3, .bat / .cmd -> cmd /c,
+## anything else is run itself) with `args` after it. program "" when the interpreter isn't installed.
+static func hook_argv(h: Dictionary, args: PackedStringArray) -> Dictionary:
+	var path := str(h.path)
+	var prog := path
+	var argv := PackedStringArray()
+	match path.get_extension().to_lower():
+		"sh":
+			prog = "sh"; argv.append(path)
+		"py":
+			prog = "python3" if Toolchains.has_program("python3") else "python"; argv.append(path)
+		"bat", "cmd":
+			prog = "cmd"; argv.append_array(["/c", path])
+	argv.append_array(args)
+	var full := prog if prog.is_absolute_path() else Toolchains.find_program(prog)
+	return {"prog": full, "argv": argv}
+
+
+## What a hook is told: the program, the project folder, then `extra` (the run's arguments / the package folder).
+static func hook_args(program: String, project_dir: String, extra: PackedStringArray) -> PackedStringArray:
+	var a := PackedStringArray([program, project_dir])
+	a.append_array(extra)
+	return a
+
+
+## Runs a hook to its end (for packaging and tests; the editor's Run streams it instead). The caller has asked.
+static func run_hook(h: Dictionary, args: PackedStringArray) -> Dictionary:
+	var c := hook_argv(h, args)
+	if str(c.prog) == "":
+		return {"ok": false, "exit": -1, "output": "can't start %s: its interpreter isn't installed" % str(h.path).get_file()}
+	var out := []
+	var code := OS.execute(str(c.prog), c.argv, out, true, false)
+	return {"ok": code == 0, "exit": code, "output": "".join(out)}
