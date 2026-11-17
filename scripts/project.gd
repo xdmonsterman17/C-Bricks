@@ -269,7 +269,10 @@ static func list_scripts(dir: String) -> PackedStringArray:
 ## Assets: files that aren't scripts or the project file (relative paths).
 static func list_assets(dir: String) -> PackedStringArray:
 	var out := PackedStringArray()
+	var skip := ignore_patterns(dir, ".cbnoexport")
 	for rel in list_entries(dir):
+		if is_ignored(rel, skip):
+			continue
 		if rel.ends_with("/") or rel.get_extension() == SCRIPT_EXT or rel == FILE or rel == WORLD_FILE or rel.get_extension() == SCENE_EXT:
 			continue
 		out.append(rel)
@@ -280,9 +283,12 @@ static func list_assets(dir: String) -> PackedStringArray:
 ## ending in `/` is a folder (everything under it); one with `*` / `?` is matched against the
 ## whole path and the file name; anything else is a path or file name. Ignored .c / .h files
 ## stay in the project (and the export) but aren't compiled into the program.
-static func ignore_patterns(dir: String) -> PackedStringArray:
+## `.cbnoexport` (2026-11-17), same syntax: files that belong to the folder but not to the program
+## (docs, tests, tools: for a project whose folder is the whole workspace). They are not compiled,
+## not exported, not packed: `list_assets` leaves them out. The Project dock still shows them.
+static func ignore_patterns(dir: String, file := ".cbignore") -> PackedStringArray:
 	var out := PackedStringArray()
-	var path := dir.path_join(".cbignore")
+	var path := dir.path_join(file)
 	if not FileAccess.file_exists(path):
 		return out
 	for line in FileAccess.get_file_as_string(path).split("\n"):

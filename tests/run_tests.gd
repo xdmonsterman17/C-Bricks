@@ -637,6 +637,14 @@ func _check_cli() -> void:
 		if DirAccess.dir_exists_absolute(d):
 			TargetPlugins.remove_tree(d)
 	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/hello_world"), dir)
+	# .cbnoexport: docs / tests / tools in the project folder aren't assets (not exported or compiled)
+	DirAccess.make_dir_recursive_absolute(dir.path_join("tools"))
+	for f in ["tools/helper.c", "NOTES.md", "keep.txt"]:
+		FileAccess.open(dir.path_join(f), FileAccess.WRITE).store_string("int helper_main(void){return 0;}\n")
+	FileAccess.open(dir.path_join(".cbnoexport"), FileAccess.WRITE).store_string("tools/\n*.md\n")
+	var assets := CBProject.list_assets(dir)
+	if "keep.txt" not in assets or "tools/helper.c" in assets or "NOTES.md" in assets:
+		problems.append(".cbnoexport: list_assets gave " + str(assets))
 	var run := func(args: Array) -> Dictionary:
 		var o := []
 		var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "-s", "res://scripts/cli.gd", "--"] + args, o, true)
