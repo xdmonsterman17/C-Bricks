@@ -27,16 +27,26 @@ static var registry := {}   ## id -> plugin (built-ins first, then the loaded on
 static var _loaded_builtin := false
 
 
+static var _builtin_lock := Mutex.new()
+
+
 static func _builtin() -> void:
 	if _loaded_builtin:
 		return
-	_loaded_builtin = true
-	for d in BUILTIN_DIRS:
-		var r := load_dir(d, true)
-		if r.ok:
-			registry[r.plugin.id] = r.plugin
-		else:
-			push_error("built-in plugin %s: %s" % [d, r.error])
+	# (Locked, and the flag set only once every built-in loaded: the build thread and the window can
+	# both get here first, and a half-loaded registry left "This computer can't do graphics".)
+	_builtin_lock.lock()
+	if not _loaded_builtin:
+		var all_ok := true
+		for d in BUILTIN_DIRS:
+			var r := load_dir(d, true)
+			if r.ok:
+				registry[r.plugin.id] = r.plugin
+			else:
+				all_ok = false
+				push_error("built-in plugin %s: %s" % [d, r.error])
+		_loaded_builtin = all_ok
+	_builtin_lock.unlock()
 
 
 ## Parses and checks one plugin folder. -> {"ok", "error", "plugin"} (nothing is registered).

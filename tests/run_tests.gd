@@ -170,6 +170,11 @@ func _init() -> void:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		_check_api_md()
+	if only.is_empty() or "export_presets" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_export_presets()
 	if only.is_empty() or "plugins" in only:
 		count += 1
 		_case_start = Time.get_ticks_msec()
@@ -1189,6 +1194,28 @@ func _old_files_of(path: String, out: Array, only_list := false) -> void:
 ## and it builds without problems (the build's own main(): cbricks_main.c).
 ## The editor's bundled toolchains (<editor folder>/toolchains, or CBRICKS_TOOLCHAINS): searched before PATH and
 ## the usual folders, so a copy of zig / DJGPP / DOSBox-X beside the editor wins; a program there is found.
+## Every export preset must carry what the editor reads from res:// at run time (a Windows build once
+## shipped without plugins/*: no graphics backend loaded, so "this computer can't do graphics").
+func _check_export_presets() -> void:
+	var problems := []
+	var cf := ConfigFile.new()
+	if cf.load("res://export_presets.cfg") != OK:
+		_finish("export_presets", ["export_presets.cfg can't be read"], [])
+		return
+	for sec in cf.get_sections():
+		if sec.ends_with(".options"):
+			continue
+		var name := str(cf.get_value(sec, "name", sec))
+		var inc := str(cf.get_value(sec, "include_filter", ""))
+		for need in ["plugins/*", "scripts/runtime/*", "scripts/tools/*", "thirdparty/*", "examples/*", "toolchains_manifest.json"]:
+			if not need in inc:
+				problems.append("preset '%s' doesn't include %s" % [name, need])
+	for d in TargetPlugins.BUILTIN_DIRS:
+		if not FileAccess.file_exists(d.path_join("target.cfg")):
+			problems.append("built-in plugin %s has no target.cfg" % d)
+	_finish("export_presets", problems, [])
+
+
 func _check_bundle() -> void:
 	var problems := []
 	var dir := OS.get_user_data_dir().path_join("test_build/bundle")
