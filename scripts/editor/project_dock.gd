@@ -190,7 +190,7 @@ func _on_activated() -> void:
 		if it != null:
 			it.collapsed = not it.collapsed
 		return
-	if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT] or path.get_file() == CBProject.WORLD_FILE or CodeEditor.is_text_file(path):
+	if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT, "cbshader"] or path.get_file() == CBProject.WORLD_FILE or CodeEditor.is_text_file(path):
 		script_activated.emit(path)
 	else:
 		OS.shell_open(path)
@@ -198,7 +198,7 @@ func _on_activated() -> void:
 
 # ------------------------------------------------------------------ menu
 
-enum { M_OPEN, M_NEW_SCRIPT, M_NEW_FOLDER, M_RENAME, M_DUPLICATE, M_DELETE, M_SHOW, M_COPY_PATH, M_IMPORT, M_NEW_SCENE, M_MAIN_SCENE }
+enum { M_OPEN, M_NEW_SCRIPT, M_NEW_FOLDER, M_RENAME, M_DUPLICATE, M_DELETE, M_SHOW, M_COPY_PATH, M_IMPORT, M_NEW_SCENE, M_MAIN_SCENE, M_NEW_SURFACE, M_NEW_POST }
 
 
 func _open_menu(item: TreeItem) -> void:
@@ -210,6 +210,8 @@ func _open_menu(item: TreeItem) -> void:
 		_menu.add_separator()
 	_menu.add_icon_item(context.brick_theme.icon("new_script"), "New Script...", M_NEW_SCRIPT)
 	_menu.add_icon_item(context.brick_theme.icon("scene"), "New Scene...", M_NEW_SCENE)
+	_menu.add_item("New Surface Shader...", M_NEW_SURFACE)
+	_menu.add_item("New Post Shader...", M_NEW_POST)
 	_menu.add_icon_item(context.brick_theme.icon("new_folder"), "New Folder...", M_NEW_FOLDER)
 	if is_file and _menu_path.get_extension() == CBProject.SCENE_EXT and _abs(_menu_path) != CBProject.world_path(project_dir):
 		_menu.add_icon_item(context.brick_theme.icon("star"), "Set as Main Scene", M_MAIN_SCENE)
@@ -236,6 +238,10 @@ func _on_menu(id: int) -> void:
 	match id:
 		M_NEW_SCENE:
 			_ask_new_scene(folder)
+		M_NEW_SURFACE:
+			_ask_new_shader(folder, "surface")
+		M_NEW_POST:
+			_ask_new_shader(folder, "post")
 		M_MAIN_SCENE:
 			var cf := CBProject.load_config(project_dir)
 			cf.set_value("project", "main_scene", rel)
@@ -243,7 +249,7 @@ func _on_menu(id: int) -> void:
 			_status("%s is the Main scene: the world starts with it." % rel)
 			_changed()
 		M_OPEN:
-			if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT] or CodeEditor.is_text_file(path):
+			if path.get_extension() in [CBProject.SCRIPT_EXT, CBProject.SCENE_EXT, "cbshader"] or CodeEditor.is_text_file(path):
 				script_activated.emit(path)
 			else:
 				OS.shell_open(path)
@@ -321,6 +327,25 @@ func _ask_new_scene(folder: String) -> void:
 			_status("%s already exists." % name)
 			return
 		CBProject.write_scene(to, CBProject.new_world())  # empty: its first node added is its root
+		_changed()
+		script_activated.emit(to))
+
+
+## A new shader graph (.cbshader): just its output node; opened in the Shader screen.
+func _ask_new_shader(folder: String, kind: String) -> void:
+	_ask_name("New %s shader" % kind, "new-%s.cbshader" % kind, func(name: String) -> void:
+		name = CBProject.safe_name(name.trim_suffix(".cbshader"), "shader") + ".cbshader"
+		var to := _abs(folder).path_join(name)
+		if FileAccess.file_exists(to):
+			_status("%s already exists." % name)
+			return
+		var g := {"cbshader": 1, "kind": kind, "nodes": [{"id": 1, "type": "%s_out" % kind, "values": {}, "pos": [300, 80]}], "wires": []}
+		var f := FileAccess.open(to, FileAccess.WRITE)
+		if f == null:
+			_status("Could not create %s." % name)
+			return
+		f.store_string(JSON.stringify(g, "\t", false))
+		f.close()
 		_changed()
 		script_activated.emit(to))
 

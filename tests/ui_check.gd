@@ -29,6 +29,7 @@ func _init() -> void:
 	var aside := OS.get_user_data_dir().path_join("example_set_aside_by_ui_check")
 	if DirAccess.dir_exists_absolute(ex) and not DirAccess.dir_exists_absolute(aside):
 		DirAccess.rename_absolute(ex, aside)
+	OS.set_environment("CBRICKS_CONFIG", OS.get_user_data_dir().path_join("ui_check_config"))  # (the app registry: never the real one)
 	_dir = OS.get_user_data_dir().path_join("ui_check")
 	_remove_tree(_dir)  # the last run's copy (deleted, not trashed: it's ours)
 	CBProject.copy_dir(ProjectSettings.globalize_path("res://examples/arguments_and_files"), _dir)
@@ -1192,6 +1193,41 @@ func _hooks_check() -> void:
 	TargetPlugins.remove_tree(dir)
 
 
+## A .cbshader opened from the FileSystem dock starts C-Vert on it (phase E, 2026-11-19): no tab opens here. With no C-Vert
+## registered the app asks once (a pretend program, never the real one, writes its arguments into a file); once registered
+## it starts it with --shader and the file.
+func _shader_screen_check() -> void:
+	var path := _dir.path_join("ui.cbshader")
+	var g := {"cbshader": 1, "kind": "surface", "nodes": [{"id": 1, "type": "surface_out", "values": {}, "pos": [420, 80]}], "wires": []}
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(JSON.stringify(g))
+	f.close()
+	var tabs_before: int = _panel._tabs.size()
+	var cfg := AppRegistry.config_dir()
+	DirAccess.make_dir_recursive_absolute(cfg)
+	_check(AppRegistry.find("c-vert") == "", "no C-Vert is registered at first")
+	var fake := cfg.path_join("fake_c_vert.sh")
+	var args_file := cfg.path_join("fake_args.txt")
+	DirAccess.remove_absolute(args_file)
+	var ff := FileAccess.open(fake, FileAccess.WRITE)
+	ff.store_string("#!/bin/sh\necho \"$@\" > '%s'\n" % args_file)
+	ff.close()
+	OS.execute("chmod", ["+x", fake])
+	_panel._dock.script_activated.emit(path)
+	await process_frame
+	_check(_panel._tabs.size() == tabs_before and _panel._file_mode == "c_vert", "double-clicking a .cbshader opens no tab: with no C-Vert known it asks where the program is")
+	_panel._on_file_chosen_for_test("c_vert", fake)
+	_check(AppRegistry.find("c-vert") == fake, "picking the C-Vert program remembers it in the app registry")
+	for i in 30:
+		if FileAccess.file_exists(args_file):
+			break
+		await create_timer(0.1).timeout
+	_check(FileAccess.file_exists(args_file) and FileAccess.get_file_as_string(args_file).contains("--shader") and FileAccess.get_file_as_string(args_file).contains("ui.cbshader"), "C-Vert is started with --shader and the file")
+	DirAccess.remove_absolute(fake)
+	DirAccess.remove_absolute(args_file)
+	DirAccess.remove_absolute(cfg.path_join("apps").path_join("c-vert"))
+
+
 func _find_object(n: String) -> Dictionary:
 	for o in _panel.context.world.objects:
 		if str(o.name) == n:
@@ -1203,6 +1239,7 @@ func _finish() -> void:
 	if true:
 			await _code_screen_check()
 			_hooks_check()
+			await _shader_screen_check()
 			# With no script open, a pick of a plain object still shows in Properties (it was skipped
 			# because redraws only ran with a graph open: user, 2026-11-09).
 			while not _panel._tabs.is_empty():

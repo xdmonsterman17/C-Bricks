@@ -1,0 +1,55 @@
+{
+ "format": "c-bricks",
+ "version": 4,
+ "target": "native",
+ "next_id": 5,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "start",
+   "pos": [
+    232,
+    96
+   ],
+   "size": [
+    0,
+    0
+   ],
+   "fields": {},
+   "args": {},
+   "outs": {},
+   "links": {
+    "out": [
+     4
+    ]
+   }
+  },
+  {
+   "id": 4,
+   "type": "call_c",
+   "pos": [
+    832,
+    96
+   ],
+   "size": [
+    0,
+    0
+   ],
+   "fields": {
+    "name": "app_probe",
+    "returns": "int",
+    "args": [],
+    "header": "app_probe.h"
+   },
+   "args": {},
+   "outs": {
+    "result": {
+     "var": "done",
+     "use": false
+    }
+   },
+   "links": {}
+  }
+ ],
+ "frames": []
+}

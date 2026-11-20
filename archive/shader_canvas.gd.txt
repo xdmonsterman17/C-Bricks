@@ -1,0 +1,381 @@
+class_name ShaderCanvas
+extends GraphEdit
+## The Shader screen's canvas (phase 2, 2026-11-18): a `.cbshader` graph as nodes and value wires.
+## Unlike the bricks' canvas, wires here carry VALUES (DECISIONS.md: the one exception to "only execution
+## wires"). It edits the graph dictionary in place and reports each change with `edited(name, before)`:
+## the panel keeps the undo history and the dirty flag; saving compiles the graph (ShaderGraph.compile).
+## A node's unwired inputs are edited on the node (numbers; a colour picker on Color); `t` picks the
+## type of a `gen` node.
+
+signal edited(action: String, before: Dictionary)
+signal problem(text: String)
+
+const DRAG_KEY := "cbricks_shader_node"
+const GROUP_COLORS := {
+	"Input": Color(0.35, 0.6, 0.95), "Constant": Color(0.62, 0.62, 0.68), "Math": Color(0.4, 0.75, 0.45),
+	"Vector": Color(0.95, 0.65, 0.3), "Pattern": Color(0.7, 0.5, 0.9), "Color": Color(0.95, 0.5, 0.7),
+	"Output": Color(0.9, 0.4, 0.4),
+}
+const TYPE_COLORS := {
+	"float": Color(0.75, 0.75, 0.75), "vec2": Color(0.55, 0.85, 0.55),
+	"vec3": Color(0.95, 0.8, 0.35), "vec4": Color(0.95, 0.55, 0.85),
+}
+
+var graph: Dictionary = {}
+
+var _move_before: Dictionary = {}
+
+
+func _init() -> void:
+	size_flags_horizontal = SIZE_EXPAND_FILL
+	size_flags_vertical = SIZE_EXPAND_FILL
+	right_disconnects = true
+	connection_request.connect(_on_connect)
+	disconnection_request.connect(_on_disconnect)
+	delete_nodes_request.connect(_on_delete)
+	begin_node_move.connect(func() -> void: _move_before = graph.duplicate(true))
+	end_node_move.connect(_on_moved)
+
+
+static func group_color(group: String) -> Color:
+	return GROUP_COLORS.get(group, Color(0.6, 0.6, 0.6))
+
+
+func set_graph(g: Dictionary) -> void:
+	graph = g
+	rebuild()
+
+
+func to_graph(p: Vector2) -> Vector2:
+	return (p + scroll_offset) / zoom
+
+
+## The nodes and wires again from the graph.
+func rebuild() -> void:
+	clear_connections()
+	for child in get_children():
+		if child is GraphNode:
+			remove_child(child)
+			child.queue_free()
+	if graph.is_empty():
+		return
+	var tab := ShaderGraph.table()
+	for nd: Dictionary in graph.get("nodes", []):
+		if tab.has(str(nd.get("type", ""))):
+			add_child(_make_view(nd, tab[str(nd.type)]))
+	for w: Dictionary in graph.get("wires", []):
+		var a := _node(int(w.get("from", -1)))
+		var b := _node(int(w.get("to", -1)))
+		if a.is_empty() or b.is_empty() or not tab.has(str(a.type)) or not tab.has(str(b.type)):
+			continue
+		var op := _port(tab[str(a.type)]["out"], str(w.get("out", "")))
+		var ip := _port(tab[str(b.type)]["in"], str(w.get("in", "")))
+		if op >= 0 and ip >= 0:
+			connect_node("n%d" % int(a.id), op, "n%d" % int(b.id), ip)
+
+
+func add_node_at(type: String, at: Vector2) -> void:
+	var tab := ShaderGraph.table()
+	if not tab.has(type) or graph.is_empty():
+		return
+	var def: Dictionary = tab[type]
+	if str(def.kinds).find("p" if str(graph.get("kind", "surface")) == "post" else "s") < 0:
+		problem.emit("%s is not available in %s shaders." % [def.title, graph.get("kind", "surface")])
+		return
+	if type.ends_with("_out") and _has_type(type):
+		problem.emit("There is one %s already." % str(def.title).to_lower())
+		return
+	var before := graph.duplicate(true)
+	var id := 1
+	for nd: Dictionary in graph.nodes:
+		id = maxi(id, int(nd.id) + 1)
+	var nd := {"id": id, "type": type, "values": {}, "pos": [at.x, at.y]}
+	if _is_gen(def):
+		nd["t"] = "float"
+	graph.nodes.append(nd)
+	edited.emit("Add node", before)
+	rebuild()
+	for child in get_children():
+		if child is GraphNode:
+			(child as GraphNode).selected = str(child.name) == "n%d" % id
+
+
+func add_node_in_view(type: String) -> void:
+	# (each one a step down and right of the last, so a run of palette double-clicks doesn't stack them)
+	var step := (graph.get("nodes", []) as Array).size() % 8
+	add_node_at(type, to_graph(size / 2.0) - Vector2(120, 80) + Vector2(28, 36) * step)
+
+
+func _can_drop_data(_at: Vector2, data: Variant) -> bool:
+	return data is Dictionary and ShaderGraph.table().has(str((data as Dictionary).get(DRAG_KEY, "")))
+
+
+func _drop_data(at: Vector2, data: Variant) -> void:
+	add_node_at(str((data as Dictionary)[DRAG_KEY]), to_graph(at))
+
+
+# ---------------------------------------------------------------- the graph's data
+
+func _node(id: int) -> Dictionary:
+	for nd: Dictionary in graph.get("nodes", []):
+		if int(nd.get("id", 0)) == id:
+			return nd
+	return {}
+
+
+func _has_type(type: String) -> bool:
+	for nd: Dictionary in graph.get("nodes", []):
+		if str(nd.get("type", "")) == type:
+			return true
+	return false
+
+
+func _port(list: Array, name: String) -> int:
+	for i in list.size():
+		if str(list[i][0]) == name:
+			return i
+	return -1
+
+
+static func _is_gen(def: Dictionary) -> bool:
+	for p: Array in def["in"] + def["out"]:
+		if str(p[1]) == "gen":
+			return true
+	return false
+
+
+func _type_of(nd: Dictionary, t: String) -> String:
+	return str(nd.get("t", "float")) if t == "gen" else t
+
+
+func _wired(id: int, inname: String) -> bool:
+	for w: Dictionary in graph.get("wires", []):
+		if int(w.get("to", -1)) == id and str(w.get("in", "")) == inname:
+			return true
+	return false
+
+
+## Does `a` read from `b` (through any wires)? Wiring b -> a would then loop.
+func _reads(a: int, b: int, seen := {}) -> bool:
+	if a == b:
+		return true
+	if seen.has(a):
+		return false
+	seen[a] = true
+	for w: Dictionary in graph.get("wires", []):
+		if int(w.get("to", -1)) == a and _reads(int(w.get("from", -1)), b, seen):
+			return true
+	return false
+
+
+# ---------------------------------------------------------------- one node
+
+func _make_view(nd: Dictionary, def: Dictionary) -> GraphNode:
+	var id := int(nd.id)
+	var gn := GraphNode.new()
+	gn.name = "n%d" % id
+	gn.title = str(def.title)
+	gn.resizable = false
+	var pos: Array = nd.get("pos", [0, 0])
+	gn.position_offset = Vector2(float(pos[0]), float(pos[1]))
+	var color := group_color(str(def.group))
+	for key: String in ["titlebar", "titlebar_selected"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = color.darkened(0.45) if key == "titlebar" else color.darkened(0.2)
+		sb.set_corner_radius_all(4)
+		sb.corner_radius_bottom_left = 0
+		sb.corner_radius_bottom_right = 0
+		sb.content_margin_left = 10
+		sb.content_margin_right = 10
+		sb.content_margin_top = 3
+		sb.content_margin_bottom = 3
+		gn.add_theme_stylebox_override(key, sb)
+	var offset := 0
+	if _is_gen(def):
+		var row := HBoxContainer.new()
+		var label := Label.new()
+		label.text = "Type"
+		label.size_flags_horizontal = SIZE_EXPAND_FILL
+		row.add_child(label)
+		var pick := OptionButton.new()
+		for t in ShaderGraph.TYPES:
+			pick.add_item(t)
+		pick.select(maxi(0, ShaderGraph.TYPES.find(str(nd.get("t", "float")))))
+		pick.item_selected.connect(func(i: int) -> void:
+			var before := graph.duplicate(true)
+			nd["t"] = ShaderGraph.TYPES[i]
+			edited.emit("Change type", before)
+			rebuild.call_deferred())
+		row.add_child(pick)
+		gn.add_child(row)
+		offset = 1
+	var ins: Array = def["in"]
+	var outs: Array = def["out"]
+	for i in maxi(ins.size(), outs.size()):
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override(&"separation", 6)
+		var in_color := Color.WHITE
+		var out_color := Color.WHITE
+		if i < ins.size():
+			var inp: Array = ins[i]
+			in_color = TYPE_COLORS.get(_type_of(nd, str(inp[1])), Color.WHITE)
+			_input_row(row, nd, inp)
+		var gap := Control.new()
+		gap.size_flags_horizontal = SIZE_EXPAND_FILL
+		row.add_child(gap)
+		if i < outs.size():
+			var o: Array = outs[i]
+			out_color = TYPE_COLORS.get(_type_of(nd, str(o[1])), Color.WHITE)
+			var label := Label.new()
+			label.text = "%s  %s" % [o[0], _type_of(nd, str(o[1]))]
+			label.add_theme_color_override(&"font_color", out_color)
+			row.add_child(label)
+		gn.add_child(row)
+		gn.set_slot(i + offset, i < ins.size(), 0, in_color, i < outs.size(), 0, out_color)
+	if def["in"].is_empty() and def["out"].is_empty():
+		gn.add_child(Control.new())
+	return gn
+
+
+## An input's label and, while nothing is wired to it, its value editor.
+func _input_row(row: HBoxContainer, nd: Dictionary, inp: Array) -> void:
+	var name := str(inp[0])
+	var t := _type_of(nd, str(inp[1]))
+	var label := Label.new()
+	label.text = name
+	label.add_theme_color_override(&"font_color", TYPE_COLORS.get(t, Color.WHITE))
+	row.add_child(label)
+	if _wired(int(nd.id), name):
+		return
+	if inp[2] is String:
+		var raw := Label.new()
+		raw.text = "= " + str(inp[2])
+		raw.modulate.a = 0.55
+		row.add_child(raw)
+		return
+	var n := ShaderGraph.size_of(t)
+	var vals: Array = (nd.get("values", {}) as Dictionary).get(name, inp[2])
+	var current := []
+	for k in n:
+		current.append(float(vals[mini(k, vals.size() - 1)]) if not vals.is_empty() else 0.0)
+	if str(nd.type) == "color" and n >= 3:
+		var pick := ColorPickerButton.new()
+		pick.custom_minimum_size = Vector2(70, 22)
+		pick.edit_alpha = false
+		pick.color = Color(current[0], current[1], current[2])
+		pick.color_changed.connect(func(c: Color) -> void:
+			_set_value(nd, name, [c.r, c.g, c.b]))
+		row.add_child(pick)
+		return
+	for k in n:
+		var spin := SpinBox.new()
+		spin.custom_minimum_size.x = 64
+		spin.min_value = -100000.0
+		spin.max_value = 100000.0
+		spin.step = 0.01
+		spin.allow_greater = true
+		spin.allow_lesser = true
+		spin.select_all_on_focus = true
+		spin.set_value_no_signal(float(current[k]))
+		spin.value_changed.connect(func(v: float) -> void:
+			var arr := current.duplicate()
+			arr[k] = v
+			current = arr
+			_set_value(nd, name, arr))
+		row.add_child(spin)
+
+
+func _set_value(nd: Dictionary, name: String, arr: Array) -> void:
+	var before := graph.duplicate(true)
+	if not nd.has("values"):
+		nd["values"] = {}
+	(nd["values"] as Dictionary)[name] = arr
+	edited.emit("Edit value", before)
+
+
+# ---------------------------------------------------------------- wiring and editing
+
+func _on_connect(from: StringName, from_port: int, to: StringName, to_port: int) -> void:
+	var a := int(String(from).substr(1))
+	var b := int(String(to).substr(1))
+	var na := _node(a)
+	var nb := _node(b)
+	if na.is_empty() or nb.is_empty():
+		return
+	var tab := ShaderGraph.table()
+	if from_port >= tab[str(na.type)]["out"].size() or to_port >= tab[str(nb.type)]["in"].size():
+		return
+	var out_name := str(tab[str(na.type)]["out"][from_port][0])
+	var in_name := str(tab[str(nb.type)]["in"][to_port][0])
+	if a == b or _reads(a, b):
+		problem.emit("That wire would loop back (a node can't read its own result).")
+		return
+	var before := graph.duplicate(true)
+	var wires: Array = graph.get("wires", [])
+	for i in range(wires.size() - 1, -1, -1):
+		if int(wires[i].to) == b and str(wires[i]["in"]) == in_name:
+			wires.remove_at(i)
+	wires.append({"from": a, "out": out_name, "to": b, "in": in_name})
+	graph["wires"] = wires
+	edited.emit("Wire", before)
+	rebuild.call_deferred()
+
+
+func _on_disconnect(from: StringName, from_port: int, to: StringName, to_port: int) -> void:
+	var a := int(String(from).substr(1))
+	var b := int(String(to).substr(1))
+	var na := _node(a)
+	var nb := _node(b)
+	if na.is_empty() or nb.is_empty():
+		return
+	var tab := ShaderGraph.table()
+	var out_name := str(tab[str(na.type)]["out"][from_port][0])
+	var in_name := str(tab[str(nb.type)]["in"][to_port][0])
+	var before := graph.duplicate(true)
+	var wires: Array = graph.get("wires", [])
+	for i in range(wires.size() - 1, -1, -1):
+		var w: Dictionary = wires[i]
+		if int(w.from) == a and str(w.out) == out_name and int(w.to) == b and str(w["in"]) == in_name:
+			wires.remove_at(i)
+	edited.emit("Unwire", before)
+	rebuild.call_deferred()
+
+
+func _on_delete(names: Array[StringName]) -> void:
+	var before := graph.duplicate(true)
+	var gone := {}
+	for n in names:
+		var id := int(String(n).substr(1))
+		var nd := _node(id)
+		if nd.is_empty():
+			continue
+		if str(nd.type).ends_with("_out"):
+			problem.emit("The output node stays: every shader needs one.")
+			continue
+		gone[id] = true
+	if gone.is_empty():
+		return
+	var nodes: Array = graph.nodes.filter(func(nd: Dictionary) -> bool: return not gone.has(int(nd.id)))
+	graph["nodes"] = nodes
+	graph["wires"] = graph.get("wires", []).filter(func(w: Dictionary) -> bool:
+		return not gone.has(int(w.from)) and not gone.has(int(w.to)))
+	edited.emit("Delete nodes", before)
+	rebuild.call_deferred()
+
+
+func _on_moved() -> void:
+	var changed := false
+	for child in get_children():
+		var gn := child as GraphNode
+		if gn == null:
+			continue
+		var nd := _node(int(String(gn.name).substr(1)))
+		if nd.is_empty():
+			continue
+		var p: Array = nd.get("pos", [0, 0])
+		if not is_equal_approx(float(p[0]), gn.position_offset.x) or not is_equal_approx(float(p[1]), gn.position_offset.y):
+			nd["pos"] = [gn.position_offset.x, gn.position_offset.y]
+			changed = true
+	if changed and not _move_before.is_empty():
+		edited.emit("Move nodes", _move_before)
+	_move_before = {}

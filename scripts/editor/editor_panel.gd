@@ -109,6 +109,7 @@ var _panel_sizes := {"left": 260, "inspector": 320, "bottom": 200}
 var _palette: Palette = null
 var _world_dock: WorldDock = null
 var _canvas: Canvas = null
+var _canvas_frame: Control = null
 var _inspector: Inspector = null
 var _tab_bar: TabBar = null
 var _bottom: TabContainer = null
@@ -119,6 +120,8 @@ var _code_pick: OptionButton = null
 var _code_view: CodeEdit = null
 var _build_btn: Button = null
 var _run_btn: Button = null
+var _cvert_pid := 0                      # a .cbshader opens in C-Vert (phase E, 2026-11-19)
+var _cvert_file := ""                    # the shader waiting for the C-Vert program to be picked
 var _all_btn: Button = null
 var _stop_btn: Button = null
 var _trace_btn: Button = null
@@ -341,7 +344,8 @@ func _ready() -> void:
 	_canvas = Canvas.new()
 	_canvas.context = context
 	_palette.canvas = _canvas
-	center.add_child(_framed(_canvas, 1))
+	_canvas_frame = _framed(_canvas, 1)
+	center.add_child(_canvas_frame)
 	_view_3d = WorldView3D.new()
 	_view_3d.context = context
 	var frame_3d := _framed(_view_3d, 1)
@@ -396,8 +400,9 @@ func _ready() -> void:
 
 # ======================================================================= projects
 
+## A script's graph is open.
 func has_graph() -> bool:
-	return _cur >= 0
+	return _cur >= 0 and _cur < _tabs.size()
 
 
 func has_project() -> bool:
@@ -543,6 +548,9 @@ func open_code(path: String, line := 0) -> void:
 
 
 func open_script(path: String) -> void:
+	if path.get_extension().to_lower() == "cbshader":
+		open_shader(path)
+		return
 	if path.get_file() == CBProject.WORLD_FILE or path.get_extension() == CBProject.SCENE_EXT:
 		open_scene(path)
 		return
@@ -567,6 +575,33 @@ func open_script(path: String) -> void:
 		_bricks_into_view.call_deferred()
 
 
+## A `.cbshader` is edited in C-Vert (phase E, 2026-11-19): its Shader workspace, started on the file (C-Vert redraws
+## and reloads on every Save, so one window is enough). C-Vert's place comes from the app registry (it writes itself there
+## when it runs); without an entry the user picks the program once.
+func open_shader(path: String) -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary) or not (parsed as Dictionary).has("nodes"):
+		_set_status("status_error", "%s is not a C-Bricks shader (.cbshader)." % path.get_file())
+		return
+	_cvert_file = ProjectSettings.globalize_path(path)
+	var exe := AppRegistry.find("c-vert")
+	if exe == "":
+		_ask_file("c_vert")
+		return
+	_launch_cvert(exe)
+
+
+func _launch_cvert(exe: String) -> void:
+	if _cvert_pid > 0 and OS.is_process_running(_cvert_pid):
+		_set_status("status_info", "C-Vert is already open: pick %s there (F4, Shader workspace), or close it first." % _cvert_file.get_file())
+		return
+	_cvert_pid = OS.create_process(exe, ["--shader", _cvert_file])
+	if _cvert_pid <= 0:
+		_set_status("status_error", "Could not start %s" % exe)
+	else:
+		_set_status("status_info", "C-Vert opened on %s" % _cvert_file.get_file())
+
+
 func _tab() -> Dictionary:
 	return _tabs[_cur] if _cur >= 0 and _cur < _tabs.size() else {}
 
@@ -589,6 +624,7 @@ func _switch_tab(i: int) -> void:
 	_queue_redraw(Context.Redraw.ALL)
 	if not t.view.is_empty():
 		_apply_view.call_deferred(t.view)
+	_apply_left()
 	_update_title()
 
 
@@ -603,6 +639,8 @@ func close_tab(i: int) -> void:
 	_tab_bar.remove_tab(i)
 	_cur = -1
 	if _tabs.is_empty():
+		_canvas_frame.visible = true
+		_apply_left()
 		context.graph = {}
 		context.selected = 0
 		_canvas.clear_connections()
@@ -713,7 +751,7 @@ func undo() -> void:
 	if _screen != "Script":
 		_scene_step(true)
 		return
-	if has_graph() and _tab().undo.has_undo():
+	if _cur >= 0 and _tab().undo.has_undo():
 		_tab().undo.undo()
 		_set_status("status_info", "Undo: " + _tab().undo.get_current_action_name())
 
@@ -722,7 +760,7 @@ func redo() -> void:
 	if _screen != "Script":
 		_scene_step(false)
 		return
-	if has_graph() and _tab().undo.has_redo():
+	if _cur >= 0 and _tab().undo.has_redo():
 		_tab().undo.redo()
 		_set_status("status_info", "Redo: " + _tab().undo.get_current_action_name())
 
@@ -1906,13 +1944,27 @@ func _ask_file(mode: String) -> void:
 		"save_c":
 			d.file_mode = FileDialog.FILE_MODE_OPEN_DIR
 			d.title = "Choose a folder for the generated C files"
+		"c_vert":
+			d.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+			d.title = "Where is the C-Vert program? (built from the C-Vert project, .build/native/meshforge)"
 	d.popup_centered_ratio(0.6)
+
+
+## For the UI check: answers the file dialog as if the user had chosen `path`.
+func _on_file_chosen_for_test(mode: String, path: String) -> void:
+	_file_mode = mode
+	_on_file_chosen(path)
 
 
 func _on_file_chosen(path: String) -> void:
 	match _file_mode:
 		"open_project":
 			open_project(path)
+		"c_vert":
+			if AppRegistry.remember("c-vert", path):
+				_launch_cvert(path)
+			else:
+				_set_status("status_error", "Could not remember C-Vert's place (the config folder isn't writable).")
 		"new_parent":
 			(_new_dialog.find_child("Parent", true, false) as LineEdit).text = path
 			_new_dialog.popup_centered()
@@ -2046,6 +2098,21 @@ func _open_project_settings() -> void:
 	(_project_dialog.find_child("PSplatShape", true, false) as OptionButton).select(CBProject.SPLAT_SHAPES.find(gfx.splat_shape))
 	(_project_dialog.find_child("PPixel", true, false) as OptionButton).select(CBProject.PIXELS.find(gfx.pixel))
 	(_project_dialog.find_child("PWindow", true, false) as OptionButton).select(CBProject.WINDOWS.find(gfx.window))
+	for sk in 2:
+		var sp := _project_dialog.find_child("PSurfaceShader" if sk == 0 else "PPostShader", true, false) as OptionButton
+		sp.clear()
+		sp.add_item("(none)")
+		sp.set_item_metadata(0, "")
+		var want := str(gfx.surface_shader if sk == 0 else gfx.post_shader)
+		for rel in CBProject.list_shaders(project_dir, sk):
+			sp.add_item(rel)
+			sp.set_item_metadata(sp.item_count - 1, rel)
+			if rel == want:
+				sp.select(sp.item_count - 1)
+		if want != "" and sp.selected <= 0 and not CBProject.list_shaders(project_dir, sk).has(want):
+			sp.add_item(want + " (missing)")  # (kept, not dropped silently)
+			sp.set_item_metadata(sp.item_count - 1, want)
+			sp.select(sp.item_count - 1)
 	(_project_dialog.find_child("PMsaa", true, false) as CheckBox).button_pressed = gfx.msaa
 	(_project_dialog.find_child("PVsync", true, false) as CheckBox).button_pressed = gfx.vsync
 	_refresh_look_rows()
@@ -2095,6 +2162,9 @@ func _save_project_settings() -> void:
 	cf.set_value("graphics", "splat_density", (_project_dialog.find_child("PSplatDensity", true, false) as SpinBox).value)
 	cf.set_value("graphics", "splat_shape", CBProject.SPLAT_SHAPES[(_project_dialog.find_child("PSplatShape", true, false) as OptionButton).selected])
 	cf.set_value("graphics", "pixel", CBProject.PIXELS[(_project_dialog.find_child("PPixel", true, false) as OptionButton).selected])
+	for sk in 2:
+		var sp := _project_dialog.find_child("PSurfaceShader" if sk == 0 else "PPostShader", true, false) as OptionButton
+		cf.set_value("graphics", "surface_shader" if sk == 0 else "post_shader", str(sp.get_item_metadata(maxi(sp.selected, 0))))
 	cf.set_value("graphics", "window", CBProject.WINDOWS[(_project_dialog.find_child("PWindow", true, false) as OptionButton).selected])
 	cf.set_value("graphics", "msaa", (_project_dialog.find_child("PMsaa", true, false) as CheckBox).button_pressed)
 	cf.set_value("graphics", "vsync", (_project_dialog.find_child("PVsync", true, false) as CheckBox).button_pressed)
@@ -2959,6 +3029,11 @@ func _build_dialogs() -> void:
 		pix_pick.add_item(n)
 	pix_pick.tooltip_text = "Low-res look: the game draws into a frame this many times smaller than the window and stretches it up with hard pixels. The window can then be resized."
 	_row(pv, "Pixel size").add_child(pix_pick)
+	for sk in 2:
+		var sh_pick := OptionButton.new()
+		sh_pick.name = "PSurfaceShader" if sk == 0 else "PPostShader"
+		sh_pick.tooltip_text = ("The project's own look for every surface: a shader file that defines cb_surface (light, fog and shading still apply). A scene's Environment and an object's Shader field override it." if sk == 0 else "A shader over the finished frame (a file that defines cb_post). It replaces the Environment's own effects (vignette, bloom...). A scene's Environment can override it.")
+		_row(pv, "Surface shader" if sk == 0 else "Post shader").add_child(sh_pick)
 	var win_pick := OptionButton.new()
 	win_pick.name = "PWindow"
 	for n in CBProject.WINDOW_NAMES:
