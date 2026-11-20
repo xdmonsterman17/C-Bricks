@@ -15,5 +15,6 @@ toolchains_pack/
 /DECISIONS.md
 /DEBUG.md
 /SetupClaude.sh
+/setup-claude.sh
 /.claude/
 /prebuilt/
