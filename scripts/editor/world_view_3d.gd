@@ -298,7 +298,7 @@ static func build_parts(holder: Node3D, world: Dictionary, only: Dictionary, pic
 		if not only.is_empty() and not only.has(int(o.id)):
 			continue
 		var oc := str(o.get("class", ""))
-		if not CBTypes.is_subclass(oc, "Shape3D") and not CBTypes.is_subclass(oc, "Mesh3D"):
+		if not CBTypes.is_subclass(oc, "Shape3D") and not CBTypes.is_subclass(oc, "Mesh3D") and not CBTypes.is_subclass(oc, "MultiMesh3D"):
 			continue
 		var made := make_part(o, WorldValues.world_transform(o, ids), ghosts)
 		if made.is_empty():
@@ -315,7 +315,7 @@ static func build_parts(holder: Node3D, world: Dictionary, only: Dictionary, pic
 ## A Shape3D's mesh (a Mesh3D: a ghost box, its mesh is made by bricks while the program
 ## runs): [MeshInstance3D, its unit box's transform] ([] for a hidden one without ghosts).
 static func make_part(o: Dictionary, xf: Transform3D, ghosts := true) -> Array:
-	var mesh_part := CBTypes.is_subclass(str(o["class"]), "Mesh3D")
+	var mesh_part := CBTypes.is_subclass(str(o["class"]), "Mesh3D") or CBTypes.is_subclass(str(o["class"]), "MultiMesh3D")
 	var size := Vector3.ONE if mesh_part else WorldValues.vec(WorldValues.field(o, "size"))
 	var shape := WorldValues.field(o, "shape")
 	var mesh: Mesh

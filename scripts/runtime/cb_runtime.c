@@ -11,6 +11,7 @@ __declspec(dllimport) void __stdcall Sleep(unsigned long ms);
 __declspec(dllimport) void *__stdcall GetStdHandle(unsigned long which);
 __declspec(dllimport) int __stdcall GetConsoleMode(void *console, unsigned long *mode);
 __declspec(dllimport) int __stdcall SetConsoleMode(void *console, unsigned long mode);
+__declspec(dllimport) unsigned long __stdcall GetModuleFileNameA(void *module, char *name, unsigned long size);
 #include <direct.h>
 #define CB_CHDIR(d) _chdir(d)
 #elif defined(__DJGPP__)
@@ -19,6 +20,7 @@ int chdir(const char *path);
 #define CB_CHDIR(d) chdir(d)
 #elif defined(__unix__) || defined(__APPLE__) || defined(__wasi__) || defined(__HAIKU__)
 #include <unistd.h>
+#include <sys/stat.h>
 #define CB_CHDIR(d) chdir(d)
 #else
 #define CB_CHDIR(d) (-1)
@@ -398,6 +400,118 @@ bool cb_file_exists(const char *path) {
     if (!f) return false;
     fclose(f);
     return true;
+}
+
+/* ---- the app registry: programs of the C-Bricks family leave where they live in one folder ----
+   <config>/apps/<name> holds one line: the program's absolute path. <config> is $CBRICKS_CONFIG, else
+   $XDG_CONFIG_HOME/c-bricks or ~/.config/c-bricks (Linux), ~/Library/Application Support/c-bricks (macOS),
+   %APPDATA%\c-bricks (Windows). A program registers on every start (so a moved one corrects its entry);
+   another program looks it up with cb_find_app, which returns "" when there is no entry or the file is gone. */
+bool cb_make_dir(const char *path) {
+    char buf[1024];
+    size_t i, n = strlen(path);
+    if (n == 0 || n >= sizeof buf) return false;
+    memcpy(buf, path, n + 1);
+    for (i = 1; i <= n; i++) {
+        if (buf[i] == '/' || buf[i] == '\\' || buf[i] == 0) {
+            char c = buf[i];
+            buf[i] = 0;
+#if defined(_WIN32)
+            _mkdir(buf);
+#elif defined(__unix__) || defined(__APPLE__) || defined(__HAIKU__)
+            mkdir(buf, 0755);
+#endif
+            buf[i] = c;
+        }
+    }
+#if defined(_WIN32) || defined(__unix__) || defined(__APPLE__) || defined(__HAIKU__)
+    {
+        char probe[1100];
+        FILE *f;
+        snprintf(probe, sizeof probe, "%s/.cb_probe", path);
+        f = fopen(probe, "wb");
+        if (!f) return false;
+        fclose(f);
+        remove(probe);
+        return true;
+    }
+#else
+    return false;
+#endif
+}
+
+const char *cb_config_dir(void) {
+    const char *o = getenv("CBRICKS_CONFIG");
+    const char *x, *h;
+    char *out;
+    if (o && *o) return o;
+    out = (char *)cb_alloc(1100);
+    out[0] = 0;
+#if defined(_WIN32)
+    x = getenv("APPDATA");
+    if (x && *x) snprintf(out, 1100, "%s/c-bricks", x);
+    (void)h;
+#elif defined(__APPLE__)
+    h = getenv("HOME");
+    if (h && *h) snprintf(out, 1100, "%s/Library/Application Support/c-bricks", h);
+    (void)x;
+#else
+    x = getenv("XDG_CONFIG_HOME");
+    h = getenv("HOME");
+    if (x && *x) snprintf(out, 1100, "%s/c-bricks", x);
+    else if (h && *h) snprintf(out, 1100, "%s/.config/c-bricks", h);
+#endif
+    return out;
+}
+
+/* This program's own absolute path ("" when the system can't say). */
+const char *cb_exe_path(void) {
+    char *out = (char *)cb_alloc(1100);
+    out[0] = 0;
+#if defined(_WIN32)
+    if (GetModuleFileNameA(NULL, out, 1090) == 0) out[0] = 0;
+#elif defined(__linux__)
+    {
+        long n = (long)readlink("/proc/self/exe", out, 1090);
+        out[n > 0 ? n : 0] = 0;
+    }
+#elif defined(__APPLE__)
+    {
+        extern int _NSGetExecutablePath(char *buf, unsigned int *size);
+        unsigned int size = 1090;
+        if (_NSGetExecutablePath(out, &size) != 0) out[0] = 0;
+    }
+#endif
+    if (!out[0] && cb_argc_ > 0 && cb_argv_[0][0] == '/') snprintf(out, 1100, "%s", cb_argv_[0]);
+    return out;
+}
+
+bool cb_register_app(const char *name) {
+    const char *dir = cb_config_dir(), *exe = cb_exe_path();
+    char path[1300];
+    if (!*dir || !*exe || !*name) return false;
+    snprintf(path, sizeof path, "%s/apps", dir);
+    if (!cb_make_dir(path)) return false;
+    snprintf(path, sizeof path, "%s/apps/%s", dir, name);
+    return cb_write_file(path, exe, false);
+}
+
+const char *cb_find_app(const char *name) {
+    const char *dir = cb_config_dir();
+    char path[1300];
+    const char *text, *end;
+    char *out;
+    size_t n;
+    if (!*dir || !*name) return "";
+    snprintf(path, sizeof path, "%s/apps/%s", dir, name);
+    if (!cb_file_exists(path)) return "";
+    text = cb_read_file(path);
+    end = text + strcspn(text, "\r\n");
+    n = (size_t)(end - text);
+    out = (char *)cb_alloc(n + 1);
+    memcpy(out, text, n);
+    out[n] = 0;
+    return cb_file_exists(out) ? out : "";
 }
 
 void cb_assert(bool ok, int file, int brick, const char *message) {

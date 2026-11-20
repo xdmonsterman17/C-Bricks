@@ -41,6 +41,8 @@ const STRICT_FLAGS := ["-std=c99", "-O0", "-Wall", "-Wextra", "-pedantic"]
 
 
 func _init() -> void:
+	# The app registry cases write under CBRICKS_CONFIG: a throwaway folder, never the real one.
+	OS.set_environment("CBRICKS_CONFIG", OS.get_cache_dir().path_join("cbricks_test_config_%d" % OS.get_process_id()))
 	# A core script that doesn't compile makes every case's calls fail silently: stop here.
 	for core in ["res://scripts/project_build.gd", "res://scripts/codegen.gd", "res://scripts/node_defs.gd", "res://scripts/types.gd", "res://scripts/toolchains.gd", "res://scripts/project.gd", "res://scripts/ops.gd"]:
 		var sc := load(core) as GDScript
@@ -98,6 +100,11 @@ func _init() -> void:
 		_case_start = Time.get_ticks_msec()
 		_compile_ms = 0
 		_check_watches()
+	if only.is_empty() or "shader_graph" in only:
+		count += 1
+		_case_start = Time.get_ticks_msec()
+		_compile_ms = 0
+		_check_shader_graph()
 	if only.is_empty() or "examples" in only:
 		count += 1
 		_case_start = Time.get_ticks_msec()
@@ -814,6 +821,88 @@ func _check_watches() -> void:
 		if r.ok or not str(r.text).contains(bad[src]):
 			problems.append("%s should fail with '%s', got ok=%s: %s" % [src, bad[src], r.ok, r.text])
 	_finish("watches", problems, [])
+
+
+## Shader graphs (.cbshader): the GDScript emitter (ShaderGraph) and the C emitter in the runtime give the same GLSL text
+## (or both refuse). A small C program carrying the runtime's emitter and node table reads each graph.
+func _check_shader_graph() -> void:
+	var problems := []
+	var work := ProjectSettings.globalize_path("user://test_build/shader_graph")
+	DirAccess.make_dir_recursive_absolute(work)
+	var harness := "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#define CB_SHADER_SURFACE 0\n#define CB_SHADER_POST 1\n" + ProjectBuild.shader_graph_c() + """
+int main(int argc, char **argv) {
+    char buf[65536], err[240], *glsl;
+    size_t n;
+    FILE *f;
+    if (argc < 3) return 2;
+    f = fopen(argv[1], "rb");
+    if (!f) return 2;
+    n = fread(buf, 1, sizeof buf - 1, f);
+    buf[n] = 0;
+    fclose(f);
+    glsl = cb_shadergraph_glsl(buf, argv[2][0] == 'p' ? CB_SHADER_POST : CB_SHADER_SURFACE, err, sizeof err);
+    if (glsl) fputs(glsl, stdout); else printf("ERR\\n");
+    return 0;
+}
+"""
+	var hf := FileAccess.open(work.path_join("harness.c"), FileAccess.WRITE)
+	hf.store_string(harness)
+	hf.close()
+	var cc := OS.execute("cc", ["-std=c99", "-Wall", "-Wextra", "-pedantic", "-O0", work.path_join("harness.c"), "-o", work.path_join("harness")], [], true)
+	if cc != 0:
+		_finish("shader_graph", ["the C emitter does not compile with -Wall -Wextra -pedantic"], [])
+		return
+	var tt := func(id: int, type: String, extra := {}) -> Dictionary:
+		var d := {"id": id, "type": type}
+		d.merge(extra)
+		return d
+	var wire := func(a: int, o: String, b: int, i: String) -> Dictionary:
+		return {"from": a, "out": o, "to": b, "in": i}
+	var graphs := {
+		"surface_plain": {"kind": "surface", "nodes": [tt.call(1, "surface_out")], "wires": []},
+		"surface_checker": {"kind": "surface", "nodes": [
+			tt.call(1, "surface_out"), tt.call(2, "uv"), tt.call(3, "checker", {"values": {"scale": [6]}}),
+			tt.call(4, "base"), tt.call(5, "mix", {"t": "vec3", "values": {"b": [0.1, 0.5, 0.25]}}),
+		], "wires": [wire.call(2, "uv", 3, "uv"), wire.call(4, "color", 5, "a"), wire.call(3, "out", 5, "t"), wire.call(5, "out", 1, "color")]},
+		"surface_pulse": {"kind": "surface", "nodes": [
+			tt.call(1, "surface_out"), tt.call(2, "time"), tt.call(3, "sin"), tt.call(4, "multiply", {"t": "vec3", "values": {"b": [0.9, 0.5, 0.2]}}),
+			tt.call(5, "base"), tt.call(6, "split3"), tt.call(7, "combine2"), tt.call(8, "gray"),
+		], "wires": [wire.call(2, "time", 3, "x"), wire.call(3, "out", 4, "a"), wire.call(4, "out", 1, "color"), wire.call(3, "out", 1, "alpha")]},
+		"surface_coerce": {"kind": "surface", "nodes": [
+			tt.call(1, "surface_out"), tt.call(2, "uv"), tt.call(3, "normal"), tt.call(4, "add", {"t": "vec4"}), tt.call(5, "time"), tt.call(6, "length", {"t": "vec2"}),
+		], "wires": [wire.call(2, "uv", 4, "a"), wire.call(3, "normal", 4, "b"), wire.call(4, "out", 1, "color"), wire.call(4, "out", 6, "x"), wire.call(6, "out", 1, "alpha")]},
+		"post_vignette": {"kind": "post", "nodes": [
+			tt.call(1, "post_out"), tt.call(2, "scene_color"), tt.call(3, "uv"), tt.call(4, "length", {"t": "vec2", "values": {}}), tt.call(5, "subtract", {"t": "vec2", "values": {"b": [0.5]}}),
+			tt.call(6, "smoothstep", {"values": {"from": [0.8], "to": [0.2]}}), tt.call(7, "multiply", {"t": "vec3"}), tt.call(8, "resolution"), tt.call(9, "random"),
+		], "wires": [wire.call(3, "uv", 5, "a"), wire.call(5, "out", 4, "x"), wire.call(4, "out", 6, "x"), wire.call(2, "color", 7, "a"), wire.call(6, "out", 7, "b"), wire.call(7, "out", 1, "color")]},
+		"bad_loop": {"kind": "surface", "nodes": [tt.call(1, "surface_out"), tt.call(2, "add"), tt.call(3, "add")],
+			"wires": [wire.call(2, "out", 3, "a"), wire.call(3, "out", 2, "a"), wire.call(2, "out", 1, "alpha")]},
+		"bad_kind": {"kind": "surface", "nodes": [tt.call(1, "surface_out"), tt.call(2, "scene_color")], "wires": [wire.call(2, "color", 1, "color")]},
+		"bad_no_output": {"kind": "post", "nodes": [tt.call(1, "uv")], "wires": []},
+		"bad_type": {"kind": "surface", "nodes": [tt.call(1, "surface_out"), tt.call(2, "nonesuch")], "wires": [wire.call(2, "out", 1, "alpha")]},
+	}
+	var shown := []
+	for gname in graphs:
+		var g: Dictionary = graphs[gname]
+		var gf := FileAccess.open(work.path_join(gname + ".cbshader"), FileAccess.WRITE)
+		gf.store_string(JSON.stringify(g, " "))
+		gf.close()
+		var gd := ShaderGraph.compile(g)
+		var out := []
+		OS.execute(work.path_join("harness"), [work.path_join(gname + ".cbshader"), "post" if g.kind == "post" else "surface"], out, true)
+		var c_text := str(out[0]) if not out.is_empty() else ""
+		var want_fail: bool = str(gname).begins_with("bad_")
+		var gd_text := "ERR\n" if gd.glsl == "" else str(gd.glsl)
+		if want_fail and gd.glsl != "":
+			problems.append("%s: should be refused" % gname)
+		elif not want_fail and gd.glsl == "":
+			problems.append("%s: GDScript refused it: %s" % [gname, ", ".join(gd.problems)])
+		elif gd_text != c_text:
+			problems.append("%s: the emitters differ\n--- GDScript\n%s--- C\n%s" % [gname, gd_text, c_text])
+		if gname == "surface_checker":
+			shown.append(str(gd.glsl))
+	# The GLSL really is what's shown in API.md's example
+	_finish("shader_graph", problems, shown)
 
 
 ## Every example generates its C without problems (they're what users open first).

@@ -713,15 +713,16 @@ const DEFS := {
 	},
 	"look": {
 		"title": "Graphics setting", "cat": "graphics", "kind": "action", "graphics": true,
-		"mode": "what", "mode_titles": {"Shading": "Set shading", "Splatting": "Set splatting", "Pixel size": "Set pixel size"},
+		"mode": "what", "mode_titles": {"Shading": "Set shading", "Splatting": "Set splatting", "Pixel size": "Set pixel size", "Shader": "Use shader"},
 		"fields": [
-			["what", "option", "Shading", ["Shading", "Splatting", "Pixel size"], "Setting"],
+			["what", "option", "Shading", ["Shading", "Splatting", "Pixel size", "Shader"], "Setting"],
 			["shading", "option", "lit", ["lit", "toon", "unlit", "wire"], "Shading", {"what": ["Shading"]}],
 			["splat", "option", "off", ["off", "mixed", "full"], "Splatting", {"what": ["Splatting"]}],
+			["kind", "option", "Surface", ["Surface", "Post"], "Shader kind", {"what": ["Shader"]}],
 		],
-		"args": [["pixel", INT, "2", false, {"what": ["Pixel size"]}]],
+		"args": [["pixel", INT, "2", false, {"what": ["Pixel size"]}], ["file", STRING, "", false, {"what": ["Shader"]}]],
 		"groups": ["next"],
-		"desc": "Changes a Project Settings > Graphics setting while the program runs (they start as the project's): Shading (lit, toon, unlit, wire), Splatting (off, mixed: the objects marked splat, full), Pixel size (1..16 window pixels per drawn pixel: the frame, Window width / height and the mouse follow from the next frame). Raylib backend only. The Environment's own effects (vignette, bloom...) are fields: set them with Field.",
+		"desc": "Changes a Project Settings > Graphics setting while the program runs (they start as the project's): Shading (lit, toon, unlit, wire), Splatting (off, mixed: the objects marked splat, full), Shader (a shader file of the project: Surface = a file that defines cb_surface, Post = cb_post; blank or \"none\" = the built-in look; it lasts until the scene's Environment changes it), Pixel size (1..16 window pixels per drawn pixel: the frame, Window width / height and the mouse follow from the next frame). Raylib backend only. The Environment's own effects (vignette, bloom...) are fields: set them with Field.",
 	},
 	"clear": {
 		"title": "Clear window", "cat": "graphics", "kind": "action", "graphics": true,

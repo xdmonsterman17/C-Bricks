@@ -227,7 +227,7 @@ static func node_icon(cls: String) -> String:
 	if CBTypes.SCRIPT_TYPES.has(cls):
 		return "script"
 	for c in CBTypes.lineage(cls):
-		var k: String = {"Shape3D": "shape3d", "Mesh3D": "mesh3d", "Camera3D": "camera3d", "Light3D": "light3d", "Spatial3D": "spatial3d",
+		var k: String = {"Shape3D": "shape3d", "Mesh3D": "mesh3d", "MultiMesh3D": "multimesh3d", "Camera3D": "camera3d", "Light3D": "light3d", "Spatial3D": "spatial3d",
 				"Shape2D": "shape2d", "Sprite2D": "sprite2d", "Text2D": "text2d", "Camera2D": "camera2d", "Spatial2D": "spatial2d",
 				"Environment": "environment", "Label": "label", "Panel": "panel", "Bar": "bar", "Image": "image", "Button": "button", "VBox": "vbox", "HBox": "hbox", "Control": "control"}.get(str(c), "")
 		if k != "":

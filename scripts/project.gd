@@ -158,6 +158,8 @@ static func graphics_settings(cf: ConfigFile) -> Dictionary:
 		"msaa": bool(cf.get_value("graphics", "msaa", false)),
 		"vsync": bool(cf.get_value("graphics", "vsync", false)),
 		"window": str(cf.get_value("graphics", "window", "fixed")),
+		"surface_shader": str(cf.get_value("graphics", "surface_shader", "")),
+		"post_shader": str(cf.get_value("graphics", "post_shader", "")),
 	}
 	if g.shading not in SHADINGS:
 		g.shading = "lit"
@@ -274,6 +276,23 @@ static func list_assets(dir: String) -> PackedStringArray:
 		if is_ignored(rel, skip):
 			continue
 		if rel.ends_with("/") or rel.get_extension() == SCRIPT_EXT or rel == FILE or rel == WORLD_FILE or rel.get_extension() == SCENE_EXT:
+			continue
+		out.append(rel)
+	return out
+
+
+## Shader files in the project (2026-11-18): relative paths of the .glsl / .fs files that define `cb_surface` (kind 0) or `cb_post`
+## (kind 1); a .cbshader (the visual editor's) is listed for both.
+const SHADER_EXTS := ["glsl", "fs", "cbshader"]
+
+
+static func list_shaders(dir: String, kind: int) -> PackedStringArray:
+	var out := PackedStringArray()
+	for rel in list_assets(dir):
+		var ext := rel.get_extension().to_lower()
+		if ext not in SHADER_EXTS:
+			continue
+		if ext != "cbshader" and FileAccess.get_file_as_string(dir.path_join(rel)).find("cb_post" if kind == 1 else "cb_surface") < 0:
 			continue
 		out.append(rel)
 	return out

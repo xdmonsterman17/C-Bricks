@@ -1221,6 +1221,8 @@ func _show_world_object(o: Dictionary) -> void:
 					o.fields[fname] = "true" if on else "false"
 					changed.call("Set " + fname))
 				_add_row(fname, cb)
+			elif fname in ["shader", "surface_shader", "post_shader"]:
+				_add_row(fname, _shader_picker(o, fname, 1 if fname == "post_shader" else 0, changed))
 			elif fname == "anchor" and CBTypes.is_subclass(cls, "Control"):
 				_add_row(fname, _anchor_picker(str(o.fields.get(fname, defaults.get(fname, "top_left"))), func(picked: String) -> void:
 					o.fields[fname] = picked
@@ -1540,3 +1542,36 @@ func _show_snapshot(o: Dictionary, changed: Callable) -> void:
 	_target.add_child(take)
 	_target.add_child(preview)
 	_target = _body
+
+
+## A shader field's picker (2026-11-18): Inherit (blank: the layer above), None (the built-in look, whatever the layers above say) or a
+## shader file of the project. The field holds "", "none" or the file's relative path.
+func _shader_picker(o: Dictionary, fname: String, kind: int, changed: Callable) -> OptionButton:
+	var pick := OptionButton.new()
+	pick.add_item("Inherit")
+	pick.set_item_metadata(0, "")
+	pick.add_item("None")
+	pick.set_item_metadata(1, "none")
+	var cur := str(o.fields.get(fname, ""))
+	var files := CBProject.list_shaders(context.project_dir, kind)
+	for rel in files:
+		pick.add_item(rel)
+		pick.set_item_metadata(pick.item_count - 1, rel)
+	var at := 0
+	for i in pick.item_count:
+		if str(pick.get_item_metadata(i)) == cur:
+			at = i
+	if cur != "" and cur != "none" and not files.has(cur):
+		pick.add_item(cur + " (missing)")
+		pick.set_item_metadata(pick.item_count - 1, cur)
+		at = pick.item_count - 1
+	pick.select(at)
+	pick.tooltip_text = "Inherit: the scene's shader, else the project's (Project Settings > Graphics). None: the built-in look. Or one of the project's shader files (%s)." % ("a file that defines cb_post" if kind == 1 else "a file that defines cb_surface")
+	pick.item_selected.connect(func(i: int) -> void:
+		var v := str(pick.get_item_metadata(i))
+		if v == "":
+			o.fields.erase(fname)
+		else:
+			o.fields[fname] = v
+		changed.call("Set " + fname))
+	return pick

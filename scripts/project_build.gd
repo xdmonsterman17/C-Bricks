@@ -282,7 +282,7 @@ static func generate_graphs(program: String, version: String, dir: String, paths
 		sources.append("cbricks_main.c")
 	var backend := resolve_backend(backend_pick, target)
 	if graphics:
-		files["cbricks_gfx.c"] = FileAccess.get_file_as_string(GFX_RUNTIME)
+		files["cbricks_gfx.c"] = FileAccess.get_file_as_string(GFX_RUNTIME) + shader_graph_c()
 		sources.append("cbricks_gfx.c")
 		if backend == "dos":  # MS-DOS: its own backend (software 2D into a VGA / VESA screen), PNG reading / writing from stb
 			files["cbricks_backend.c"] = "#define CB_DOS_SCREEN %d\n" % dos_screen + FileAccess.get_file_as_string(str(TargetPlugins.backend("dos").file))
@@ -590,6 +590,7 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"typedef struct cb_rect { float x, y, width, height; } cb_rect;",
 			"typedef struct cb_texture { int id; int width; int height; } cb_texture;  /* id 0: not loaded */",
 			"typedef struct cb_font { int id; } cb_font;  /* id 0: the default font */",
+			"typedef struct cb_shader { int id; } cb_shader;  /* id 0: not loaded / didn't compile */",
 			"typedef struct cb_sound { int id; unsigned int frames; } cb_sound;",
 			"typedef struct cb_music { int id; float length; bool looping; } cb_music;",
 			"typedef struct cb_mesh cb_mesh;",
@@ -627,6 +628,11 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 		"const char *cb_read_file(const char *path);",
 		"bool cb_write_file(const char *path, const char *text, bool append);",
 		"bool cb_file_exists(const char *path);",
+		"bool cb_make_dir(const char *path);",
+		"const char *cb_config_dir(void);",
+		"const char *cb_exe_path(void);",
+		"bool cb_register_app(const char *name);",
+		"const char *cb_find_app(const char *name);",
 		"void cb_assert(bool ok, int file, int brick, const char *message);",
 		"",
 		"/* Memory: every string and list is kept until the program ends, then freed. */",
@@ -799,6 +805,18 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"cb_font cb_load_font(const char *path, int size);  /* a TTF / OTF file; id 0 = it can't be read (the default font is used) */",
 			"void cb_draw_text_font(cb_font font, const char *text, int x, int y, int size, cb_rgba c);",
 			"int cb_text_width_font(cb_font font, const char *text, int size);",
+			"#define CB_SHADER_SURFACE 0  /* GLSL defines  vec4 cb_surface(vec4 base, vec2 uv, vec3 normal)  (base = texture * color); light, fog and shading still apply */",
+			"#define CB_SHADER_POST 1     /* GLSL defines  vec3 cb_post(vec3 color, vec2 uv)  and runs on the finished frame; also reads uniform vec2 res */",
+			"cb_shader cb_shader_source(int kind, const char *glsl);  /* both may declare uniforms and read uniform float cbTime (seconds); id 0 = didn't compile / not supported */",
+			"cb_shader cb_load_shader(int kind, const char *path);    /* the same from a text file (.glsl / .fs / .cbshader) */",
+		"void cb_unload_shader(cb_shader s);                      /* frees it (and its slot: a program that reloads a shader on every file change needs this); in use -> the built-in look returns */",
+			"void cb_shader_float(cb_shader s, const char *name, double v);",
+			"void cb_shader_vec2(cb_shader s, const char *name, double x, double y);",
+			"void cb_shader_vec3(cb_shader s, const char *name, double x, double y, double z);",
+			"void cb_shader_vec4(cb_shader s, const char *name, double x, double y, double z, double w);",
+			"void cb_use_shader(cb_shader s);          /* a surface shader: the 3D draws after this; a post shader: every frame after this */",
+			"void cb_use_default_shader(int kind);     /* back to the plain lit shader / the Environment's effects */",
+			"void cb_shader_use_file(int kind, const char *file);  /* a shader file (read once; \"\" or \"none\" = the built-in look): what the Use shader brick calls */",
 			"void cb_draw_texture(cb_texture t, int x, int y, cb_rgba tint);",
 			"cb_texture cb_load_texture(const char *path);",
 			"cb_sound cb_sound_load(const char *path);",
@@ -870,6 +888,8 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"void cb_draw_sprite(cb_texture texture, int x, int y, int frame, int columns, int rows, double scale, double rotation, cb_rgba tint);",
 			"void cb_begin_2d(Vector2 center, double zoom, double rotation);",
 			"void cb_end_2d(void);",
+			"void cb_clip(int x, int y, int width, int height);   /* only pixels inside are drawn, until cb_clip_end() */",
+			"void cb_clip_end(void);",
 			"cb_music cb_music_load(const char *path, bool loop);",
 			"void cb_music_play(cb_music music);",
 			"void cb_music_stop(cb_music music);",
@@ -1035,9 +1055,24 @@ static func gfx_defines(g: Dictionary) -> String:
 		"#define CB_MSAA %d" % (1 if d.msaa else 0),
 		"#define CB_VSYNC %d" % (1 if d.vsync else 0),
 		"#define CB_WINDOW %d  /* 0 fixed, 1 resizable, 2 fullscreen, 3 borderless */" % CBProject.WINDOWS.find(d.window),
+		"#define CB_SHADER_SURFACE_DEFAULT %s  /* the project's shader files (\"\" = none): a scene's Environment and an object's Shader field override them */" % CodeGen.c_string(str(d.surface_shader)),
+		"#define CB_SHADER_POST_DEFAULT %s" % CodeGen.c_string(str(d.post_shader)),
 	])
 
 
+## The shader graph compiler for cbricks_gfx.c: the node table (shader_nodes.json, in pieces: C99 only promises
+## 4095-character string literals) + the C emitter (runtime/cb_shadergraph.c).
+static func shader_graph_c() -> String:
+	var json := ShaderGraph.table_text()
+	var parts := PackedStringArray()
+	var i := 0
+	while i < json.length():
+		parts.append("\t" + CodeGen.c_string(json.substr(i, 1000)))
+		i += 1000
+	return "\nstatic const char *const cb_sg_table_parts[] = {\n%s\n};\n\n" % ",\n".join(parts) + FileAccess.get_file_as_string(SHADER_GRAPH_RUNTIME)
+
+
+const SHADER_GRAPH_RUNTIME := "res://scripts/runtime/cb_shadergraph.c"
 ## Colors and handle printing for graphics projects (the backend draws them).
 const GFX_RUNTIME := "res://scripts/runtime/cb_gfx.c"
 ## Graphics backends (2026-11-08): the one file that talks to a graphics library.

@@ -14,6 +14,7 @@ const DESCRIPTIONS := {
 	"Spatial3D": "An object in the 3D world: position, rotation and scale (relative to its parent Spatial3D). Group other 3D objects under it to move them together.",
 	"Shape3D": "A box, sphere, cylinder... drawn in 3D with a size and a colour. Solid ones stop Move and collide; Every frame and touch events work on it.",
 	"Mesh3D": "A 3D model loaded from a mesh file (OBJ...), with a colour.",
+	"MultiMesh3D": "One mesh drawn many times in a few draw calls (thousands of gems, grass, bullets). Its copies aren't objects: fill the lists positions (one Vector3 each), sizes and turns from a brick (sizes and turns are optional). Not drawn in the editor but as a box.",
 	"Camera3D": "The view into the 3D world: where it stands (position), what it looks at (target) and its field of view.",
 	"Light3D": "A light in the 3D world (a sun): colour and energy.",
 	"Spatial2D": "An object in the 2D world: position, rotation and scale (relative to its parent Spatial2D).",

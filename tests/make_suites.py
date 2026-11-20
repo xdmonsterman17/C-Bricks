@@ -549,7 +549,9 @@ def graphics():
         s.b("look", {"what": "Splatting", "splat": sp})
     s.b("look", {"what": "Pixel size"}, {"pixel": I(2)})
     s.b("look", {"what": "Pixel size"}, {"pixel": I(1)})
-    s.say("look", "shading toon / unlit / wire / lit, splatting mixed / full / off, pixel size 2 then 1")
+    s.b("look", {"what": "Shader", "kind": "Surface"}, {"file": S("none")})
+    s.b("look", {"what": "Shader", "kind": "Post"}, {"file": S("")})
+    s.say("look", "shading toon / unlit / wire / lit, splatting mixed / full / off, pixel size 2 then 1, shader surface none / post blank")
     s.b("var", {"mode": "Set", "name": "frames"}, {"value": I(0)})
     fr = []
     fr.append(s.b("clear", {}, {"color": S("RAYWHITE")}, top=False))

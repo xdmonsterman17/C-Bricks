@@ -1484,6 +1484,7 @@ func _graphics_brick(id: int, d: int, ctx: Dictionary) -> String:
 			match str(f.get("what", "Shading")):
 				"Splatting": return _lines(id, d, "cb_graphics_setting(1, %d);" % maxi(CBProject.SPLATS.find(str(f.get("splat", "off"))), 0))
 				"Pixel size": return _lines(id, d, "cb_graphics_setting(2, (int)(%s));" % a.call("pixel"))
+				"Shader": return _lines(id, d, "cb_shader_use_file(%d, %s);" % [1 if str(f.get("kind", "Surface")) == "Post" else 0, a.call("file")])
 			return _lines(id, d, "cb_graphics_setting(0, %d);" % maxi(CBProject.SHADINGS.find(str(f.get("shading", "lit"))), 0))
 		"close_window":
 			return _lines(id, d, "cb_close_window();  /* the Game loop ends after this frame */")
