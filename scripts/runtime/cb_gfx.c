@@ -97,6 +97,120 @@ void cb_draw_text_font(cb_font font, const char *text, int x, int y, int size, c
 int cb_text_width_font(cb_font font, const char *text, int size) {
     return (int)(cb_be_text_size_font(font, text, size < 10 ? 10 : size).x + 0.5);
 }
+/* ---- custom shaders (2026-11-18; see cb_backend.h CB_BE_HAVE_SHADERS) ---- */
+cb_shader cb_shader_source(int kind, const char *glsl) {
+    return kind == CB_SHADER_POST ? cb_be_shader_post(glsl) : cb_be_shader_surface(glsl);
+}
+char *cb_shadergraph_glsl(const char *json, int kind, char *err, size_t errn);   /* the C emitter, below in this file */
+cb_shader cb_load_shader(int kind, const char *path) {
+    cb_shader none;
+    FILE *f = fopen(path, "rb");
+    char *text;
+    long n;
+    none.id = 0;
+    if (!f)
+        return none;
+    fseek(f, 0, SEEK_END);
+    n = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    text = (char *)malloc((size_t)(n > 0 ? n : 0) + 1);
+    if (!text) { fclose(f); return none; }
+    n = (long)fread(text, 1, (size_t)(n > 0 ? n : 0), f);
+    text[n] = 0;
+    fclose(f);
+    if (strlen(path) > 9 && strcmp(path + strlen(path) - 9, ".cbshader") == 0) {   /* a visual shader: compile its graph to GLSL */
+        char err[240];
+        char *glsl = cb_shadergraph_glsl(text, kind, err, sizeof err);
+        free(text);
+        if (!glsl) {
+            fprintf(stderr, "[shader] %s: %s\n", path, err);
+            return none;
+        }
+        none = cb_shader_source(kind, glsl);
+        free(glsl);
+        return none;
+    }
+    none = cb_shader_source(kind, text);
+    free(text);
+    return none;
+}
+void cb_unload_shader(cb_shader s) { cb_be_shader_free(s); }
+void cb_shader_float(cb_shader s, const char *name, double v) { float a = (float)v; cb_be_shader_set(s, name, 1, &a); }
+void cb_shader_vec2(cb_shader s, const char *name, double x, double y) { float a[2]; a[0] = (float)x; a[1] = (float)y; cb_be_shader_set(s, name, 2, a); }
+void cb_shader_vec3(cb_shader s, const char *name, double x, double y, double z) { float a[3]; a[0] = (float)x; a[1] = (float)y; a[2] = (float)z; cb_be_shader_set(s, name, 3, a); }
+void cb_shader_vec4(cb_shader s, const char *name, double x, double y, double z, double w) { float a[4]; a[0] = (float)x; a[1] = (float)y; a[2] = (float)z; a[3] = (float)w; cb_be_shader_set(s, name, 4, a); }
+void cb_use_shader(cb_shader s) { if (s.id > 0) cb_be_shader_use(s); }
+void cb_use_default_shader(int kind) { cb_be_shader_use_none(kind == CB_SHADER_POST); }
+
+/* Shader layers (2026-11-18): an object's Shader field, then the scene's Environment (Surface shader / Post shader), then the project's
+   default (Project Settings > Graphics), then the built-in look. A field is "" (inherit the layer above), "none" (the built-in look) or a
+   shader file's path. Files are read once (a file that fails stays failed: it's reported once, on stderr). */
+typedef struct { char *path; int kind; cb_shader sh; } cb_shader_file;
+static cb_shader_file *cb_shader_files = NULL;
+static int cb_shader_files_n = 0;
+static char *cb_shader_last[2] = {NULL, NULL};  /* the spec the scene applied, per kind */
+
+static char *cb_shader_copy(const char *s) {
+    size_t n = strlen(s) + 1;
+    char *c = (char *)malloc(n);
+    if (!c) { fputs("out of memory\n", stderr); exit(3); }
+    memcpy(c, s, n);
+    return c;
+}
+
+static cb_shader cb_shader_of(int kind, const char *path) {
+    int i;
+    cb_shader_file *f;
+    for (i = 0; i < cb_shader_files_n; i++)
+        if (cb_shader_files[i].kind == kind && strcmp(cb_shader_files[i].path, path) == 0)
+            return cb_shader_files[i].sh;
+    cb_shader_files = (cb_shader_file *)realloc((void *)cb_shader_files, sizeof(cb_shader_file) * (size_t)(cb_shader_files_n + 1));
+    if (!cb_shader_files) { fputs("out of memory\n", stderr); exit(3); }
+    f = &cb_shader_files[cb_shader_files_n++];
+    f->path = cb_shader_copy(path);
+    f->kind = kind;
+    f->sh = cb_load_shader(kind, path);
+    if (f->sh.id <= 0)
+        fprintf(stderr, "[shader] %s: not loaded (missing or it does not compile): the built-in look is used\n", path);
+    return f->sh;
+}
+
+/* Makes `spec` the active shader of `kind`. */
+void cb_shader_use_file(int kind, const char *spec) {
+    cb_shader s;
+    if (!spec || !spec[0] || strcmp(spec, "none") == 0) {
+        cb_use_default_shader(kind);
+        return;
+    }
+    s = cb_shader_of(kind, spec);
+    if (s.id > 0)
+        cb_use_shader(s);
+    else
+        cb_use_default_shader(kind);
+}
+
+static const char *cb_shader_first(const char *a, const char *b) { return a && a[0] ? a : (b ? b : ""); }
+
+/* The scene's layer, applied when it changes (a Use shader brick lasts until the Environment's field or the scene changes). */
+static void cb_shader_scene(int kind, const char *spec) {
+    if (cb_shader_last[kind] && strcmp(cb_shader_last[kind], spec) == 0)
+        return;
+    free(cb_shader_last[kind]);
+    cb_shader_last[kind] = cb_shader_copy(spec);
+    cb_shader_use_file(kind, spec);
+}
+
+/* An object's own shader around its draw: 1 when it switched (end it with cb_shader_object_end). */
+static int cb_shader_object(const char *spec) {
+    if (!spec || !spec[0])
+        return 0;
+    cb_shader_use_file(CB_SHADER_SURFACE, spec);
+    return 1;
+}
+static void cb_shader_object_end(void) {
+    cb_shader_use_file(CB_SHADER_SURFACE, cb_shader_last[CB_SHADER_SURFACE] ? cb_shader_last[CB_SHADER_SURFACE] : "");
+}
+
 cb_sound cb_sound_load(const char *path) { return cb_be_sound_load(path); }
 void cb_sound_play(cb_sound s) { cb_be_sound_play(s); }
 cb_music cb_music_load(const char *path, bool loop) { return cb_be_music_load(path, loop); }
@@ -157,6 +271,8 @@ void cb_draw_sprite(cb_texture texture, int x, int y, int frame, int columns, in
 
 void cb_begin_2d(Vector2 center, double zoom, double rotation) { cb_be_begin_2d(center, zoom, rotation); }
 void cb_end_2d(void) { cb_be_end_2d(); }
+void cb_clip(int x, int y, int width, int height) { cb_be_clip(x, y, width, height); }
+void cb_clip_end(void) { cb_be_clip_end(); }
 
 /* ---- 3D: the camera (kept here: Set camera, the world's Camera3D, shakes, Snapshot) ---- */
 typedef struct { Vector3 position, target; double fov; bool ortho; } cb_camera_state;
@@ -345,16 +461,51 @@ static void cb_draw_object(cb_object *o) {
     if (cb_is_a(o, &cls_Shape3D_class)) {
         cls_Shape3D *p = (cls_Shape3D *)o;
         if (p->f_visible) {
-            cb_be_splat(cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && p->f_splat));
+            int own = cb_shader_object(p->f_shader);  /* (an object with a shader is drawn whole, never splatted) */
+            cb_be_splat(!own && (cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && p->f_splat)));
             cb_draw_shape(cb_shape_kind(p->f_shape), cb_v3(0, 0, 0), p->f_size, 0, cb_color(p->f_color));
             cb_be_splat(cb_be_splat_mode() == 2);
+            if (own)
+                cb_shader_object_end();
         }
     } else if (cb_is_a(o, &cls_Mesh3D_class)) {
         cls_Mesh3D *m = (cls_Mesh3D *)o;
         if (m->f_visible && m->f_mesh) {
-            cb_be_splat(cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && m->f_splat));
+            int own = cb_shader_object(m->f_shader);
+            cb_be_splat(!own && (cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && m->f_splat)));
             cb_draw_mesh(m->f_mesh, cb_v3(0, 0, 0), cb_v3(1, 1, 1), 0, cb_color(m->f_color));
             cb_be_splat(cb_be_splat_mode() == 2);
+            if (own)
+                cb_shader_object_end();
+        }
+    }
+    else if (cb_is_a(o, &cls_MultiMesh3D_class)) {
+        cls_MultiMesh3D *mm = (cls_MultiMesh3D *)o;
+        if (mm->f_visible && mm->f_mesh && mm->f_positions && mm->f_positions->count > 0) {
+            static cb_instance *inst = NULL;
+            static int cap = 0;
+            int n = mm->f_positions->count, k;
+            const Vector3 *pos = (const Vector3 *)mm->f_positions->data;
+            const Vector3 *size = mm->f_sizes ? (const Vector3 *)mm->f_sizes->data : NULL;
+            const double *turn = mm->f_turns ? (const double *)mm->f_turns->data : NULL;
+            int ns = mm->f_sizes ? mm->f_sizes->count : 0, nt = mm->f_turns ? mm->f_turns->count : 0;
+            cb_rgba tint = cb_color(mm->f_color);
+            if (n > cap) {
+                cap = n + n / 2;
+                inst = (cb_instance *)realloc(inst, sizeof(cb_instance) * (size_t)cap);
+                if (!inst) {
+                    cap = 0;
+                    n = 0;
+                }
+            }
+            for (k = 0; k < n; k++) {
+                inst[k].x = pos[k].x; inst[k].y = pos[k].y; inst[k].z = pos[k].z;
+                inst[k].sx = k < ns ? size[k].x : 1.0f; inst[k].sy = k < ns ? size[k].y : 1.0f; inst[k].sz = k < ns ? size[k].z : 1.0f;
+                inst[k].turn = k < nt ? (float)turn[k] : 0.0f;
+                inst[k].color = tint;
+            }
+            cb_be_splat(cb_be_splat_mode() == 2);
+            cb_draw_mesh_batch(mm->f_mesh, inst, n);
         }
     }
     if (o->cls->drawn)
@@ -1261,10 +1412,14 @@ static void cb_post_update(void) {
         cb_object *o = (cb_object *)all[i];
         if (cb_is_a(o, &cls_Environment_class)) {
             cls_Environment *e = (cls_Environment *)o;
+            cb_shader_scene(CB_SHADER_SURFACE, cb_shader_first(e->f_surface_shader, CB_SHADER_SURFACE_DEFAULT));
+            cb_shader_scene(CB_SHADER_POST, cb_shader_first(e->f_post_shader, CB_SHADER_POST_DEFAULT));
             cb_be_post(e->f_vignette, e->f_scanlines, e->f_grain, e->f_posterize, e->f_bloom, e->f_curve, e->f_outline, e->f_dither, e->f_snap);
             return;
         }
     }
+    cb_shader_scene(CB_SHADER_SURFACE, CB_SHADER_SURFACE_DEFAULT);
+    cb_shader_scene(CB_SHADER_POST, CB_SHADER_POST_DEFAULT);
     cb_be_post(0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 

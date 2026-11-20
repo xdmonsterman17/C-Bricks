@@ -1,0 +1,9 @@
+[project]
+
+name="ShaderLayers"
+version="1.0"
+
+[graphics]
+
+surface_shader="assets/blue.glsl"
+post_shader="assets/lift.glsl"

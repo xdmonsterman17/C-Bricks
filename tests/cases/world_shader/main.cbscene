@@ -1,0 +1,88 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"objects": [
+		{
+			"id": 8,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 8,
+			"fields": {
+				"sky": "#1b2838",
+				"surface_shader": "assets/red.glsl",
+				"post_shader": "none"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 8,
+			"fields": {
+				"rotation": "-50, 30, 0"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 8,
+			"fields": {
+				"position": "0, 2, 9",
+				"target": "0, 0, 0",
+				"fov": "50"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Shape3D",
+			"name": "Inherit",
+			"parent": 8,
+			"fields": {
+				"position": "-3, 0, 0",
+				"size": "2, 2, 2"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Shape3D",
+			"name": "Plain",
+			"parent": 8,
+			"fields": {
+				"position": "0, 0, 0",
+				"size": "2, 2, 2",
+				"shader": "none"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Shape3D",
+			"name": "Own",
+			"parent": 8,
+			"fields": {
+				"position": "3, 0, 0",
+				"size": "2, 2, 2",
+				"shader": "assets/green.glsl"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Shape3D",
+			"name": "Graph",
+			"parent": 8,
+			"fields": {
+				"position": "0, 2.4, 0",
+				"size": "2, 2, 2",
+				"shader": "assets/checker.cbshader"
+			}
+		}
+	],
+	"next_id": 9
+}

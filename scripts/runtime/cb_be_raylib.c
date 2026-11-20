@@ -6,6 +6,7 @@
    cb_rect, cb_texture / cb_sound / cb_music handles, CB_KEY_* codes): another backend (MS-DOS)
    implements the same functions. Added to projects that use graphics bricks. */
 #include "raylib.h"
+#include <stdarg.h>
 #include "rlgl.h"  /* transforms, back-face culling, the render batch */
 /* the optional groups of cb_backend.h this backend implements */
 #define CB_BE_HAVE_2D_EXTRA 1
@@ -13,9 +14,12 @@
 #define CB_BE_HAVE_FONTS 1
 #define CB_BE_HAVE_SOUND 1
 #define CB_BE_HAVE_3D 1
+#define CB_BE_HAVE_3D_BATCH 1
 #define CB_BE_HAVE_LOOK 1
 #define CB_BE_HAVE_TARGETS 1
 #define CB_BE_HAVE_SCREENSHOT 1
+#define CB_BE_HAVE_SHADERS 1
+#define CB_BE_HAVE_CLIP 1
 #include "cbricks.h"
 
 static Color RL(cb_rgba c) {
@@ -100,6 +104,8 @@ void cb_be_music_forget_all(void) { cb_playing_n = 0; }
 /* ---- the window and its frames ---- */
 static float cb_splat_q = 1.0f;  /* the quality level 0.05..1: the share of every object's points drawn; follows the frame time */
 static long cb_splat_drawn = 0;  /* points drawn this frame */
+static long cb_splat_last = 0;   /* ... and in the frame before (tests read it: cb_be_splat_points) */
+long cb_be_splat_points(void) { return cb_splat_last; }
 static int cb_target_fps = 60;
 bool cb_be_open(int width, int height, const char *title, int fps, bool esc_closes) {
     unsigned int flags = 0;
@@ -130,6 +136,7 @@ bool cb_be_open(int width, int height, const char *title, int fps, bool esc_clos
 void cb_be_close(void) {
     cb_be_fonts_forget_all();
     cb_be_music_forget_all();
+    cb_be_shaders_forget_all();
     CloseAudioDevice();
     CloseWindow();
 }
@@ -139,11 +146,15 @@ bool cb_be_ready(void) { return IsWindowReady(); }
 /* The look's settings start as Project Settings > Graphics (CB_SHADING, CB_SPLAT, CB_PIXEL) and the Graphics
    setting brick changes them while the program runs. A pixel size change waits for the next frame, so a frame is
    drawn at one size. */
+static bool cb_splat_now = (CB_SPLAT == 2);
 static int cb_shading_v = CB_SHADING, cb_splat_v = CB_SPLAT, cb_pixel_v = CB_PIXEL, cb_pixel_next = CB_PIXEL;
 static void cb_shade_uniform(void);
 void cb_be_set_look(int what, int value) {
     if (what == 0) { cb_shading_v = value < 0 ? 0 : value > 3 ? 3 : value; cb_shade_uniform(); }
-    else if (what == 1) cb_splat_v = value < 0 ? 0 : value > 2 ? 2 : value;
+    else if (what == 1) {
+        cb_splat_v = value < 0 ? 0 : value > 2 ? 2 : value;
+        cb_splat_now = cb_splat_v == 2;  /* Draw shape / Draw mesh bricks: Full splats them (scene objects set it per object) */
+    }
     else if (what == 2) cb_pixel_next = value < 1 ? 1 : value > 16 ? 16 : value;
 }
 int cb_be_splat_mode(void) { return cb_splat_v; }
@@ -167,8 +178,11 @@ static float cb_post_fx[4] = { 0, 0, 0, 0 };   /* vignette, scanlines, grain, po
 static float cb_post_fx2[4] = { 0, 0, 0, 0 };  /* bloom, curve, outline, dither */
 static float cb_snap_px = 0;                   /* vertex snapping: the grid in frame pixels (0 off) */
 static bool cb_post_on = false;
+static int cb_post_custom = 0;  /* a post shader (CB_BE_HAVE_SHADERS) in place of the built-in pass: its handle id, 0 none */
+#define CB_POST_ACTIVE (cb_post_on || cb_post_custom > 0)
 static void cb_post_draw(Rectangle src, Rectangle dst);
 static void cb_snap_apply(void);
+static void cb_shaders_time(void);
 
 static float cb_unit(double v) { return v > 0 ? (v > 1 ? 1.0f : (float)v) : 0.0f; }
 
@@ -193,7 +207,8 @@ void cb_be_begin_frame(void) {
     cb_pixel_v = cb_pixel_next;
     BeginDrawing();
     cb_snap_apply();
-    if (cb_pixel_v > 1 || cb_post_on) {
+    cb_shaders_time();
+    if (cb_pixel_v > 1 || CB_POST_ACTIVE) {
         int w, h;
         cb_low_size(&w, &h);
         if (!cb_low_ok || cb_low.texture.width != w || cb_low.texture.height != h) {
@@ -223,6 +238,7 @@ static void cb_splat_adapt(void) {
         if (cb_splat_q > 1.0f) cb_splat_q = 1.0f;
         if (cb_splat_q < 0.05f) cb_splat_q = 0.05f;
     }
+    cb_splat_last = cb_splat_drawn;
     cb_splat_drawn = 0;
 }
 
@@ -255,7 +271,7 @@ bool cb_be_screenshot(const char *path) {
     bool ok;
     if (cb_low_in_frame) {  /* the frame so far, at its own (small) size, with the post effects */
         Image img;
-        if (cb_post_on) {
+        if (CB_POST_ACTIVE) {
             Rectangle src, dst;
             int w = cb_low.texture.width, h = cb_low.texture.height;
             if (!cb_shot_ok || cb_shot.texture.width != w || cb_shot.texture.height != h) {
@@ -342,6 +358,8 @@ void cb_be_begin_2d(Vector2 center, double zoom, double rotation) {
 }
 
 void cb_be_end_2d(void) { EndMode2D(); }
+void cb_be_clip(int x, int y, int width, int height) { BeginScissorMode(x, y, width, height); }
+void cb_be_clip_end(void) { EndScissorMode(); }
 
 /* ---- textures: handles (cb_texture.id) to raylib's ---- */
 static Texture2D *cb_texs = NULL;
@@ -438,6 +456,19 @@ void cb_be_sound_play(cb_sound h) {
 static Shader cb_lit;
 static bool cb_lit_ready = false;
 static bool cb_lit_ok = false;
+/* Custom shaders (CB_BE_HAVE_SHADERS): surface shaders are copies of the lit shader (they get every light / fog / shading
+   uniform too), post shaders replace the built-in post pass. Handle id = index + 1. */
+typedef struct cb_shader_slot { Shader sh; bool post, ok; } cb_shader_slot;
+#define CB_SHADER_MAX 32
+static cb_shader_slot cb_shaders[CB_SHADER_MAX];
+static int cb_shader_n = 0;
+static void cb_lit_set(const char *name, const void *v, int type) {
+    int i;
+    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, name), v, type);
+    for (i = 0; i < cb_shader_n; i++)
+        if (cb_shaders[i].ok && !cb_shaders[i].post)
+            SetShaderValue(cb_shaders[i].sh, GetShaderLocation(cb_shaders[i].sh, name), v, type);
+}
 /* The light, fog and ambient as last set (the shader has them for models; splats are lit in C with the same numbers). */
 static Vector3 cb_sun = { -0.3f, -0.8f, -0.5f };
 static float cb_sun_amb = 0.38f, cb_sun_col[3] = { 1, 1, 1 }, cb_fog_col[3] = { 1, 1, 1 }, cb_fog_dens = 0.0f;
@@ -469,20 +500,27 @@ static const char cb_vs[] = CB_VS_HEAD
     "        vec2 g = snapGrid * 0.5;\n"
     "        gl_Position.xy = floor(gl_Position.xy / gl_Position.w * g + 0.5) / g * gl_Position.w;\n    }\n}\n";
 
-static const char cb_fs[] = CB_FS_HEAD
-    "VARY vec2 fragTexCoord;\nVARY vec4 fragColor;\nVARY vec3 fragNormal;\n"
-    "uniform sampler2D texture0;\nuniform vec4 colDiffuse;\nuniform vec3 lightDir;\nuniform float ambient;\n"
+/* The lit fragment shader in pieces: a custom surface shader (CB_BE_HAVE_SHADERS) is this same shader with
+   its own cb_surface(base, uv, normal) in place of the default base color, so light, fog and shading still apply. */
+#define CB_LIT_DECL \
+    "VARY vec2 fragTexCoord;\nVARY vec4 fragColor;\nVARY vec3 fragNormal;\n" \
+    "uniform sampler2D texture0;\nuniform vec4 colDiffuse;\nuniform vec3 lightDir;\nuniform float ambient;\n" \
     "uniform float shade;\nuniform vec3 lightCol;\nuniform vec3 fogCol;\nuniform float fogDensity;\nuniform vec3 ambientCol;\nuniform float fogStart;\n"
-    "void main() {\n"
-    "    vec3 n = normalize(fragNormal);\n"
-    "    if (!gl_FrontFacing) n = -n;\n"
-    "    float diff = max(dot(n, -lightDir), 0.0);\n"
-    "    if (shade > 0.5 && shade < 1.5) diff = floor(diff * 3.0 + 0.5) / 3.0;\n"  /* toon: three steps of light */
-    "    vec3 light = ambient * ambientCol + (1.0 - ambient) * diff * lightCol;\n"
-    "    if (shade > 1.5) light = vec3(1.0);\n"  /* unlit */
-    "    vec4 base = TEX(texture0, fragTexCoord) * colDiffuse * fragColor;\n"
-    "    float seen = exp(-fogDensity * max(1.0 / gl_FragCoord.w - fogStart, 0.0));\n"  /* 1 / w: the depth from the camera */
-    "    FRAG = vec4(mix(fogCol, base.rgb * light, seen), base.a);\n}\n";
+#define CB_LIT_MAIN_A \
+    "void main() {\n" \
+    "    vec3 n = normalize(fragNormal);\n" \
+    "    if (!gl_FrontFacing) n = -n;\n" \
+    "    float diff = max(dot(n, -lightDir), 0.0);\n" \
+    "    if (shade > 0.5 && shade < 1.5) diff = floor(diff * 3.0 + 0.5) / 3.0;\n" /* toon: three steps of light */ \
+    "    vec3 light = ambient * ambientCol + (1.0 - ambient) * diff * lightCol;\n" \
+    "    if (shade > 1.5) light = vec3(1.0);\n" /* unlit */
+#define CB_LIT_BASE_DEFAULT "    vec4 base = TEX(texture0, fragTexCoord) * colDiffuse * fragColor;\n"
+#define CB_LIT_BASE_CUSTOM  "    vec4 base = cb_surface(TEX(texture0, fragTexCoord) * colDiffuse * fragColor, fragTexCoord, n);\n"
+#define CB_LIT_MAIN_B \
+    "    float seen = exp(-fogDensity * max(1.0 / gl_FragCoord.w - fogStart, 0.0));\n" /* 1 / w: the depth from the camera */ \
+    "    FRAG = vec4(mix(fogCol, base.rgb * light, seen), base.a);\n}\n"
+
+static const char cb_fs[] = CB_FS_HEAD CB_LIT_DECL CB_LIT_MAIN_A CB_LIT_BASE_DEFAULT CB_LIT_MAIN_B;
 
 
 static bool cb_wire_3d = false;
@@ -491,7 +529,7 @@ static bool cb_wire_3d = false;
 static void cb_shade_uniform(void) {
     if (cb_lit_ready && cb_lit_ok) {
         float shade = cb_shading_v == 1 ? 1.0f : cb_shading_v == 2 ? 2.0f : 0.0f;
-        SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "shade"), &shade, SHADER_UNIFORM_FLOAT);
+        cb_lit_set("shade", &shade, SHADER_UNIFORM_FLOAT);
     }
 }
 
@@ -500,7 +538,7 @@ static void cb_snap_apply(void) {
         float g[2];
         g[0] = cb_snap_px > 0 ? (float)cb_be_width() / cb_snap_px : 0.0f;
         g[1] = cb_snap_px > 0 ? (float)cb_be_height() / cb_snap_px : 0.0f;
-        SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "snapGrid"), g, SHADER_UNIFORM_VEC2);
+        cb_lit_set("snapGrid", g, SHADER_UNIFORM_VEC2);
     }
 }
 
@@ -515,8 +553,8 @@ static void cb_3d_ready(void) {
         if (!cb_lit_ok) {
             fputs("[warning] 3D lighting isn't available on this GPU: shapes are drawn unlit\n", stderr);
         } else {
-            SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightDir"), &sun, SHADER_UNIFORM_VEC3);
-            SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "ambient"), &amb, SHADER_UNIFORM_FLOAT);
+            cb_lit_set("lightDir", &sun, SHADER_UNIFORM_VEC3);
+            cb_lit_set("ambient", &amb, SHADER_UNIFORM_FLOAT);
             cb_shade_uniform();
             cb_snap_apply();
         }
@@ -591,7 +629,16 @@ static void cb_post_draw(Rectangle src, Rectangle dst) {
         if (!cb_post_ok)
             fputs("[warning] post effects aren't available on this GPU\n", stderr);
     }
-    if (cb_post_on && cb_post_ok) {
+    if (cb_post_custom > 0 && cb_shaders[cb_post_custom - 1].ok) {
+        Shader sh = cb_shaders[cb_post_custom - 1].sh;
+        float res[2], t = (float)GetTime();
+        res[0] = (float)cb_low.texture.width; res[1] = (float)cb_low.texture.height;
+        SetShaderValue(sh, GetShaderLocation(sh, "res"), res, SHADER_UNIFORM_VEC2);
+        SetShaderValue(sh, GetShaderLocation(sh, "cbTime"), &t, SHADER_UNIFORM_FLOAT);
+        BeginShaderMode(sh);
+        DrawTexturePro(cb_low.texture, src, dst, cb_v2(0, 0), 0.0f, WHITE);
+        EndShaderMode();
+    } else if (cb_post_on && cb_post_ok) {
         float res[2];
         res[0] = (float)cb_low.texture.width; res[1] = (float)cb_low.texture.height;
         SetShaderValue(cb_post_shader, GetShaderLocation(cb_post_shader, "fx"), cb_post_fx, SHADER_UNIFORM_VEC4);
@@ -613,6 +660,186 @@ static Model cb_lit_model(Mesh mesh) {
     return m;
 }
 
+/* ---- custom shaders (CB_BE_HAVE_SHADERS, 2026-11-18) ----
+   Surface: the project's GLSL defines  vec4 cb_surface(vec4 base, vec2 uv, vec3 normal)  (base = texture * color), and it is
+   spliced into the lit shader above, so sun, ambient, fog, toon / unlit and vertex snap still apply. Post: it defines
+   vec3 cb_post(vec3 color, vec2 uv)  and runs on the finished frame instead of the Environment's effects. Both may declare
+   their own uniforms, and get `uniform float cbTime` (seconds) and post gets `uniform vec2 res` (the frame's size). */
+static Shader cb_cur_surface;
+static bool cb_cur_surface_on = false;
+
+static char *cb_cat(const char *const *parts, int n) {
+    size_t len = 1;
+    int i;
+    char *out;
+    for (i = 0; i < n; i++) len += strlen(parts[i]);
+    out = (char *)malloc(len);
+    if (!out) { fputs("out of memory\n", stderr); exit(3); }
+    out[0] = 0;
+    for (i = 0; i < n; i++) strcat(out, parts[i]);
+    return out;
+}
+
+static void cb_surface_push(Shader sh) {   /* the lit shader's uniforms as they stand now */
+    float shade = cb_shading_v == 1 ? 1.0f : cb_shading_v == 2 ? 2.0f : 0.0f, g[2];
+    g[0] = cb_snap_px > 0 ? (float)cb_be_width() / cb_snap_px : 0.0f;
+    g[1] = cb_snap_px > 0 ? (float)cb_be_height() / cb_snap_px : 0.0f;
+    SetShaderValue(sh, GetShaderLocation(sh, "lightDir"), &cb_sun, SHADER_UNIFORM_VEC3);
+    SetShaderValue(sh, GetShaderLocation(sh, "ambient"), &cb_sun_amb, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(sh, GetShaderLocation(sh, "lightCol"), cb_sun_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(sh, GetShaderLocation(sh, "fogCol"), cb_fog_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(sh, GetShaderLocation(sh, "fogDensity"), &cb_fog_dens, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(sh, GetShaderLocation(sh, "ambientCol"), cb_amb_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(sh, GetShaderLocation(sh, "fogStart"), &cb_fog_start, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(sh, GetShaderLocation(sh, "shade"), &shade, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(sh, GetShaderLocation(sh, "snapGrid"), g, SHADER_UNIFORM_VEC2);
+}
+
+/* raylib logs a compile error to stdout and then links its own default code instead (the program looks fine): so a
+   shader is compiled once by itself first, with the log sent to stderr, and only a clean one is loaded. (The probe's
+   shader object stays until the window closes: raylib has no public delete.) */
+static void cb_shader_log(int level, const char *text, va_list args) {
+    char line[1024];
+    (void)level;
+    vsnprintf(line, sizeof line, text, args);
+    fprintf(stderr, "[shader] %s\n", line);
+}
+
+static Shader cb_shader_load(const char *vs, const char *fs) {
+    Shader none = { 0 };
+    unsigned int probe;
+    Shader sh;
+    SetTraceLogCallback(cb_shader_log);
+    probe = rlCompileShader(fs, RL_FRAGMENT_SHADER);
+    if (probe == 0) {
+        SetTraceLogCallback(NULL);
+        return none;
+    }
+    sh = LoadShaderFromMemory(vs, fs);
+    SetTraceLogCallback(NULL);
+    return sh;
+}
+
+static cb_shader cb_shader_add(Shader sh, bool post) {
+    cb_shader h;
+    int slot;
+    h.id = 0;
+    if (sh.id == 0 || sh.id == rlGetShaderIdDefault()) {
+        fputs("[warning] a custom shader didn't compile (the errors are above): ignored\n", stderr);
+        return h;
+    }
+    for (slot = 0; slot < cb_shader_n; slot++)   /* a slot freed by cb_unload_shader first */
+        if (!cb_shaders[slot].ok)
+            break;
+    if (slot >= CB_SHADER_MAX) {
+        UnloadShader(sh);
+        fputs("[warning] too many custom shaders (32)\n", stderr);
+        return h;
+    }
+    cb_shaders[slot].sh = sh;
+    cb_shaders[slot].post = post;
+    cb_shaders[slot].ok = true;
+    if (slot == cb_shader_n)
+        cb_shader_n++;
+    h.id = slot + 1;
+    return h;
+}
+
+cb_shader cb_be_shader_surface(const char *glsl) {
+    cb_shader h;
+    const char *parts[7];
+    char *fs;
+    Shader sh;
+    cb_3d_ready();
+    parts[0] = CB_FS_HEAD; parts[1] = CB_LIT_DECL; parts[2] = "uniform float cbTime;\n"; parts[3] = glsl;
+    parts[4] = "\n" CB_LIT_MAIN_A; parts[5] = CB_LIT_BASE_CUSTOM; parts[6] = CB_LIT_MAIN_B;
+    fs = cb_cat(parts, 7);
+    sh = cb_shader_load(cb_vs, fs);
+    free(fs);
+    h = cb_shader_add(sh, false);
+    if (h.id > 0)
+        cb_surface_push(sh);
+    return h;
+}
+
+cb_shader cb_be_shader_post(const char *glsl) {
+    const char *parts[5];
+    char *fs;
+    Shader sh;
+    cb_shader h;
+    parts[0] = CB_FS_HEAD "VARY vec2 fragTexCoord;\nuniform sampler2D texture0;\nuniform vec2 res;\nuniform float cbTime;\n";
+    parts[1] = glsl;
+    parts[2] = "\nvoid main() { FRAG = vec4(cb_post(TEX(texture0, fragTexCoord).rgb, fragTexCoord), 1.0); }\n";
+    fs = cb_cat(parts, 3);
+    sh = cb_shader_load(NULL, fs);
+    free(fs);
+    h = cb_shader_add(sh, true);
+    return h;
+}
+
+void cb_be_shader_set(cb_shader s, const char *name, int n, const float *v) {
+    if (s.id > 0 && s.id <= cb_shader_n && cb_shaders[s.id - 1].ok) {
+        Shader sh = cb_shaders[s.id - 1].sh;
+        int type = n == 1 ? SHADER_UNIFORM_FLOAT : n == 2 ? SHADER_UNIFORM_VEC2 : n == 3 ? SHADER_UNIFORM_VEC3 : SHADER_UNIFORM_VEC4;
+        SetShaderValue(sh, GetShaderLocation(sh, name), v, type);
+    }
+}
+
+/* Surface: the shader the next 3D draws use (id 0: the plain lit one). Post: the frame's shader (id 0: the Environment's). */
+void cb_be_shader_use(cb_shader s) {
+    if (s.id > 0 && s.id <= cb_shader_n && cb_shaders[s.id - 1].ok) {
+        if (cb_shaders[s.id - 1].post) {
+            cb_post_custom = s.id;
+        } else {
+            cb_cur_surface = cb_shaders[s.id - 1].sh;
+            cb_cur_surface_on = true;
+        }
+    }
+}
+
+void cb_be_shader_use_none(int post) {
+    if (post) cb_post_custom = 0;
+    else cb_cur_surface_on = false;
+}
+
+static void cb_shaders_time(void) {
+    int i;
+    float t = (float)GetTime();
+    for (i = 0; i < cb_shader_n; i++)
+        if (cb_shaders[i].ok && !cb_shaders[i].post)
+            SetShaderValue(cb_shaders[i].sh, GetShaderLocation(cb_shaders[i].sh, "cbTime"), &t, SHADER_UNIFORM_FLOAT);
+}
+
+void cb_be_shader_free(cb_shader s) {
+    if (s.id > 0 && s.id <= cb_shader_n && cb_shaders[s.id - 1].ok) {
+        cb_shader_slot *slot = &cb_shaders[s.id - 1];
+        if (slot->post && cb_post_custom == s.id)
+            cb_post_custom = 0;
+        if (!slot->post && cb_cur_surface_on && cb_cur_surface.id == slot->sh.id)
+            cb_cur_surface_on = false;
+        UnloadShader(slot->sh);
+        slot->ok = false;
+    }
+}
+
+void cb_be_shaders_forget_all(void) {
+    int i;
+    for (i = 0; i < cb_shader_n; i++)
+        if (cb_shaders[i].ok)
+            UnloadShader(cb_shaders[i].sh);
+    cb_shader_n = 0;
+    cb_cur_surface_on = false;
+    cb_post_custom = 0;
+}
+
+/* A draw of a model under the current surface shader (the model's material is swapped for the draw). */
+static Shader cb_shader_in(Model *m) {
+    Shader prev = m->materials[0].shader;
+    if (cb_cur_surface_on)
+        m->materials[0].shader = cb_cur_surface;
+    return prev;
+}
+
 
 /* ---- point splatting (2026-11-11): a model drawn as screen-facing discs (or squares) sprinkled over its
    triangles instead of filled triangles. The points are picked per triangle by area (CB_SPLAT_DENSITY a
@@ -628,7 +855,6 @@ typedef struct cb_splat_set { const void *key; int qx, qy, qz, stamp; cb_pt *pts
 #define CB_SPLAT_MAX 150000  /* points of one model */
 static cb_splat_set cb_splats[CB_SPLAT_SETS];
 static int cb_splat_tick = 0;
-static bool cb_splat_now = (CB_SPLAT == 2);
 
 void cb_be_splat(bool on) { cb_splat_now = on; }
 
@@ -642,8 +868,10 @@ static void cb_splat_free(cb_splat_set *set) {
     memset(set, 0, sizeof *set);
 }
 
+static void cb_batch_free(void);
 static void cb_splat_forget(void) {
     int i;
+    cb_batch_free();  /* (a mesh changed: its batch copy is stale; splats and batches are rebuilt together) */
     for (i = 0; i < CB_SPLAT_SETS; i++)
         cb_splat_free(&cb_splats[i]);
 }
@@ -1160,7 +1388,11 @@ void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba colo
         rlPopMatrix();
         return;
     }
-    DrawModelEx(cb_shape_models[kind], at, cb_v3(0, 1, 0), (float)turn, size, RL(color));
+    {
+        Shader prev = cb_shader_in(&cb_shape_models[kind]);
+        DrawModelEx(cb_shape_models[kind], at, cb_v3(0, 1, 0), (float)turn, size, RL(color));
+        cb_shape_models[kind].materials[0].shader = prev;
+    }
 }
 
 /* ---- meshes (Brickscript's mesh bricks) ----
@@ -1388,7 +1620,11 @@ void cb_draw_mesh(cb_mesh *m, Vector3 at, Vector3 size, double turn, cb_rgba rgb
     }
     if (m->both)
         rlDisableBackfaceCulling();
-    DrawModelEx(m->model, at, cb_v3(0, 1, 0), (float)turn, size, tint);
+    {
+        Shader prev = cb_shader_in(&m->model);
+        DrawModelEx(m->model, at, cb_v3(0, 1, 0), (float)turn, size, tint);
+        m->model.materials[0].shader = prev;
+    }
     if (m->both)
         rlEnableBackfaceCulling();
 }
@@ -1409,11 +1645,168 @@ void cb_draw_mesh_rot(cb_mesh *m, Vector3 at, Vector3 size, Vector3 rot, cb_rgba
     } else {
         if (m->both)
             rlDisableBackfaceCulling();
+        Shader prev = cb_shader_in(&m->model);
         DrawModelEx(m->model, cb_v3(0, 0, 0), cb_v3(0, 1, 0), 0.0f, cb_v3(1, 1, 1), tint);
+        m->model.materials[0].shader = prev;
         if (m->both)
             rlEnableBackfaceCulling();
     }
     rlPopMatrix();
+}
+
+/* ---- batched meshes (2026-11-18, experimental): many copies of one mesh in a few draw calls ----
+   No instancing on OpenGL 2.1 (a Pi), so a "batch mesh" holds CB_BATCH_K copies of the mesh in one vertex buffer; each
+   vertex carries its copy's number in texcoord.x, and the vertex shader finds that copy's place (3 rows of an affine matrix
+   + a tint: 4 vec4s) in a uniform array. One draw call = CB_BATCH_K objects, the work on the GPU. A smaller last group is
+   padded with zero-sized copies. The normal is turned by the same rows (not exact for uneven scales; the fragment shader
+   normalises it). Everything else (lights, fog, shading, snap) is the lit shader's own. */
+#if defined(GRAPHICS_API_OPENGL_ES2) || defined(PLATFORM_WEB)
+#define CB_BATCH_K 24   /* GLSL 100 promises only 128 vec4s of uniforms */
+#else
+#define CB_BATCH_K 64
+#endif
+#define CB_STR2(x) #x
+#define CB_STR(x) CB_STR2(x)
+
+static const char cb_batch_vs[] = CB_VS_HEAD
+    "ATTR vec3 vertexPosition;\nATTR vec2 vertexTexCoord;\nATTR vec3 vertexNormal;\nATTR vec4 vertexColor;\n"
+    "uniform mat4 mvp;\nuniform mat4 matNormal;\nuniform vec2 snapGrid;\nuniform vec4 inst[" CB_STR(CB_BATCH_K) " * 4];\n"
+    "VARY vec2 fragTexCoord;\nVARY vec4 fragColor;\nVARY vec3 fragNormal;\n"
+    "void main() {\n"
+    "    int i = int(vertexTexCoord.x + 0.5) * 4;\n"
+    "    vec4 p = vec4(vertexPosition, 1.0);\n"
+    "    vec3 lp = vec3(dot(inst[i], p), dot(inst[i + 1], p), dot(inst[i + 2], p));\n"
+    "    vec3 ln = vec3(dot(inst[i].xyz, vertexNormal), dot(inst[i + 1].xyz, vertexNormal), dot(inst[i + 2].xyz, vertexNormal));\n"
+    "    fragTexCoord = vec2(0.0);\n    fragColor = vertexColor * inst[i + 3];\n"
+    "    fragNormal = (matNormal * vec4(ln, 0.0)).xyz;\n"
+    "    gl_Position = mvp * vec4(lp, 1.0);\n"
+    "    if (snapGrid.x > 0.5) {\n"
+    "        vec2 g = snapGrid * 0.5;\n"
+    "        gl_Position.xy = floor(gl_Position.xy / gl_Position.w * g + 0.5) / g * gl_Position.w;\n    }\n}\n";
+
+static Shader cb_batch_sh;
+static Material cb_batch_mat;
+static int cb_batch_state = 0;  /* 0 not tried, 1 works, -1 not available */
+static int cb_batch_inst_loc = -1;
+static struct { const cb_mesh *key; int verts, k; Mesh mesh; bool ok; } cb_batch_c;
+long cb_batch_draws = 0, cb_batch_objects = 0;  /* (tests / benchmarks read these) */
+
+static void cb_batch_free(void) {
+    if (cb_batch_c.ok)
+        UnloadMesh(cb_batch_c.mesh);
+    memset(&cb_batch_c, 0, sizeof cb_batch_c);
+}
+
+static bool cb_batch_ready(void) {
+    if (cb_batch_state)
+        return cb_batch_state > 0;
+    cb_batch_state = -1;
+    cb_3d_ready();
+    if (!cb_lit_ok)
+        return false;
+    cb_batch_sh = LoadShaderFromMemory(cb_batch_vs, cb_fs);
+    if (cb_batch_sh.id == rlGetShaderIdDefault() || cb_batch_sh.id == 0)
+        return false;
+    cb_batch_inst_loc = GetShaderLocation(cb_batch_sh, "inst");
+    cb_batch_mat = LoadMaterialDefault();
+    cb_batch_mat.shader = cb_batch_sh;
+    cb_batch_state = cb_batch_inst_loc >= 0 ? 1 : -1;
+    return cb_batch_state > 0;
+}
+
+/* The batch mesh for a mesh: K copies (fewer when the 16-bit indices run out). */
+static bool cb_batch_build(const cb_mesh *m) {
+    const Mesh *g = &m->model.meshes[0];
+    int v = g->vertexCount, ipc = g->indices ? g->triangleCount * 3 : v, k = CB_BATCH_K, c, i;
+    Mesh b;
+    if (cb_batch_c.ok && cb_batch_c.key == m && cb_batch_c.verts == v)
+        return true;
+    cb_batch_free();
+    if (v <= 0 || v > 65535)
+        return false;
+    if (k > 65535 / v)
+        k = 65535 / v;
+    if (k < 2)
+        return false;
+    memset(&b, 0, sizeof b);
+    b.vertexCount = v * k;
+    b.triangleCount = ipc / 3 * k;
+    b.vertices = (float *)MemAlloc((unsigned)(b.vertexCount * 3 * (int)sizeof(float)));
+    b.normals = (float *)MemAlloc((unsigned)(b.vertexCount * 3 * (int)sizeof(float)));
+    b.texcoords = (float *)MemAlloc((unsigned)(b.vertexCount * 2 * (int)sizeof(float)));
+    if (g->colors)
+        b.colors = (unsigned char *)MemAlloc((unsigned)(b.vertexCount * 4));
+    b.indices = (unsigned short *)MemAlloc((unsigned)(b.triangleCount * 3 * (int)sizeof(unsigned short)));
+    for (c = 0; c < k; c++) {
+        memcpy(b.vertices + (size_t)c * v * 3, g->vertices, (size_t)v * 3 * sizeof(float));
+        if (g->normals)
+            memcpy(b.normals + (size_t)c * v * 3, g->normals, (size_t)v * 3 * sizeof(float));
+        if (g->colors)
+            memcpy(b.colors + (size_t)c * v * 4, g->colors, (size_t)v * 4);
+        for (i = 0; i < v; i++)
+            b.texcoords[((size_t)c * v + i) * 2] = (float)c;
+        for (i = 0; i < ipc; i++)
+            b.indices[(size_t)c * ipc + i] = (unsigned short)((g->indices ? g->indices[i] : i) + c * v);
+    }
+    UploadMesh(&b, false);
+    cb_batch_c.key = m;
+    cb_batch_c.verts = v;
+    cb_batch_c.k = k;
+    cb_batch_c.mesh = b;
+    cb_batch_c.ok = true;
+    return true;
+}
+
+static void cb_batch_sync(void) {  /* the batch shader's lights are the lit shader's */
+    float shade = cb_shading_v == 1 ? 1.0f : cb_shading_v == 2 ? 2.0f : 0.0f, g[2];
+    g[0] = cb_snap_px > 0 ? (float)cb_be_width() / cb_snap_px : 0.0f;
+    g[1] = cb_snap_px > 0 ? (float)cb_be_height() / cb_snap_px : 0.0f;
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "lightDir"), &cb_sun, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "ambient"), &cb_sun_amb, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "shade"), &shade, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "lightCol"), cb_sun_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "fogCol"), cb_fog_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "fogDensity"), &cb_fog_dens, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "ambientCol"), cb_amb_col, SHADER_UNIFORM_VEC3);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "fogStart"), &cb_fog_start, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(cb_batch_sh, GetShaderLocation(cb_batch_sh, "snapGrid"), g, SHADER_UNIFORM_VEC2);
+}
+
+void cb_draw_mesh_batch(cb_mesh *m, const cb_instance *list, int count) {
+    float buf[CB_BATCH_K * 16];
+    int done = 0, i;
+    Matrix ident;
+    memset(&ident, 0, sizeof ident);
+    ident.m0 = ident.m5 = ident.m10 = ident.m15 = 1.0f;
+    if (!m || !m->built || m->model.meshes[0].vertexCount == 0 || count <= 0)
+        return;
+    if (cb_splat_now || !cb_batch_ready() || !cb_batch_build(m)) {  /* the plain way */
+        for (i = 0; i < count; i++)
+            cb_draw_mesh(m, cb_v3(list[i].x, list[i].y, list[i].z), cb_v3(list[i].sx, list[i].sy, list[i].sz), list[i].turn, list[i].color);
+        return;
+    }
+    cb_batch_sync();
+    if (m->both)
+        rlDisableBackfaceCulling();
+    while (done < count) {
+        int n = count - done < cb_batch_c.k ? count - done : cb_batch_c.k;
+        memset(buf, 0, sizeof buf);
+        for (i = 0; i < n; i++) {
+            const cb_instance *o = &list[done + i];
+            float rad = o->turn * (float)(3.14159265358979 / 180.0), c = cosf(rad), s = sinf(rad), *q = buf + i * 16;
+            q[0] = c * o->sx;  q[1] = 0;      q[2] = s * o->sz;  q[3] = o->x;
+            q[4] = 0;          q[5] = o->sy;  q[6] = 0;          q[7] = o->y;
+            q[8] = -s * o->sx; q[9] = 0;      q[10] = c * o->sz; q[11] = o->z;
+            q[12] = o->color.r / 255.0f; q[13] = o->color.g / 255.0f; q[14] = o->color.b / 255.0f; q[15] = o->color.a / 255.0f;
+        }
+        SetShaderValueV(cb_batch_sh, cb_batch_inst_loc, buf, SHADER_UNIFORM_VEC4, cb_batch_c.k * 4);
+        DrawMesh(cb_batch_c.mesh, cb_batch_mat, ident);
+        cb_batch_draws++;
+        done += n;
+    }
+    cb_batch_objects += count;
+    if (m->both)
+        rlEnableBackfaceCulling();
 }
 
 cb_list *cb_mesh_points(const cb_mesh *m) {
@@ -1463,8 +1856,8 @@ void cb_set_light(Vector3 direction, double ambient) {
     cb_sun_amb = amb;
     if (!cb_lit_ok)
         return;
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightDir"), &sun, SHADER_UNIFORM_VEC3);
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "ambient"), &amb, SHADER_UNIFORM_FLOAT);
+    cb_lit_set("lightDir", &sun, SHADER_UNIFORM_VEC3);
+    cb_lit_set("ambient", &amb, SHADER_UNIFORM_FLOAT);
 }
 
 /* The sun's color times its energy (Light3D), and the fog (Environment: density 0 = none). */
@@ -1474,7 +1867,7 @@ void cb_set_light_color(cb_rgba color, double energy) {
     cb_sun_col[1] = (float)(color.g / 255.0 * energy);
     cb_sun_col[2] = (float)(color.b / 255.0 * energy);
     if (cb_lit_ok)
-        SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "lightCol"), cb_sun_col, SHADER_UNIFORM_VEC3);
+        cb_lit_set("lightCol", cb_sun_col, SHADER_UNIFORM_VEC3);
 }
 
 void cb_set_fog(cb_rgba color, double density) {
@@ -1485,8 +1878,8 @@ void cb_set_fog(cb_rgba color, double density) {
     cb_fog_dens = density > 0 ? (float)density : 0.0f;
     if (!cb_lit_ok)
         return;
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogCol"), cb_fog_col, SHADER_UNIFORM_VEC3);
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogDensity"), &cb_fog_dens, SHADER_UNIFORM_FLOAT);
+    cb_lit_set("fogCol", cb_fog_col, SHADER_UNIFORM_VEC3);
+    cb_lit_set("fogDensity", &cb_fog_dens, SHADER_UNIFORM_FLOAT);
 }
 
 /* The ambient light's colour and where fog begins (Environment: ambient_color, fog_start). */
@@ -1498,8 +1891,8 @@ void cb_set_ambient(cb_rgba color, double fog_start) {
     cb_fog_start = fog_start > 0 ? (float)fog_start : 0.0f;
     if (!cb_lit_ok)
         return;
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "ambientCol"), cb_amb_col, SHADER_UNIFORM_VEC3);
-    SetShaderValue(cb_lit, GetShaderLocation(cb_lit, "fogStart"), &cb_fog_start, SHADER_UNIFORM_FLOAT);
+    cb_lit_set("ambientCol", cb_amb_col, SHADER_UNIFORM_VEC3);
+    cb_lit_set("fogStart", &cb_fog_start, SHADER_UNIFORM_FLOAT);
 }
 
 /* ---- 3D transforms and lines (the world's placement; Draw shape's lines and grids) ---- */

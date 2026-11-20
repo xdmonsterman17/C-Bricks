@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://b1utweak4j5au"
+path="res://.godot/imported/green.glsl-937c840278ac0f3a03577cf216547097.res"
+
+[deps]
+
+source_file="res://tests/cases/world_shader/assets/green.glsl"
+dest_files=["res://.godot/imported/green.glsl-937c840278ac0f3a03577cf216547097.res"]
+
+[params]
+

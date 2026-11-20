@@ -1,0 +1,1046 @@
+{
+ "cbshader_nodes": 1,
+ "nodes": {
+  "base": {
+   "title": "Base color",
+   "group": "Input",
+   "kinds": "s",
+   "in": [],
+   "out": [
+    [
+     "color",
+     "vec3"
+    ],
+    [
+     "alpha",
+     "float"
+    ]
+   ],
+   "code": [
+    "base.rgb",
+    "base.a"
+   ]
+  },
+  "scene_color": {
+   "title": "Scene color",
+   "group": "Input",
+   "kinds": "p",
+   "in": [],
+   "out": [
+    [
+     "color",
+     "vec3"
+    ]
+   ],
+   "code": [
+    "c"
+   ]
+  },
+  "uv": {
+   "title": "UV",
+   "group": "Input",
+   "kinds": "sp",
+   "in": [],
+   "out": [
+    [
+     "uv",
+     "vec2"
+    ]
+   ],
+   "code": [
+    "uv"
+   ]
+  },
+  "normal": {
+   "title": "Normal",
+   "group": "Input",
+   "kinds": "s",
+   "in": [],
+   "out": [
+    [
+     "normal",
+     "vec3"
+    ]
+   ],
+   "code": [
+    "normal"
+   ]
+  },
+  "time": {
+   "title": "Time",
+   "group": "Input",
+   "kinds": "sp",
+   "in": [],
+   "out": [
+    [
+     "time",
+     "float"
+    ]
+   ],
+   "code": [
+    "cbTime"
+   ]
+  },
+  "resolution": {
+   "title": "Resolution",
+   "group": "Input",
+   "kinds": "p",
+   "in": [],
+   "out": [
+    [
+     "size",
+     "vec2"
+    ]
+   ],
+   "code": [
+    "res"
+   ]
+  },
+  "value": {
+   "title": "Value",
+   "group": "Constant",
+   "kinds": "sp",
+   "in": [
+    [
+     "value",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "{value}"
+   ],
+   "gen": true
+  },
+  "color": {
+   "title": "Color",
+   "group": "Constant",
+   "kinds": "sp",
+   "in": [
+    [
+     "color",
+     "vec3",
+     [
+      1.0,
+      1.0,
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "color",
+     "vec3"
+    ]
+   ],
+   "code": [
+    "{color}"
+   ]
+  },
+  "add": {
+   "title": "Add",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "{a} + {b}"
+   ],
+   "gen": true
+  },
+  "subtract": {
+   "title": "Subtract",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "{a} - {b}"
+   ],
+   "gen": true
+  },
+  "multiply": {
+   "title": "Multiply",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      1.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "{a} * {b}"
+   ],
+   "gen": true
+  },
+  "divide": {
+   "title": "Divide",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      1.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "{a} / {b}"
+   ],
+   "gen": true
+  },
+  "one_minus": {
+   "title": "One minus",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "1.0 - {x}"
+   ],
+   "gen": true
+  },
+  "mix": {
+   "title": "Mix",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      1.0
+     ]
+    ],
+    [
+     "t",
+     "float",
+     [
+      0.5
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "mix({a}, {b}, {t})"
+   ],
+   "gen": true
+  },
+  "min": {
+   "title": "Min",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "min({a}, {b})"
+   ],
+   "gen": true
+  },
+  "max": {
+   "title": "Max",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "max({a}, {b})"
+   ],
+   "gen": true
+  },
+  "clamp": {
+   "title": "Clamp",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "low",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "high",
+     "gen",
+     [
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "clamp({x}, {low}, {high})"
+   ],
+   "gen": true
+  },
+  "smoothstep": {
+   "title": "Smoothstep",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "from",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "to",
+     "gen",
+     [
+      1.0
+     ]
+    ],
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "smoothstep({from}, {to}, {x})"
+   ],
+   "gen": true
+  },
+  "step": {
+   "title": "Step",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "edge",
+     "gen",
+     [
+      0.5
+     ]
+    ],
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "step({edge}, {x})"
+   ],
+   "gen": true
+  },
+  "power": {
+   "title": "Power",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      1.0
+     ]
+    ],
+    [
+     "exp",
+     "gen",
+     [
+      2.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "pow({x}, {exp})"
+   ],
+   "gen": true
+  },
+  "sqrt": {
+   "title": "Square root",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "sqrt({x})"
+   ],
+   "gen": true
+  },
+  "abs": {
+   "title": "Absolute",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "abs({x})"
+   ],
+   "gen": true
+  },
+  "fract": {
+   "title": "Fraction",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "fract({x})"
+   ],
+   "gen": true
+  },
+  "floor": {
+   "title": "Floor",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "floor({x})"
+   ],
+   "gen": true
+  },
+  "modulo": {
+   "title": "Modulo",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "by",
+     "gen",
+     [
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "mod({x}, {by})"
+   ],
+   "gen": true
+  },
+  "sin": {
+   "title": "Sine",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "sin({x})"
+   ],
+   "gen": true
+  },
+  "cos": {
+   "title": "Cosine",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "gen"
+    ]
+   ],
+   "code": [
+    "cos({x})"
+   ],
+   "gen": true
+  },
+  "length": {
+   "title": "Length",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "float"
+    ]
+   ],
+   "code": [
+    "length({x})"
+   ],
+   "gen": true
+  },
+  "dot": {
+   "title": "Dot",
+   "group": "Math",
+   "kinds": "sp",
+   "in": [
+    [
+     "a",
+     "gen",
+     [
+      0.0
+     ]
+    ],
+    [
+     "b",
+     "gen",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "float"
+    ]
+   ],
+   "code": [
+    "dot({a}, {b})"
+   ],
+   "gen": true
+  },
+  "combine2": {
+   "title": "Make vec2",
+   "group": "Vector",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "float",
+     [
+      0.0
+     ]
+    ],
+    [
+     "y",
+     "float",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "vec2"
+    ]
+   ],
+   "code": [
+    "vec2({x}, {y})"
+   ]
+  },
+  "combine3": {
+   "title": "Make vec3",
+   "group": "Vector",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "float",
+     [
+      0.0
+     ]
+    ],
+    [
+     "y",
+     "float",
+     [
+      0.0
+     ]
+    ],
+    [
+     "z",
+     "float",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "vec3"
+    ]
+   ],
+   "code": [
+    "vec3({x}, {y}, {z})"
+   ]
+  },
+  "combine4": {
+   "title": "Make vec4",
+   "group": "Vector",
+   "kinds": "sp",
+   "in": [
+    [
+     "x",
+     "float",
+     [
+      0.0
+     ]
+    ],
+    [
+     "y",
+     "float",
+     [
+      0.0
+     ]
+    ],
+    [
+     "z",
+     "float",
+     [
+      0.0
+     ]
+    ],
+    [
+     "w",
+     "float",
+     [
+      1.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "vec4"
+    ]
+   ],
+   "code": [
+    "vec4({x}, {y}, {z}, {w})"
+   ]
+  },
+  "split2": {
+   "title": "Split vec2",
+   "group": "Vector",
+   "kinds": "sp",
+   "in": [
+    [
+     "v",
+     "vec2",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "x",
+     "float"
+    ],
+    [
+     "y",
+     "float"
+    ]
+   ],
+   "code": [
+    "{v}.x",
+    "{v}.y"
+   ]
+  },
+  "split3": {
+   "title": "Split vec3",
+   "group": "Vector",
+   "kinds": "sp",
+   "in": [
+    [
+     "v",
+     "vec3",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "x",
+     "float"
+    ],
+    [
+     "y",
+     "float"
+    ],
+    [
+     "z",
+     "float"
+    ]
+   ],
+   "code": [
+    "{v}.x",
+    "{v}.y",
+    "{v}.z"
+   ]
+  },
+  "checker": {
+   "title": "Checker",
+   "group": "Pattern",
+   "kinds": "sp",
+   "in": [
+    [
+     "uv",
+     "vec2",
+     [
+      0.0
+     ]
+    ],
+    [
+     "scale",
+     "float",
+     [
+      8.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "float"
+    ]
+   ],
+   "code": [
+    "mod(floor({uv}.x * {scale}) + floor({uv}.y * {scale}), 2.0)"
+   ]
+  },
+  "random": {
+   "title": "Random",
+   "group": "Pattern",
+   "kinds": "sp",
+   "in": [
+    [
+     "p",
+     "vec2",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "float"
+    ]
+   ],
+   "code": [
+    "fract(sin(dot({p}, vec2(12.9898, 78.233))) * 43758.5453)"
+   ]
+  },
+  "gray": {
+   "title": "Grayscale",
+   "group": "Color",
+   "kinds": "sp",
+   "in": [
+    [
+     "color",
+     "vec3",
+     [
+      0.0
+     ]
+    ]
+   ],
+   "out": [
+    [
+     "out",
+     "float"
+    ]
+   ],
+   "code": [
+    "dot({color}, vec3(0.299, 0.587, 0.114))"
+   ]
+  },
+  "surface_out": {
+   "title": "Surface output",
+   "group": "Output",
+   "kinds": "s",
+   "in": [
+    [
+     "color",
+     "vec3",
+     "base.rgb"
+    ],
+    [
+     "alpha",
+     "float",
+     "base.a"
+    ]
+   ],
+   "out": [],
+   "code": []
+  },
+  "post_out": {
+   "title": "Post output",
+   "group": "Output",
+   "kinds": "p",
+   "in": [
+    [
+     "color",
+     "vec3",
+     "c"
+    ]
+   ],
+   "out": [],
+   "code": []
+  }
+ }
+}

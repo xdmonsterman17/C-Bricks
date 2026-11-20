@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bxti5aksg6pon"
+path="res://.godot/imported/lift.glsl-95492403bc2e8801ef81cb1c55d78836.res"
+
+[deps]
+
+source_file="res://tests/cases/world_shader/assets/lift.glsl"
+dest_files=["res://.godot/imported/lift.glsl-95492403bc2e8801ef81cb1c55d78836.res"]
+
+[params]
+

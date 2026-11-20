@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://k6p4u2rxckss"
+path="res://.godot/imported/red.glsl-a3cba66caba62a986a18854ae86d7797.res"
+
+[deps]
+
+source_file="res://tests/cases/world_shader/assets/red.glsl"
+dest_files=["res://.godot/imported/red.glsl-a3cba66caba62a986a18854ae86d7797.res"]
+
+[params]
+

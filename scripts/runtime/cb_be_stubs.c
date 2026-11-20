@@ -25,6 +25,21 @@ Vector2 cb_be_text_size_font(cb_font f, const char *text, double size) { (void)f
 void cb_be_fonts_forget_all(void) {}
 #endif
 
+#ifndef CB_BE_HAVE_CLIP
+void cb_be_clip(int x, int y, int width, int height) { (void)x; (void)y; (void)width; (void)height; }
+void cb_be_clip_end(void) {}
+#endif
+
+#ifndef CB_BE_HAVE_SHADERS
+cb_shader cb_be_shader_surface(const char *glsl) { cb_shader s; (void)glsl; s.id = 0; return s; }
+cb_shader cb_be_shader_post(const char *glsl) { cb_shader s; (void)glsl; s.id = 0; return s; }
+void cb_be_shader_set(cb_shader s, const char *name, int count, const float *values) { (void)s; (void)name; (void)count; (void)values; }
+void cb_be_shader_use(cb_shader s) { (void)s; }
+void cb_be_shader_use_none(int post) { (void)post; }
+void cb_be_shader_free(cb_shader s) { (void)s; }
+void cb_be_shaders_forget_all(void) {}
+#endif
+
 #ifndef CB_BE_HAVE_SOUND
 cb_sound cb_be_sound_load(const char *path) { cb_sound s; (void)path; s.id = 0; s.frames = 0; return s; }
 void cb_be_sound_play(cb_sound s) { (void)s; }
@@ -69,6 +84,14 @@ void cb_set_light(Vector3 direction, double ambient) { (void)direction; (void)am
 void cb_set_light_color(cb_rgba color, double energy) { (void)color; (void)energy; }
 void cb_set_fog(cb_rgba color, double density) { (void)color; (void)density; }
 void cb_set_ambient(cb_rgba color, double fog_start) { (void)color; (void)fog_start; }
+#endif
+
+#ifndef CB_BE_HAVE_3D_BATCH
+void cb_draw_mesh_batch(cb_mesh *mesh, const cb_instance *list, int count) {
+    int i;
+    for (i = 0; i < count; i++)
+        cb_draw_mesh(mesh, cb_v3(list[i].x, list[i].y, list[i].z), cb_v3(list[i].sx, list[i].sy, list[i].sz), list[i].turn, list[i].color);
+}
 #endif
 
 #ifndef CB_BE_HAVE_LOOK

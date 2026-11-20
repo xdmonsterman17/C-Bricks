@@ -23,9 +23,12 @@
  *     CB_BE_HAVE_FONTS       fonts loaded from a file (without: the default font draws)
  *     CB_BE_HAVE_SOUND       sounds and music
  *     CB_BE_HAVE_3D          the 3D view, transforms, 3D lines, shapes, meshes, lights, fog
+ *     CB_BE_HAVE_3D_BATCH    many copies of one mesh in a few draw calls (without: one cb_draw_mesh each)
  *     CB_BE_HAVE_LOOK        post effects, shading / splat settings (needs 3D to matter)
  *     CB_BE_HAVE_TARGETS     render targets (camera snapshots, scene thumbnails)
  *     CB_BE_HAVE_SCREENSHOT  cb_be_screenshot
+ *     CB_BE_HAVE_CLIP        a clip rectangle for everything drawn next (scissor)
+ *     CB_BE_HAVE_SHADERS     custom GLSL: surface shaders on 3D draws, a post shader (without: they load as id 0 and do nothing)
  *
  * Conventions: colors are cb_rgba (0..255); coordinates are pixels, y down; 3D is right-handed,
  * y up; times are seconds; key / button codes are the CB_KEY_* / mouse numbers of cbricks.h.
@@ -135,6 +138,12 @@ void cb_set_light_color(cb_rgba color, double energy);
 void cb_set_fog(cb_rgba color, double density);
 void cb_set_ambient(cb_rgba color, double fog_start);
 
+/* ======== CB_BE_HAVE_3D_BATCH (experimental, 2026-11-18) ======== */
+/* One copy of a mesh: where, how big (per axis), turned about the up axis (degrees), tinted. */
+typedef struct cb_instance { float x, y, z; float sx, sy, sz; float turn; cb_rgba color; } cb_instance;
+/* Draws `count` copies of the mesh (what cb_draw_mesh does for each) in a few draw calls. */
+void cb_draw_mesh_batch(cb_mesh *mesh, const cb_instance *list, int count);
+
 /* ======== CB_BE_HAVE_LOOK ======== */
 void cb_be_post(double vignette, double scanlines, double grain, double posterize, double bloom, double curve, double outline, double dither, double snap);
 void cb_be_set_look(int what, int value);   /* 0 shading (lit toon unlit wire), 1 splatting (off mixed full), 2 pixel size */
@@ -146,6 +155,22 @@ void cb_be_target_end(void);
 bool cb_be_target_save(const char *path);
 cb_texture cb_be_target_texture(void);
 void cb_be_target_free(void);
+
+/* ======== CB_BE_HAVE_CLIP (2026-11-19) ======== */
+void cb_be_clip(int x, int y, int width, int height);   /* only pixels inside the rectangle are drawn, until cb_be_clip_end */
+void cb_be_clip_end(void);
+
+/* ======== CB_BE_HAVE_SHADERS (2026-11-18) ======== */
+/* Surface: glsl defines  vec4 cb_surface(vec4 base, vec2 uv, vec3 normal)  and is spliced into the lit shader.
+   Post: glsl defines  vec3 cb_post(vec3 color, vec2 uv)  and runs on the finished frame. Both may declare uniforms and read
+   `uniform float cbTime`; post also `uniform vec2 res`. A shader that doesn't compile gives id 0 (and a warning). */
+cb_shader cb_be_shader_surface(const char *glsl);
+cb_shader cb_be_shader_post(const char *glsl);
+void cb_be_shader_set(cb_shader s, const char *name, int count, const float *values);   /* count 1..4: float, vec2, vec3, vec4 */
+void cb_be_shader_use(cb_shader s);        /* a surface shader: the next 3D draws; a post shader: the frame */
+void cb_be_shader_use_none(int post);      /* back to the plain lit shader (post = 0) / the Environment's effects (post = 1) */
+void cb_be_shader_free(cb_shader s);       /* unload one; its slot can be reused; if it was in use, the built-in look returns */
+void cb_be_shaders_forget_all(void);       /* before the window closes */
 
 /* ======== CB_BE_HAVE_SCREENSHOT ======== */
 bool cb_be_screenshot(const char *path);

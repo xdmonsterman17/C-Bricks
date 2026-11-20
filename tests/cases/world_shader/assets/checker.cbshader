@@ -1,0 +1,85 @@
+{
+	"cbshader": 1,
+	"kind": "surface",
+	"nodes": [
+		{
+			"id": 1,
+			"type": "surface_out",
+			"pos": [
+				600,
+				100
+			]
+		},
+		{
+			"id": 2,
+			"type": "uv",
+			"pos": [
+				0,
+				200
+			]
+		},
+		{
+			"id": 3,
+			"type": "checker",
+			"pos": [
+				200,
+				200
+			],
+			"values": {
+				"scale": [
+					4
+				]
+			}
+		},
+		{
+			"id": 4,
+			"type": "base",
+			"pos": [
+				200,
+				0
+			]
+		},
+		{
+			"id": 5,
+			"type": "mix",
+			"t": "vec3",
+			"pos": [
+				400,
+				100
+			],
+			"values": {
+				"b": [
+					1.0,
+					0.8,
+					0.1
+				]
+			}
+		}
+	],
+	"wires": [
+		{
+			"from": 2,
+			"out": "uv",
+			"to": 3,
+			"in": "uv"
+		},
+		{
+			"from": 4,
+			"out": "color",
+			"to": 5,
+			"in": "a"
+		},
+		{
+			"from": 3,
+			"out": "out",
+			"to": 5,
+			"in": "t"
+		},
+		{
+			"from": 5,
+			"out": "out",
+			"to": 1,
+			"in": "color"
+		}
+	]
+}
