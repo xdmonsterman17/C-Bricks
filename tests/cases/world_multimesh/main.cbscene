@@ -1,0 +1,61 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"objects": [
+		{
+			"id": 6,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 6,
+			"fields": {
+				"sky": "#1b2838"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 6,
+			"fields": {
+				"rotation": "-50, 30, 0"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 6,
+			"fields": {
+				"position": "0, 9, 12",
+				"target": "0, 0, 0",
+				"fov": "55"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Shape3D",
+			"name": "Floor",
+			"parent": 6,
+			"fields": {
+				"size": "16, 0.2, 16",
+				"position": "0, -0.1, 0",
+				"color": "#37474f"
+			}
+		},
+		{
+			"id": 5,
+			"class": "MultiMesh3D",
+			"name": "Gems",
+			"parent": 6,
+			"fields": {}
+		}
+	],
+	"next_id": 7
+}

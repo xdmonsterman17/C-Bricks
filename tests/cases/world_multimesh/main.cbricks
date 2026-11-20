@@ -1,0 +1,944 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 33,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					16,
+					17,
+					18,
+					26,
+					27
+				]
+			}
+		},
+		{
+			"id": 2,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "320"
+				},
+				"height": {
+					"type": "int",
+					"value": "200"
+				},
+				"title": {
+					"type": "string",
+					"value": "multimesh"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "begin_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {
+				"mesh": {
+					"var": "gem",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, 0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "-0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, 0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"color": {
+					"type": "string",
+					"value": "#00bcd4"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "add_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"kind": "Triangle"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				},
+				"a": {
+					"type": "vector3",
+					"value": "0, -0.35, 0"
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0.25, 0, 0"
+				},
+				"c": {
+					"type": "vector3",
+					"value": "0, 0, -0.25"
+				},
+				"color": {
+					"type": "string",
+					"value": "#40e0ff"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 12,
+			"type": "finish_mesh",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shading": "Flat",
+				"sides": "One side"
+			},
+			"args": {
+				"mesh": {
+					"var": "gem"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "MultiMesh3D"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Gems"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "mm",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 14,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "mesh"
+			},
+			"args": {
+				"record": {
+					"var": "mm"
+				},
+				"value": {
+					"var": "gem"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "positions"
+			},
+			"args": {
+				"record": {
+					"var": "mm"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "mpos",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 16,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "sizes"
+			},
+			"args": {
+				"record": {
+					"var": "mm"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "msize",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 17,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "turns"
+			},
+			"args": {
+				"record": {
+					"var": "mm"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "mturn",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 18,
+			"type": "for",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"from": {
+					"type": "int",
+					"value": "0"
+				},
+				"to": {
+					"type": "int",
+					"value": "100"
+				},
+				"step": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {
+				"index": {
+					"var": "i",
+					"use": false
+				}
+			},
+			"links": {
+				"loop": [
+					19,
+					20,
+					21,
+					22,
+					23,
+					24,
+					25
+				]
+			}
+		},
+		{
+			"id": 19,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(i % 10 - 5) * 1.5",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gx",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "(i / 10 - 5) * 1.5",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "gz",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"var": "gx"
+				},
+				"y": {
+					"type": "float",
+					"value": "1"
+				},
+				"z": {
+					"var": "gz"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "at",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "mpos"
+				},
+				"value": {
+					"var": "at"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 23,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "msize"
+				},
+				"value": {
+					"type": "vector3",
+					"value": "2"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 24,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "i * 7.0",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "spin",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 25,
+			"type": "list",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Add"
+			},
+			"args": {
+				"list": {
+					"var": "mturn"
+				},
+				"value": {
+					"var": "spin"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 26,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 27,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					28,
+					29
+				]
+			}
+		},
+		{
+			"id": 28,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 29,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "30"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					30,
+					31,
+					32
+				]
+			}
+		},
+		{
+			"id": 30,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"world_multimesh.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 31,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "extern long cb_batch_draws, cb_batch_objects; printf(\"[multimesh] %s\\n\", (cb_batch_objects > 0 && cb_batch_objects % 100 == 0 && cb_batch_draws == 2 * (cb_batch_objects / 100)) ? \"batched\" : \"not batched\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 32,
+			"type": "close_window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {}
+		}
+	]
+}
