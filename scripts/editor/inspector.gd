@@ -1221,6 +1221,8 @@ func _show_world_object(o: Dictionary) -> void:
 					o.fields[fname] = "true" if on else "false"
 					changed.call("Set " + fname))
 				_add_row(fname, cb)
+			elif fname == "texture" and (CBTypes.is_subclass(cls, "Shape3D") or CBTypes.is_subclass(cls, "Mesh3D") or CBTypes.is_subclass(cls, "Sprite2D") or cls == "Image"):
+				_add_row(fname, _texture_picker(o, fname, changed))
 			elif fname in ["shader", "surface_shader", "post_shader"]:
 				_add_row(fname, _shader_picker(o, fname, 1 if fname == "post_shader" else 0, changed))
 			elif fname == "anchor" and CBTypes.is_subclass(cls, "Control"):
@@ -1542,6 +1544,41 @@ func _show_snapshot(o: Dictionary, changed: Callable) -> void:
 	_target.add_child(take)
 	_target.add_child(preview)
 	_target = _body
+
+
+## A Texture field's picker (2026-11-20): blank (none), a Video object of this scene (its picture, live: the field holds the object's name) or an
+## image file of the project (the field holds its relative path).
+func _texture_picker(o: Dictionary, fname: String, changed: Callable) -> OptionButton:
+	var pick := OptionButton.new()
+	pick.add_item("(none)")
+	pick.set_item_metadata(0, "")
+	var cur := str(o.fields.get(fname, ""))
+	var known := PackedStringArray([""])
+	for x in context.world_flat.get("objects", []):
+		if CBTypes.is_subclass(str(x.get("class", "")), "Video"):
+			pick.add_item("Video: " + str(x.name))
+			pick.set_item_metadata(pick.item_count - 1, str(x.name))
+			known.append(str(x.name))
+	for rel in CBProject.list_assets(context.project_dir):
+		if rel.get_extension().to_lower() in ["png", "jpg", "jpeg", "bmp", "tga"]:
+			pick.add_item(rel)
+			pick.set_item_metadata(pick.item_count - 1, rel)
+			known.append(rel)
+	if cur != "" and not known.has(cur):
+		pick.add_item(cur + " (missing)")
+		pick.set_item_metadata(pick.item_count - 1, cur)
+	for i in pick.item_count:
+		if str(pick.get_item_metadata(i)) == cur:
+			pick.select(i)
+	pick.tooltip_text = "A Video object of this scene (its picture, live) or an image file of the project."
+	pick.item_selected.connect(func(i: int) -> void:
+		var v := str(pick.get_item_metadata(i))
+		if v == "":
+			o.fields.erase(fname)
+		else:
+			o.fields[fname] = v
+		changed.call("Set " + fname))
+	return pick
 
 
 ## A shader field's picker (2026-11-18): Inherit (blank: the layer above), None (the built-in look, whatever the layers above say) or a

@@ -44,6 +44,10 @@ var _target_problems: Array = []     # [{script, node, world_id, msg}]: what the
 var _recent: PackedStringArray = []
 ## MS-DOS is an extra, not an everyday target (user, 2026-11-10): off, the Target list, the examples and the Toolchains window leave it out.
 var _show_dos := false
+var _show_fps := true           # Project > Show FPS: a frame counter at the right of the status line
+var _fps_label: Label = null
+var _fps_draws := 0             # frames actually drawn since the last reading (the app sleeps when nothing changes: those aren't frames)
+var _fps_time := 0.0
 var _dos_open := false  # the open project targets MS-DOS: shown while it's open, without changing the setting
 var _thread: Thread = null
 var _export_menu: MenuButton = null
@@ -137,7 +141,7 @@ var _scene_hist := {}
 const EXAMPLE_SCRATCH := "user://example"
 ## The start page's example groups (an example with Target MS-DOS goes under MS-DOS).
 const EXAMPLE_GROUP_ORDER := ["Text programs", "2D and 3D graphics", "Networking", "MS-DOS"]
-const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "stress_test": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
+const EXAMPLE_GROUPS := {"bouncing_ball": "2D and 3D graphics", "gem_collector": "2D and 3D graphics", "stress_test": "2D and 3D graphics", "tv": "2D and 3D graphics", "arena": "Networking", "net_gems": "Networking"}
 const NEW_HINT := "Makes a folder with project.cbproj and assets/ (no scripts yet: add nodes to the Main scene; running it runs that scene)."
 var _saving_example := false
 var _progress_dialog: AcceptDialog = null
@@ -1389,7 +1393,16 @@ func _package_done(r: Dictionary, dir: String) -> void:
 	_set_status("status_success", "Packaged to %s" % dir)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_fps_time += delta
+	if _fps_time >= 0.5:
+		if _fps_label != null:
+			# (Set only when it changes: setting the text redraws, and a counter that redraws itself would never read "idle".)
+			var text := "%d fps" % roundi(_fps_draws / _fps_time) if _fps_draws > 2 else "idle"
+			if _fps_label.text != text:
+				_fps_label.text = text
+		_fps_draws = 0
+		_fps_time = 0.0
 	if not _flash_pending.is_empty():
 		_canvas.flash(_flash_pending)
 		_flash_pending.clear()
@@ -2342,6 +2355,7 @@ func _load_settings() -> void:
 	_screen = str(cf.get_value("ui", "main_screen", "Script"))
 	_left_trees = bool(cf.get_value("ui", "left_trees", false))
 	_show_dos = bool(cf.get_value("ui", "show_dos", false))
+	_show_fps = bool(cf.get_value("ui", "show_fps", true))
 	for k in _panel_sizes:
 		_panel_sizes[k] = int(cf.get_value("ui", k + "_size", _panel_sizes[k]))
 	for t in Toolchains.targets():
@@ -2357,6 +2371,7 @@ func _save_settings() -> void:
 	cf.set_value("ui", "main_screen", _screen)
 	cf.set_value("ui", "left_trees", _left_trees)
 	cf.set_value("ui", "show_dos", _show_dos)
+	cf.set_value("ui", "show_fps", _show_fps)
 	if cf.has_section_key("ui", "preview_sky"):
 		cf.erase_section_key("ui", "preview_sky")  # (the Sky toggle is gone: the Environment decides)
 	for k in _panel_sizes:
@@ -2607,6 +2622,9 @@ func _build_toolbar(parent: Control) -> void:
 	pp.add_item("Show Project Folder", 4)
 	pp.add_separator()
 	pp.add_item("Close Project (Project Manager)", 5)
+	pp.add_separator()
+	pp.add_check_item("Show FPS", 6)
+	pp.set_item_checked(pp.get_item_index(6), _show_fps)
 	pp.about_to_popup.connect(func() -> void:
 		for id in [2, 3, 4, 5]:
 			pp.set_item_disabled(pp.get_item_index(id), not has_project()))
@@ -2622,7 +2640,13 @@ func _build_toolbar(parent: Control) -> void:
 		elif id == 4:
 			OS.shell_open(project_dir)
 		elif id == 5:
-			close_project())
+			close_project()
+		elif id == 6:
+			_show_fps = not _show_fps
+			pp.set_item_checked(pp.get_item_index(6), _show_fps)
+			if _fps_label != null:
+				_fps_label.visible = _show_fps
+			_save_settings())
 	files.add_child(project_menu)
 	for spec in [["Save", "save", save, "Save this script (Ctrl+S; Ctrl+Shift+S: all)"],
 			["", "undo", undo, "Undo (Ctrl+Z): the scene's last change on the 2D / 3D screens, the script's on Node"], ["", "redo", redo, "Redo (Ctrl+Shift+Z)"]]:
@@ -2664,6 +2688,16 @@ func _build_toolbar(parent: Control) -> void:
 	_status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_status.mouse_filter = MOUSE_FILTER_PASS
 	status.add_child(_status)
+	_fps_label = Label.new()
+	_fps_label.text = "idle"
+	_fps_label.custom_minimum_size.x = 64
+	_fps_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_fps_label.add_theme_color_override(&"font_color", Color(0.62, 0.66, 0.72))
+	_fps_label.tooltip_text = "Frames drawn a second by this window. The editor sleeps while nothing changes, so it reads idle then."
+	_fps_label.mouse_filter = MOUSE_FILTER_PASS
+	_fps_label.visible = _show_fps
+	status.add_child(_fps_label)
+	RenderingServer.frame_post_draw.connect(func() -> void: _fps_draws += 1)
 	tools.add_child(VSeparator.new())
 	_build_btn = _tool_button(tools, "Build", "build", func() -> void: build(false), "Compile the project for the target (F6)")
 	_run_btn = _tool_button(tools, "Run", "play", func() -> void: build(true), "Build and run it here, from the project folder, with the project's run arguments; type its input under Console (F5)")

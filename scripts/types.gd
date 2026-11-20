@@ -34,12 +34,15 @@ const OBJECT := "Node"
 ## parent Spatial3D (Spatial2D: to its Spatial2D parent).
 const BUILTIN := {
 	"Spatial3D": {"extends": "Node", "fields": [["position", "vector3", "0, 0, 0"], ["rotation", "vector3", "0, 0, 0"], ["scale", "vector3", "1, 1, 1"]], "synced": ["position", "rotation", "scale"]},
-	"Shape3D": {"extends": "Spatial3D", "fields": [["shape", "string", "Box"], ["size", "vector3", "1, 1, 1"], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["solid", "bool", "false"], ["splat", "bool", "false"], ["shader", "string", ""]], "synced": ["shape", "size", "color", "visible", "solid"]},
-	"Mesh3D": {"extends": "Spatial3D", "fields": [["mesh", "mesh", ""], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["splat", "bool", "false"], ["shader", "string", ""]], "synced": ["color", "visible"]},
+	"Shape3D": {"extends": "Spatial3D", "fields": [["shape", "string", "Box"], ["size", "vector3", "1, 1, 1"], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["solid", "bool", "false"], ["splat", "bool", "false"], ["shader", "string", ""], ["texture", "string", ""]], "synced": ["shape", "size", "color", "visible", "solid", "texture"]},
+	"Mesh3D": {"extends": "Spatial3D", "fields": [["mesh", "mesh", ""], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["splat", "bool", "false"], ["shader", "string", ""], ["texture", "string", ""]], "synced": ["color", "visible", "texture"]},
 	# MultiMesh3D (2026-11-18): one mesh drawn many times in a few draw calls; the copies are not objects (no scripts, no
 	# collisions), just places in three lists: count = positions' length; sizes (default 1, 1, 1) and turns (default 0) are
 	# read by index, a short list leaves the rest at their default. Not synced (a client's scripts fill their own).
 	"MultiMesh3D": {"extends": "Spatial3D", "fields": [["mesh", "mesh", ""], ["color", "string", "WHITE"], ["visible", "bool", "true"], ["positions", "vector3 list", ""], ["sizes", "vector3 list", ""], ["turns", "float list", ""]], "synced": ["color", "visible"]},
+	# Video (2026-11-20): an MPEG-1 .mpg played by the world; it draws nothing itself: an object's Texture field names it (the
+	# object's name) to wear its picture. time = where it is (set it to seek), duration and ended are set by the runtime.
+	"Video": {"extends": "Node", "fields": [["file", "string", ""], ["playing", "bool", "true"], ["loop", "bool", "false"], ["volume", "float", "1"], ["speed", "float", "1"], ["time", "float", "0"], ["duration", "float", "0"], ["ended", "bool", "false"]], "synced": []},
 	"Camera3D": {"extends": "Spatial3D", "fields": [["target", "vector3", "0, 0, 0"], ["fov", "float", "60"]], "synced": []},
 	"Light3D": {"extends": "Spatial3D", "fields": [["color", "string", "WHITE"], ["energy", "float", "1"]], "synced": ["color", "energy"]},
 	"Spatial2D": {"extends": "Node", "fields": [["position", "vector2", "0, 0"], ["rotation", "float", "0"], ["scale", "vector2", "1, 1"]], "synced": ["position", "rotation", "scale"]},

@@ -30,6 +30,19 @@ void cb_be_clip(int x, int y, int width, int height) { (void)x; (void)y; (void)w
 void cb_be_clip_end(void) {}
 #endif
 
+#ifndef CB_BE_HAVE_VIDEO
+cb_texture cb_be_texture_create(int width, int height) { cb_texture t; (void)width; (void)height; t.id = 0; t.width = 0; t.height = 0; return t; }
+void cb_be_texture_update(cb_texture t, const unsigned char *rgba) { (void)t; (void)rgba; }
+void cb_be_texture_3d(cb_texture t) { (void)t; }
+int cb_be_audio_open(int rate) { (void)rate; return 0; }
+void cb_be_audio_push(int stream, const float *lr, int frames) { (void)stream; (void)lr; (void)frames; }
+int cb_be_audio_queued(int stream) { (void)stream; return 0; }
+void cb_be_audio_volume(int stream, double volume) { (void)stream; (void)volume; }
+void cb_be_audio_flush(int stream) { (void)stream; }
+void cb_be_audio_close(int stream) { (void)stream; }
+void cb_be_video_forget_all(void) {}
+#endif
+
 #ifndef CB_BE_HAVE_SHADERS
 cb_shader cb_be_shader_surface(const char *glsl) { cb_shader s; (void)glsl; s.id = 0; return s; }
 cb_shader cb_be_shader_post(const char *glsl) { cb_shader s; (void)glsl; s.id = 0; return s; }

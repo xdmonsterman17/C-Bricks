@@ -20,6 +20,7 @@
 #define CB_BE_HAVE_SCREENSHOT 1
 #define CB_BE_HAVE_SHADERS 1
 #define CB_BE_HAVE_CLIP 1
+#define CB_BE_HAVE_VIDEO 1
 #include "cbricks.h"
 
 static Color RL(cb_rgba c) {
@@ -137,6 +138,7 @@ void cb_be_close(void) {
     cb_be_fonts_forget_all();
     cb_be_music_forget_all();
     cb_be_shaders_forget_all();
+    cb_be_video_forget_all();
     CloseAudioDevice();
     CloseWindow();
 }
@@ -382,6 +384,154 @@ void cb_be_texture(cb_texture t, cb_rect src, cb_rect dst, Vector2 origin, doubl
     if (t.id <= 0 || t.id > cb_tex_n)
         return;
     DrawTexturePro(cb_texs[t.id - 1], RR(src), RR(dst), origin, (float)rotation, RL(tint));
+}
+
+/* ---- video (2026-11-20): a texture the program fills, shapes / meshes wearing it, a stereo audio stream ---- */
+static Texture2D cb_tex_3d;          /* the texture the next shapes / meshes wear (id 0: none) */
+static bool cb_tex_3d_on = false;
+
+cb_texture cb_be_texture_create(int width, int height) {
+    Image img;
+    Texture2D t;
+    if (width <= 0 || height <= 0)
+        return cb_tex_handle((Texture2D){ 0 });
+    img = GenImageColor(width, height, BLACK);
+    ImageFormat(&img, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+    t = LoadTextureFromImage(img);
+    UnloadImage(img);
+    SetTextureFilter(t, TEXTURE_FILTER_BILINEAR);
+    SetTextureWrap(t, TEXTURE_WRAP_CLAMP);
+    return cb_tex_handle(t);
+}
+
+void cb_be_texture_update(cb_texture t, const unsigned char *rgba) {
+    if (t.id <= 0 || t.id > cb_tex_n || !rgba)
+        return;
+    UpdateTexture(cb_texs[t.id - 1], rgba);
+}
+
+void cb_be_texture_3d(cb_texture t) {
+    cb_tex_3d_on = t.id > 0 && t.id <= cb_tex_n;
+    if (cb_tex_3d_on)
+        cb_tex_3d = cb_texs[t.id - 1];
+}
+
+/* Audio: a ring of float samples between the decoder (the program's thread) and raylib's audio thread. Four streams at most;
+   raylib's callback has no user pointer, so each slot has its own. */
+#define CB_AUD_MAX 4
+#define CB_AUD_RING (48000 * 2 * 2)   /* 2 seconds of stereo samples */
+typedef struct cb_aud {
+    AudioStream stream;
+    float *ring;
+    volatile unsigned r, w;
+    volatile int flush;
+    bool used;
+} cb_aud;
+static cb_aud cb_auds[CB_AUD_MAX];
+
+static void cb_aud_fill(int k, void *buffer, unsigned int frames) {
+    cb_aud *a = &cb_auds[k];
+    float *out = (float *)buffer;
+    unsigned i, n = frames * 2;
+    if (a->flush) {
+        a->r = a->w;
+        a->flush = 0;
+    }
+    for (i = 0; i < n; i++) {
+        if (a->r != a->w) {
+            out[i] = a->ring[a->r];
+            a->r = (a->r + 1) % CB_AUD_RING;
+        } else
+            out[i] = 0.0f;
+    }
+}
+static void cb_aud_cb0(void *b, unsigned int f) { cb_aud_fill(0, b, f); }
+static void cb_aud_cb1(void *b, unsigned int f) { cb_aud_fill(1, b, f); }
+static void cb_aud_cb2(void *b, unsigned int f) { cb_aud_fill(2, b, f); }
+static void cb_aud_cb3(void *b, unsigned int f) { cb_aud_fill(3, b, f); }
+
+int cb_be_audio_open(int rate) {
+    static const AudioCallback cbs[CB_AUD_MAX] = { cb_aud_cb0, cb_aud_cb1, cb_aud_cb2, cb_aud_cb3 };
+    int k;
+    if (!IsAudioDeviceReady() || rate <= 0)
+        return 0;
+    for (k = 0; k < CB_AUD_MAX; k++)
+        if (!cb_auds[k].used)
+            break;
+    if (k == CB_AUD_MAX)
+        return 0;
+    cb_auds[k].ring = (float *)calloc(CB_AUD_RING, sizeof(float));
+    if (!cb_auds[k].ring)
+        return 0;
+    cb_auds[k].r = cb_auds[k].w = 0;
+    cb_auds[k].flush = 0;
+    cb_auds[k].stream = LoadAudioStream((unsigned)rate, 32, 2);
+    if (!IsAudioStreamValid(cb_auds[k].stream)) {
+        free(cb_auds[k].ring);
+        cb_auds[k].ring = NULL;
+        return 0;
+    }
+    cb_auds[k].used = true;
+    SetAudioStreamCallback(cb_auds[k].stream, cbs[k]);
+    PlayAudioStream(cb_auds[k].stream);
+    return k + 1;
+}
+
+void cb_be_audio_push(int stream, const float *lr, int frames) {
+    cb_aud *a;
+    int i, n = frames * 2;
+    if (stream < 1 || stream > CB_AUD_MAX || !cb_auds[stream - 1].used)
+        return;
+    a = &cb_auds[stream - 1];
+    for (i = 0; i < n; i++) {
+        unsigned next = (a->w + 1) % CB_AUD_RING;
+        if (next == a->r)
+            break;
+        a->ring[a->w] = lr[i];
+        a->w = next;
+    }
+}
+
+int cb_be_audio_queued(int stream) {
+    cb_aud *a;
+    unsigned r, w;
+    if (stream < 1 || stream > CB_AUD_MAX || !cb_auds[stream - 1].used)
+        return 0;
+    a = &cb_auds[stream - 1];
+    r = a->r;
+    w = a->w;
+    return (int)(((w + CB_AUD_RING - r) % CB_AUD_RING) / 2);
+}
+
+void cb_be_audio_volume(int stream, double volume) {
+    if (stream < 1 || stream > CB_AUD_MAX || !cb_auds[stream - 1].used)
+        return;
+    SetAudioStreamVolume(cb_auds[stream - 1].stream, (float)volume);
+}
+
+void cb_be_audio_flush(int stream) {
+    if (stream < 1 || stream > CB_AUD_MAX || !cb_auds[stream - 1].used)
+        return;
+    cb_auds[stream - 1].flush = 1;
+}
+
+void cb_be_audio_close(int stream) {
+    cb_aud *a;
+    if (stream < 1 || stream > CB_AUD_MAX || !cb_auds[stream - 1].used)
+        return;
+    a = &cb_auds[stream - 1];
+    StopAudioStream(a->stream);
+    UnloadAudioStream(a->stream);
+    free(a->ring);
+    a->ring = NULL;
+    a->used = false;
+}
+
+void cb_be_video_forget_all(void) {
+    int k;
+    for (k = 1; k <= CB_AUD_MAX; k++)
+        cb_be_audio_close(k);
+    cb_tex_3d_on = false;
 }
 
 /* ---- fonts: handles (cb_font.id) to raylib's; Latin-1 glyphs, bilinear; unloaded before the window closes
@@ -1358,20 +1508,30 @@ void cb_be_end_3d(void) {
     EndMode3D();
 }
 
+/* raylib's generated shapes put v = 0 at the bottom of a face: a picture (row 0 on top) would hang upside down. Flipped, so a
+   Texture field shows a picture the right way up on every shape. */
+static Mesh cb_flip_v(Mesh m) {
+    int i;
+    for (i = 0; i < m.vertexCount; i++)
+        m.texcoords[i * 2 + 1] = 1.0f - m.texcoords[i * 2 + 1];
+    UpdateMeshBuffer(m, 1, m.texcoords, m.vertexCount * 2 * (int)sizeof(float), 0);
+    return m;
+}
+
 /* Shapes 1 across, their middle at the origin (the cylinder's too). */
 static void cb_shapes(void) {
     Mesh cyl;
     int i;
     if (cb_shapes_ready)
         return;
-    cb_shape_models[0] = cb_lit_model(GenMeshCube(1.0f, 1.0f, 1.0f));
-    cb_shape_models[1] = cb_lit_model(GenMeshSphere(0.5f, 8, 16));
+    cb_shape_models[0] = cb_lit_model(cb_flip_v(GenMeshCube(1.0f, 1.0f, 1.0f)));
+    cb_shape_models[1] = cb_lit_model(cb_flip_v(GenMeshSphere(0.5f, 8, 16)));
     cyl = GenMeshCylinder(0.5f, 1.0f, 16);
     for (i = 0; i < cyl.vertexCount; i++)
         cyl.vertices[i * 3 + 1] -= 0.5f;
     UpdateMeshBuffer(cyl, 0, cyl.vertices, cyl.vertexCount * 3 * (int)sizeof(float), 0);
-    cb_shape_models[2] = cb_lit_model(cyl);
-    cb_shape_models[3] = cb_lit_model(GenMeshPlane(1.0f, 1.0f, 1, 1));
+    cb_shape_models[2] = cb_lit_model(cb_flip_v(cyl));
+    cb_shape_models[3] = cb_lit_model(cb_flip_v(GenMeshPlane(1.0f, 1.0f, 1, 1)));
     cb_shapes_ready = true;
 }
 
@@ -1390,7 +1550,11 @@ void cb_draw_shape(int kind, Vector3 at, Vector3 size, double turn, cb_rgba colo
     }
     {
         Shader prev = cb_shader_in(&cb_shape_models[kind]);
+        Texture2D keep = cb_shape_models[kind].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture;
+        if (cb_tex_3d_on)
+            cb_shape_models[kind].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = cb_tex_3d;
         DrawModelEx(cb_shape_models[kind], at, cb_v3(0, 1, 0), (float)turn, size, RL(color));
+        cb_shape_models[kind].materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = keep;
         cb_shape_models[kind].materials[0].shader = prev;
     }
 }
@@ -1622,7 +1786,11 @@ void cb_draw_mesh(cb_mesh *m, Vector3 at, Vector3 size, double turn, cb_rgba rgb
         rlDisableBackfaceCulling();
     {
         Shader prev = cb_shader_in(&m->model);
+        Texture2D keep = m->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture;
+        if (cb_tex_3d_on)
+            m->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = cb_tex_3d;
         DrawModelEx(m->model, at, cb_v3(0, 1, 0), (float)turn, size, tint);
+        m->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = keep;
         m->model.materials[0].shader = prev;
     }
     if (m->both)
@@ -1646,7 +1814,11 @@ void cb_draw_mesh_rot(cb_mesh *m, Vector3 at, Vector3 size, Vector3 rot, cb_rgba
         if (m->both)
             rlDisableBackfaceCulling();
         Shader prev = cb_shader_in(&m->model);
+        Texture2D keep = m->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture;
+        if (cb_tex_3d_on)
+            m->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = cb_tex_3d;
         DrawModelEx(m->model, cb_v3(0, 0, 0), cb_v3(0, 1, 0), 0.0f, cb_v3(1, 1, 1), tint);
+        m->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = keep;
         m->model.materials[0].shader = prev;
         if (m->both)
             rlEnableBackfaceCulling();

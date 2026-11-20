@@ -1,0 +1,1602 @@
+{
+	"format": "c-bricks",
+	"frames": [],
+	"next_id": 46,
+	"nodes": [
+		{
+			"args": {
+				"fps": {
+					"type": "int",
+					"value": "60"
+				},
+				"height": {
+					"type": "int",
+					"value": "540"
+				},
+				"title": {
+					"type": "string",
+					"value": "TV"
+				},
+				"width": {
+					"type": "int",
+					"value": "960"
+				}
+			},
+			"fields": {},
+			"id": 1,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "window"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Channel"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Video",
+				"op": "Find"
+			},
+			"id": 2,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "chan"
+				}
+			},
+			"pos": [
+				208.0,
+				160.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "TV"
+				},
+				"object": {
+					"var": ""
+				},
+				"parent": {
+					"var": ""
+				}
+			},
+			"fields": {
+				"of": "Spatial3D",
+				"op": "Find"
+			},
+			"id": 3,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "tv"
+				}
+			},
+			"pos": [
+				208.0,
+				288.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "object"
+		},
+		{
+			"args": {},
+			"fields": {
+				"what": "Time"
+			},
+			"id": 4,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "t"
+				}
+			},
+			"pos": [
+				432.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_info"
+		},
+		{
+			"args": {},
+			"fields": {
+				"what": "FPS"
+			},
+			"id": 5,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "fps"
+				}
+			},
+			"pos": [
+				432.0,
+				544.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_info"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "sin(t * 0.6) * 28.0",
+				"type": "float"
+			},
+			"id": 6,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "sway"
+				}
+			},
+			"pos": [
+				432.0,
+				672.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"a": {
+					"var": ""
+				},
+				"b": {
+					"type": "vector3",
+					"value": "0, 1, 0"
+				},
+				"factor": {
+					"type": "float",
+					"value": "2"
+				},
+				"t": {
+					"type": "float",
+					"value": "0.5"
+				},
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"var": "sway"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"op": "Make"
+			},
+			"id": 7,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "rot"
+				},
+				"x": {
+					"use": false,
+					"var": "x"
+				},
+				"y": {
+					"use": false,
+					"var": "y"
+				},
+				"z": {
+					"use": false,
+					"var": "z"
+				}
+			},
+			"pos": [
+				432.0,
+				800.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "vector"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "tv"
+				},
+				"value": {
+					"var": "rot"
+				}
+			},
+			"fields": {
+				"field": "rotation",
+				"mode": "Set"
+			},
+			"id": 8,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value"
+				}
+			},
+			"pos": [
+				432.0,
+				928.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "SPACE",
+				"when": "Pressed"
+			},
+			"id": 9,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "ksp"
+				}
+			},
+			"pos": [
+				432.0,
+				1056.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "ksp"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 10,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					11,
+					12
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				1184.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "playing",
+				"mode": "Get"
+			},
+			"id": 11,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "pl"
+				}
+			},
+			"pos": [
+				640.0,
+				1184.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "pl"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 12,
+			"links": {
+				"false": [
+					14
+				],
+				"next": [],
+				"true": [
+					13
+				]
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				1312.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"fields": {
+				"field": "playing",
+				"mode": "Set"
+			},
+			"id": 13,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_2"
+				}
+			},
+			"pos": [
+				848.0,
+				1312.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"fields": {
+				"field": "playing",
+				"mode": "Set"
+			},
+			"id": 14,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_3"
+				}
+			},
+			"pos": [
+				848.0,
+				1440.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "R",
+				"when": "Pressed"
+			},
+			"id": 15,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kr"
+				}
+			},
+			"pos": [
+				432.0,
+				1568.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kr"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 16,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					17,
+					18
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				1696.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "time",
+				"mode": "Set"
+			},
+			"id": 17,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_4"
+				}
+			},
+			"pos": [
+				640.0,
+				1696.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"fields": {
+				"field": "playing",
+				"mode": "Set"
+			},
+			"id": 18,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_5"
+				}
+			},
+			"pos": [
+				640.0,
+				1824.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "UP",
+				"when": "Pressed"
+			},
+			"id": 19,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kup"
+				}
+			},
+			"pos": [
+				432.0,
+				1952.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "DOWN",
+				"when": "Pressed"
+			},
+			"id": 20,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kdn"
+				}
+			},
+			"pos": [
+				432.0,
+				2080.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "volume",
+				"mode": "Get"
+			},
+			"id": 21,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "vol"
+				}
+			},
+			"pos": [
+				432.0,
+				2208.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kup"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 22,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					23,
+					24
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				2336.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "fmin(vol + 0.1, 1.0)",
+				"type": "float"
+			},
+			"id": 23,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "vol"
+				}
+			},
+			"pos": [
+				640.0,
+				2336.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"var": "vol"
+				}
+			},
+			"fields": {
+				"field": "volume",
+				"mode": "Set"
+			},
+			"id": 24,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_6"
+				}
+			},
+			"pos": [
+				640.0,
+				2464.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kdn"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 25,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					26,
+					27
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				2592.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "fmax(vol - 0.1, 0.0)",
+				"type": "float"
+			},
+			"id": 26,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "vol"
+				}
+			},
+			"pos": [
+				640.0,
+				2592.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"var": "vol"
+				}
+			},
+			"fields": {
+				"field": "volume",
+				"mode": "Set"
+			},
+			"id": 27,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_7"
+				}
+			},
+			"pos": [
+				640.0,
+				2720.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"key": "L",
+				"when": "Pressed"
+			},
+			"id": 28,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "kl"
+				}
+			},
+			"pos": [
+				432.0,
+				2848.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "input"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "kl"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 29,
+			"links": {
+				"false": [],
+				"next": [],
+				"true": [
+					30,
+					31
+				]
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				2976.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "loop",
+				"mode": "Get"
+			},
+			"id": 30,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "lp"
+				}
+			},
+			"pos": [
+				640.0,
+				2976.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"a": {
+					"var": "lp"
+				},
+				"b": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"operator": "is true"
+			},
+			"id": 31,
+			"links": {
+				"false": [
+					33
+				],
+				"next": [],
+				"true": [
+					32
+				]
+			},
+			"outs": {},
+			"pos": [
+				640.0,
+				3104.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "if"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"fields": {
+				"field": "loop",
+				"mode": "Set"
+			},
+			"id": 32,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_8"
+				}
+			},
+			"pos": [
+				848.0,
+				3104.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"fields": {
+				"field": "loop",
+				"mode": "Set"
+			},
+			"id": 33,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "value_9"
+				}
+			},
+			"pos": [
+				848.0,
+				3232.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "time",
+				"mode": "Get"
+			},
+			"id": 34,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "vt"
+				}
+			},
+			"pos": [
+				432.0,
+				3360.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "duration",
+				"mode": "Get"
+			},
+			"id": 35,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "vd"
+				}
+			},
+			"pos": [
+				432.0,
+				3488.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "playing",
+				"mode": "Get"
+			},
+			"id": 36,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "vp"
+				}
+			},
+			"pos": [
+				432.0,
+				3616.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"field": "loop",
+				"mode": "Get"
+			},
+			"id": 37,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"value": {
+					"use": false,
+					"var": "vl"
+				}
+			},
+			"pos": [
+				432.0,
+				3744.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "field"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "floor(vt * 10.0) / 10.0",
+				"type": "float"
+			},
+			"id": 38,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "shown_t"
+				}
+			},
+			"pos": [
+				432.0,
+				3872.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "floor(vd * 10.0) / 10.0",
+				"type": "float"
+			},
+			"id": 39,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "shown_d"
+				}
+			},
+			"pos": [
+				432.0,
+				4000.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {},
+			"fields": {
+				"expression": "floor(vol * 10.0 + 0.5)",
+				"type": "int"
+			},
+			"id": 40,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "shown_v"
+				}
+			},
+			"pos": [
+				432.0,
+				4128.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "formula"
+		},
+		{
+			"args": {
+				"first": {
+					"var": "shown_t"
+				},
+				"fourth": {
+					"type": "string",
+					"value": ""
+				},
+				"length": {
+					"type": "int",
+					"value": "5"
+				},
+				"list": {
+					"var": ""
+				},
+				"more": {
+					"type": "string",
+					"value": "world"
+				},
+				"second": {
+					"var": "shown_d"
+				},
+				"separator": {
+					"type": "string",
+					"value": ", "
+				},
+				"start": {
+					"type": "int",
+					"value": "0"
+				},
+				"text": {
+					"type": "string",
+					"value": "Hello, "
+				},
+				"third": {
+					"var": "shown_v"
+				},
+				"value": {
+					"type": "int",
+					"value": "42"
+				},
+				"what": {
+					"type": "string",
+					"value": "o"
+				},
+				"with": {
+					"type": "string",
+					"value": "0"
+				}
+			},
+			"fields": {
+				"format": "{} / {} s     volume {}/10",
+				"op": "Format"
+			},
+			"id": 41,
+			"links": {
+				"next": []
+			},
+			"outs": {
+				"result": {
+					"use": false,
+					"var": "hud"
+				}
+			},
+			"pos": [
+				432.0,
+				4256.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "text"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				},
+				"columns": {
+					"type": "int",
+					"value": "4"
+				},
+				"frame": {
+					"type": "int",
+					"value": "0"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "40"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"rows": {
+					"type": "int",
+					"value": "1"
+				},
+				"scale": {
+					"type": "float",
+					"value": "1"
+				},
+				"size": {
+					"type": "int",
+					"value": "24"
+				},
+				"text": {
+					"var": "hud"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "16"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "12"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Text"
+			},
+			"id": 42,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				4416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {
+				"color": {
+					"type": "string",
+					"value": "#b0bec5"
+				},
+				"columns": {
+					"type": "int",
+					"value": "4"
+				},
+				"frame": {
+					"type": "int",
+					"value": "0"
+				},
+				"height": {
+					"type": "int",
+					"value": "60"
+				},
+				"radius": {
+					"type": "float",
+					"value": "40"
+				},
+				"rotation": {
+					"type": "float",
+					"value": "0"
+				},
+				"rows": {
+					"type": "int",
+					"value": "1"
+				},
+				"scale": {
+					"type": "float",
+					"value": "1"
+				},
+				"size": {
+					"type": "int",
+					"value": "18"
+				},
+				"text": {
+					"type": "string",
+					"value": "SPACE: pause / play     R: restart     UP / DOWN: volume     L: loop on / off"
+				},
+				"texture": {
+					"var": ""
+				},
+				"width": {
+					"type": "int",
+					"value": "120"
+				},
+				"x": {
+					"type": "int",
+					"value": "16"
+				},
+				"x2": {
+					"type": "int",
+					"value": "300"
+				},
+				"y": {
+					"type": "int",
+					"value": "46"
+				},
+				"y2": {
+					"type": "int",
+					"value": "200"
+				}
+			},
+			"fields": {
+				"shape": "Text"
+			},
+			"id": 43,
+			"links": {
+				"next": []
+			},
+			"outs": {},
+			"pos": [
+				432.0,
+				4576.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "draw"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 44,
+			"links": {
+				"done": [],
+				"frame": [
+					4,
+					5,
+					6,
+					7,
+					8,
+					9,
+					10,
+					15,
+					16,
+					19,
+					20,
+					21,
+					22,
+					25,
+					28,
+					29,
+					34,
+					35,
+					36,
+					37,
+					38,
+					39,
+					40,
+					41,
+					42,
+					43
+				]
+			},
+			"outs": {},
+			"pos": [
+				208.0,
+				416.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "game_loop"
+		},
+		{
+			"args": {},
+			"fields": {},
+			"id": 45,
+			"links": {
+				"out": [
+					1,
+					2,
+					3,
+					44
+				]
+			},
+			"outs": {},
+			"pos": [
+				0.0,
+				0.0
+			],
+			"size": [
+				0.0,
+				0.0
+			],
+			"type": "start"
+		}
+	],
+	"version": 4
+}

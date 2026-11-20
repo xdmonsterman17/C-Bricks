@@ -1,0 +1,74 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"objects": [
+		{
+			"id": 7,
+			"class": "Spatial3D",
+			"name": "Main",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 1,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 7,
+			"fields": {
+				"sky": "#101820"
+			}
+		},
+		{
+			"id": 2,
+			"class": "Light3D",
+			"name": "Sun",
+			"parent": 7,
+			"fields": {
+				"rotation": "-50, 30, 0"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 7,
+			"fields": {
+				"position": "0, 0.4, 3.2",
+				"target": "0, 0, 0",
+				"fov": "50"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Video",
+			"name": "Clip",
+			"parent": 7,
+			"fields": {
+				"file": "clip.mpg",
+				"loop": "true"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Shape3D",
+			"name": "Screen",
+			"parent": 7,
+			"fields": {
+				"size": "2.4, 1.8, 0.1",
+				"rotation": "0, 20, 0",
+				"texture": "Clip"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Image",
+			"name": "Pic",
+			"parent": 7,
+			"fields": {
+				"texture": "Clip",
+				"size": "128, 96"
+			}
+		}
+	],
+	"next_id": 8
+}

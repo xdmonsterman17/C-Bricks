@@ -1,0 +1,150 @@
+{
+	"format": "c-bricks-scene",
+	"version": 4,
+	"next_id": 14,
+	"objects": [
+		{
+			"id": 1,
+			"class": "Spatial3D",
+			"name": "Room",
+			"parent": 0,
+			"fields": {}
+		},
+		{
+			"id": 2,
+			"class": "Environment",
+			"name": "Environment",
+			"parent": 1,
+			"fields": {
+				"sky": "#050508",
+				"ambient": "0.6",
+				"ambient_color": "#7a88aa",
+				"fog": "0.04",
+				"fog_color": "#030305",
+				"vignette": "0.35",
+				"grain": "0.04"
+			}
+		},
+		{
+			"id": 3,
+			"class": "Camera3D",
+			"name": "Camera",
+			"parent": 1,
+			"fields": {
+				"position": "0, 1.5, 4.6",
+				"target": "0, 1.25, 0",
+				"fov": "48"
+			}
+		},
+		{
+			"id": 4,
+			"class": "Light3D",
+			"name": "Moonlight",
+			"parent": 1,
+			"fields": {
+				"rotation": "-45, 30, 0",
+				"color": "#9aa8d0",
+				"energy": "1.1"
+			}
+		},
+		{
+			"id": 5,
+			"class": "Shape3D",
+			"name": "Floor",
+			"parent": 1,
+			"fields": {
+				"size": "12, 0.2, 12",
+				"position": "0, -0.1, 0",
+				"color": "#2a2a31"
+			}
+		},
+		{
+			"id": 6,
+			"class": "Shape3D",
+			"name": "BackWall",
+			"parent": 1,
+			"fields": {
+				"size": "12, 6, 0.2",
+				"position": "0, 3, -3",
+				"color": "#22222a"
+			}
+		},
+		{
+			"id": 7,
+			"class": "Shape3D",
+			"name": "Stand",
+			"parent": 1,
+			"fields": {
+				"size": "1.6, 0.8, 0.9",
+				"position": "0, 0.4, 0",
+				"color": "#3a2f28"
+			}
+		},
+		{
+			"id": 8,
+			"class": "Video",
+			"name": "Channel",
+			"parent": 1,
+			"fields": {
+				"file": "media/channel.mpg",
+				"loop": "true"
+			}
+		},
+		{
+			"id": 9,
+			"class": "Spatial3D",
+			"name": "TV",
+			"parent": 1,
+			"fields": {
+				"position": "0, 1.75, 0"
+			}
+		},
+		{
+			"id": 10,
+			"class": "Shape3D",
+			"name": "Body",
+			"parent": 9,
+			"fields": {
+				"size": "2.3, 1.7, 0.75",
+				"color": "#2b2b30"
+			}
+		},
+		{
+			"id": 11,
+			"class": "Shape3D",
+			"name": "Screen",
+			"parent": 9,
+			"fields": {
+				"size": "2.0, 1.5, 0.02",
+				"position": "0, 0, 0.38",
+				"texture": "Channel"
+			}
+		},
+		{
+			"id": 12,
+			"class": "Shape3D",
+			"name": "AntennaLeft",
+			"parent": 9,
+			"fields": {
+				"shape": "Cylinder",
+				"size": "0.02, 0.55, 0.02",
+				"position": "-0.14, 1.12, -0.02",
+				"rotation": "0, 0, 28",
+				"color": "#b0b0b8"
+			}
+		},
+		{
+			"id": 13,
+			"class": "Shape3D",
+			"name": "AntennaRight",
+			"parent": 9,
+			"fields": {
+				"shape": "Cylinder",
+				"size": "0.02, 0.55, 0.02",
+				"position": "0.14, 1.12, -0.02",
+				"rotation": "0, 0, -28",
+				"color": "#b0b0b8"
+			}
+		}
+	]
+}

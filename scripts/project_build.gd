@@ -284,6 +284,12 @@ static func generate_graphs(program: String, version: String, dir: String, paths
 	if graphics:
 		files["cbricks_gfx.c"] = FileAccess.get_file_as_string(GFX_RUNTIME) + shader_graph_c()
 		sources.append("cbricks_gfx.c")
+		# Video (2026-11-20): pl_mpeg is compiled only when something names it (a Video object / the class / cb_video_ in your C)
+		var uses_video := uses_video_in(dir, graphs, scenes, user_c)
+		files["cbricks_video.c"] = ("" if uses_video else "#define CB_NO_VIDEO 1\n") + FileAccess.get_file_as_string(VIDEO_RUNTIME)
+		if uses_video:
+			files["cb_pl_mpeg.h"] = FileAccess.get_file_as_string(PL_MPEG_HEADER)
+		sources.append("cbricks_video.c")
 		if backend == "dos":  # MS-DOS: its own backend (software 2D into a VGA / VESA screen), PNG reading / writing from stb
 			files["cbricks_backend.c"] = "#define CB_DOS_SCREEN %d\n" % dos_screen + FileAccess.get_file_as_string(str(TargetPlugins.backend("dos").file))
 			for h in ["stb_image.h", "stb_image_write.h"]:
@@ -819,6 +825,24 @@ static func header(funcs: Dictionary, includes: Array, extra: Dictionary, standa
 			"void cb_shader_use_file(int kind, const char *file);  /* a shader file (read once; \"\" or \"none\" = the built-in look): what the Use shader brick calls */",
 			"void cb_draw_texture(cb_texture t, int x, int y, cb_rgba tint);",
 			"cb_texture cb_load_texture(const char *path);",
+			"/* Video (cbricks_video.c: pl_mpeg, MPEG-1 .mpg with MP2 sound): a player of your own, or the Video class (a Video object in a scene) */",
+			"typedef struct cb_video cb_video;",
+			"cb_video *cb_video_open(const char *path);          /* NULL when the file can't be read or isn't MPEG-1 */",
+			"void cb_video_close(cb_video *v);",
+			"void cb_video_update(cb_video *v, double dt);       /* play dt seconds (every frame; 0 while paused): sound goes out, the texture changes */",
+			"cb_texture cb_video_texture(const cb_video *v);     /* draw it with cb_draw_texture / cb_be_texture, or give it to a Shape3D's Texture */",
+			"void cb_video_seek(cb_video *v, double seconds);",
+			"void cb_video_set_loop(cb_video *v, bool loop);",
+			"void cb_video_set_volume(cb_video *v, double volume);",
+			"double cb_video_time(const cb_video *v);",
+			"double cb_video_duration(const cb_video *v);",
+			"bool cb_video_ended(const cb_video *v);",
+			"int cb_video_width(const cb_video *v);",
+			"int cb_video_height(const cb_video *v);",
+			"void cb_video_world_update(double dt);              /* (the world: every Video object, once a frame) */",
+			"cb_texture cb_video_object_texture(void *video_object);",
+			"void cb_video_forget_all(void);",
+			"cb_texture cb_texture_ref(const char *ref);         /* a Texture field: a Video object's name, else an image file */",
 			"cb_sound cb_sound_load(const char *path);",
 			"void cb_sound_play(cb_sound s);",
 			"void cb_music_pause(cb_music m);",
@@ -1075,6 +1099,20 @@ static func shader_graph_c() -> String:
 const SHADER_GRAPH_RUNTIME := "res://scripts/runtime/cb_shadergraph.c"
 ## Colors and handle printing for graphics projects (the backend draws them).
 const GFX_RUNTIME := "res://scripts/runtime/cb_gfx.c"
+## Video (2026-11-20): the player + the Video class (cb_video.c) and the decoder it uses (pl_mpeg, MIT).
+const VIDEO_RUNTIME := "res://scripts/runtime/cb_video.c"
+const PL_MPEG_HEADER := "res://thirdparty/pl_mpeg/pl_mpeg.h"
+
+
+## True when the project uses video: a script or scene names the class "Video", or your own C calls cb_video_ (the decoder is
+## 140 KB of source, so a program that never plays a film doesn't carry it).
+static func uses_video_in(dir: String, graphs: Dictionary, scenes: Dictionary, user_c: Array) -> bool:
+	if JSON.stringify(graphs).contains("\"Video\"") or JSON.stringify(scenes).contains("\"Video\""):
+		return true
+	for rel in user_c:
+		if FileAccess.file_exists(dir.path_join(str(rel))) and FileAccess.get_file_as_string(dir.path_join(str(rel))).contains("cb_video_"):
+			return true
+	return false
 ## Graphics backends (2026-11-08): the one file that talks to a graphics library.
 ## The graphics backends (Project Settings ▸ Graphics backend): id -> [name, the targets it can build for ("" = every
 ## target but the ones another backend owns)]. "auto" picks by target.
@@ -1114,7 +1152,7 @@ const NET_RUNTIME := "res://scripts/runtime/cb_net.c"
 ## Networking: the UDP socket and a clock, its own file (cbricks_socket.c): the OS headers stay apart.
 const SOCKET_RUNTIME := "res://scripts/runtime/cb_socket.c"
 ## File names C-Bricks makes: a project's own .c / .h can't use them.
-const RESERVED_FILES := ["cbricks.h", "cbricks_runtime.c", "cbricks_data.c", "cbricks_gfx.c", "cbricks_world.c", "cbricks_scene.c", "cbricks_socket.c"]
+const RESERVED_FILES := ["cb_pl_mpeg.h", "cbricks_video.c", "cbricks.h", "cbricks_runtime.c", "cbricks_data.c", "cbricks_gfx.c", "cbricks_world.c", "cbricks_scene.c", "cbricks_socket.c"]
 
 
 # ------------------------------------------------------------------ classes

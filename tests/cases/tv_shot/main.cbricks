@@ -1,0 +1,1372 @@
+{
+	"format": "c-bricks",
+	"version": 4,
+	"next_id": 51,
+	"nodes": [
+		{
+			"id": 1,
+			"type": "window",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"width": {
+					"type": "int",
+					"value": "960"
+				},
+				"height": {
+					"type": "int",
+					"value": "540"
+				},
+				"title": {
+					"type": "string",
+					"value": "TV"
+				},
+				"fps": {
+					"type": "int",
+					"value": "60"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 2,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Video"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "Channel"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "chan",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 3,
+			"type": "object",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Find",
+				"of": "Spatial3D"
+			},
+			"args": {
+				"name": {
+					"type": "string",
+					"value": "TV"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "tv",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 4,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 5,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "Time"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "t",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 6,
+			"type": "game_info",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"what": "FPS"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "fps",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 7,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "sin(t * 0.6) * 28.0",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "sway",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 8,
+			"type": "vector",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Make"
+			},
+			"args": {
+				"x": {
+					"type": "float",
+					"value": "0"
+				},
+				"y": {
+					"var": "sway"
+				},
+				"z": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "rot",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 9,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "rotation"
+			},
+			"args": {
+				"record": {
+					"var": "tv"
+				},
+				"value": {
+					"var": "rot"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 10,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Pressed",
+				"key": "SPACE"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "ksp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 11,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "ksp"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					12,
+					13
+				]
+			}
+		},
+		{
+			"id": 12,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "playing"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "pl",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 13,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "pl"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					14
+				],
+				"false": [
+					15
+				]
+			}
+		},
+		{
+			"id": 14,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "playing"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 15,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "playing"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 16,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Pressed",
+				"key": "R"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kr",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 17,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "kr"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					18,
+					19
+				]
+			}
+		},
+		{
+			"id": 18,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "time"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "float",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 19,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "playing"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 20,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Pressed",
+				"key": "UP"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kup",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 21,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Pressed",
+				"key": "DOWN"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kdn",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 22,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "volume"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "vol",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 23,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "kup"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					24,
+					25
+				]
+			}
+		},
+		{
+			"id": 24,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "fmin(vol + 0.1, 1.0)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "vol",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 25,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "volume"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"var": "vol"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 26,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "kdn"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					27,
+					28
+				]
+			}
+		},
+		{
+			"id": 27,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "fmax(vol - 0.1, 0.0)",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "vol",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 28,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "volume"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"var": "vol"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 29,
+			"type": "input",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"when": "Pressed",
+				"key": "L"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "kl",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 30,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "kl"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					31,
+					32
+				]
+			}
+		},
+		{
+			"id": 31,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "loop"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "lp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 32,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "is true"
+			},
+			"args": {
+				"a": {
+					"var": "lp"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					33
+				],
+				"false": [
+					34
+				]
+			}
+		},
+		{
+			"id": 33,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "loop"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "false"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 34,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Set",
+				"field": "loop"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				},
+				"value": {
+					"type": "bool",
+					"value": "true"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 35,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "time"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "vt",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 36,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "duration"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "vd",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 37,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "playing"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "vp",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 38,
+			"type": "field",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Get",
+				"field": "loop"
+			},
+			"args": {
+				"record": {
+					"var": "chan"
+				}
+			},
+			"outs": {
+				"value": {
+					"var": "vl",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 39,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "floor(vt * 10.0) / 10.0",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "shown_t",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 40,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "floor(vd * 10.0) / 10.0",
+				"type": "float"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "shown_d",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 41,
+			"type": "formula",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"expression": "floor(vol * 10.0 + 0.5)",
+				"type": "int"
+			},
+			"args": {},
+			"outs": {
+				"result": {
+					"var": "shown_v",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 42,
+			"type": "text",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"op": "Format",
+				"format": "{} / {} s     volume {}/10"
+			},
+			"args": {
+				"first": {
+					"var": "shown_t"
+				},
+				"second": {
+					"var": "shown_d"
+				},
+				"third": {
+					"var": "shown_v"
+				}
+			},
+			"outs": {
+				"result": {
+					"var": "hud",
+					"use": false
+				}
+			},
+			"links": {}
+		},
+		{
+			"id": 43,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"var": "hud"
+				},
+				"x": {
+					"type": "int",
+					"value": "16"
+				},
+				"y": {
+					"type": "int",
+					"value": "12"
+				},
+				"size": {
+					"type": "int",
+					"value": "24"
+				},
+				"color": {
+					"type": "string",
+					"value": "WHITE"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 44,
+			"type": "draw",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"shape": "Text"
+			},
+			"args": {
+				"text": {
+					"type": "string",
+					"value": "SPACE: pause / play     R: restart     UP / DOWN: volume     L: loop on / off"
+				},
+				"x": {
+					"type": "int",
+					"value": "16"
+				},
+				"y": {
+					"type": "int",
+					"value": "46"
+				},
+				"size": {
+					"type": "int",
+					"value": "18"
+				},
+				"color": {
+					"type": "string",
+					"value": "#b0bec5"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 45,
+			"type": "var",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"mode": "Add",
+				"name": "frames"
+			},
+			"args": {
+				"value": {
+					"type": "int",
+					"value": "1"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 46,
+			"type": "if",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"operator": "=="
+			},
+			"args": {
+				"a": {
+					"var": "frames"
+				},
+				"b": {
+					"type": "int",
+					"value": "45"
+				}
+			},
+			"outs": {},
+			"links": {
+				"true": [
+					47,
+					48
+				]
+			}
+		},
+		{
+			"id": 47,
+			"type": "raw_c",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {
+				"code": "cb_screenshot(\"tv.png\");"
+			},
+			"args": {},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 48,
+			"type": "quit",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {
+				"code": {
+					"type": "int",
+					"value": "0"
+				}
+			},
+			"outs": {},
+			"links": {}
+		},
+		{
+			"id": 49,
+			"type": "game_loop",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"frame": [
+					5,
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					16,
+					17,
+					20,
+					21,
+					22,
+					23,
+					26,
+					29,
+					30,
+					35,
+					36,
+					37,
+					38,
+					39,
+					40,
+					41,
+					42,
+					43,
+					44,
+					45,
+					46
+				]
+			}
+		},
+		{
+			"id": 50,
+			"type": "start",
+			"pos": [
+				0,
+				0
+			],
+			"size": [
+				0,
+				0
+			],
+			"fields": {},
+			"args": {},
+			"outs": {},
+			"links": {
+				"out": [
+					1,
+					2,
+					3,
+					4,
+					49
+				]
+			}
+		}
+	]
+}

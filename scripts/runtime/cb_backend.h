@@ -28,6 +28,7 @@
  *     CB_BE_HAVE_TARGETS     render targets (camera snapshots, scene thumbnails)
  *     CB_BE_HAVE_SCREENSHOT  cb_be_screenshot
  *     CB_BE_HAVE_CLIP        a clip rectangle for everything drawn next (scissor)
+ *     CB_BE_HAVE_VIDEO       a texture the program fills each frame (+ shapes / meshes wearing a texture), a stereo audio stream
  *     CB_BE_HAVE_SHADERS     custom GLSL: surface shaders on 3D draws, a post shader (without: they load as id 0 and do nothing)
  *
  * Conventions: colors are cb_rgba (0..255); coordinates are pixels, y down; 3D is right-handed,
@@ -171,6 +172,20 @@ void cb_be_shader_use(cb_shader s);        /* a surface shader: the next 3D draw
 void cb_be_shader_use_none(int post);      /* back to the plain lit shader (post = 0) / the Environment's effects (post = 1) */
 void cb_be_shader_free(cb_shader s);       /* unload one; its slot can be reused; if it was in use, the built-in look returns */
 void cb_be_shaders_forget_all(void);       /* before the window closes */
+
+/* ======== CB_BE_HAVE_VIDEO (2026-11-20) ======== */
+/* Video is decoded in C (cb_video.c: pl_mpeg); the backend only shows the frames and plays the sound. Without the group a video
+   "plays" with no picture and no sound (cb_be_texture_create gives id 0). */
+cb_texture cb_be_texture_create(int width, int height);                /* an empty RGBA texture the program fills; id 0 when it can't */
+void cb_be_texture_update(cb_texture t, const unsigned char *rgba);    /* width * height * 4 bytes, rows top to bottom */
+void cb_be_texture_3d(cb_texture t);     /* the shapes / meshes drawn next wear this texture, times their color (id 0: none again) */
+int cb_be_audio_open(int rate);          /* a stereo stream of float samples (-1..1) at `rate`: a handle > 0, 0 = no sound here */
+void cb_be_audio_push(int stream, const float *lr, int frames);   /* interleaved L R; what doesn't fit is dropped */
+int cb_be_audio_queued(int stream);      /* frames waiting to be played */
+void cb_be_audio_volume(int stream, double volume);
+void cb_be_audio_flush(int stream);      /* throw away what is waiting (after a seek) */
+void cb_be_audio_close(int stream);
+void cb_be_video_forget_all(void);       /* before the window closes */
 
 /* ======== CB_BE_HAVE_SCREENSHOT ======== */
 bool cb_be_screenshot(const char *path);

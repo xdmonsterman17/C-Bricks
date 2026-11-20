@@ -441,6 +441,12 @@ void cb_world_physics(double dt) {
     cb_touch_cap = now_cap;
 }
 
+static cb_texture cb_no_texture(void) {
+    cb_texture t;
+    t.id = 0; t.width = 0; t.height = 0;
+    return t;
+}
+
 static void cb_push_local(cb_object *o) {
     if (cb_is_a(o, &cls_Spatial3D_class)) {
         cls_Spatial3D *sp = (cls_Spatial3D *)o;
@@ -462,8 +468,11 @@ static void cb_draw_object(cb_object *o) {
         cls_Shape3D *p = (cls_Shape3D *)o;
         if (p->f_visible) {
             int own = cb_shader_object(p->f_shader);  /* (an object with a shader is drawn whole, never splatted) */
-            cb_be_splat(!own && (cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && p->f_splat)));
+            cb_texture tex = p->f_texture[0] ? cb_texture_ref(p->f_texture) : cb_no_texture();   /* (so is a textured one) */
+            cb_be_splat(!own && !tex.id && (cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && p->f_splat)));
+            cb_be_texture_3d(tex);
             cb_draw_shape(cb_shape_kind(p->f_shape), cb_v3(0, 0, 0), p->f_size, 0, cb_color(p->f_color));
+            cb_be_texture_3d(cb_no_texture());
             cb_be_splat(cb_be_splat_mode() == 2);
             if (own)
                 cb_shader_object_end();
@@ -472,8 +481,11 @@ static void cb_draw_object(cb_object *o) {
         cls_Mesh3D *m = (cls_Mesh3D *)o;
         if (m->f_visible && m->f_mesh) {
             int own = cb_shader_object(m->f_shader);
-            cb_be_splat(!own && (cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && m->f_splat)));
+            cb_texture tex = m->f_texture[0] ? cb_texture_ref(m->f_texture) : cb_no_texture();
+            cb_be_splat(!own && !tex.id && (cb_be_splat_mode() == 2 || (cb_be_splat_mode() == 1 && m->f_splat)));
+            cb_be_texture_3d(tex);
             cb_draw_mesh(m->f_mesh, cb_v3(0, 0, 0), cb_v3(1, 1, 1), 0, cb_color(m->f_color));
+            cb_be_texture_3d(cb_no_texture());
             cb_be_splat(cb_be_splat_mode() == 2);
             if (own)
                 cb_shader_object_end();
@@ -618,6 +630,17 @@ static cb_texture cb_sprite_texture(const char *path) {
     return t;
 }
 
+/* A Texture field (2026-11-20): the name of a Video object in the scene (its picture, live), else an image file. A name with a
+   dot or a slash is a file, so the world isn't searched for it every frame. */
+cb_texture cb_texture_ref(const char *ref) {
+    if (ref && ref[0] && !strchr(ref, '.') && !strchr(ref, '/')) {
+        void *o = cb_find_object(ref);
+        if (o && cb_is_a((cb_object *)o, &cls_Video_class))
+            return cb_video_object_texture(o);
+    }
+    return cb_sprite_texture(ref);
+}
+
 static void cb_world_draw_2d(cls_Camera2D *cam) {
     void **all;
     int i, n = cb_world_objects(&all);
@@ -660,7 +683,7 @@ static void cb_world_draw_2d(cls_Camera2D *cam) {
             cb_rect src, dst;
             if (!s->f_visible || !s->f_texture[0])
                 continue;
-            tex = cb_sprite_texture(s->f_texture);
+            tex = cb_texture_ref(s->f_texture);
             {   /* a sprite sheet: Columns x Rows cells, the Frame-th one (along the rows) */
                 int cols = s->f_columns > 0 ? s->f_columns : 1, rows = s->f_rows > 0 ? s->f_rows : 1;
                 int cells = cols * rows, fr = ((s->f_frame % cells) + cells) % cells;
@@ -913,7 +936,7 @@ static void cb_world_draw_ui(void) {
             cb_rect src;
             if (!im->f_texture[0])
                 continue;
-            t = cb_sprite_texture(im->f_texture);
+            t = cb_texture_ref(im->f_texture);
             src.x = 0; src.y = 0; src.width = (float)t.width; src.height = (float)t.height;
             cb_be_texture(t, src, r, cb_v2(0, 0), 0, cb_color(im->f_color));
         }
@@ -1433,6 +1456,7 @@ void cb_frame_begin(void) {
     cb_ui_input();  /* Buttons: hover, press, clicks (When clicked, When button clicked) */
     if (!cb_headless) {
         cb_be_music_update();
+        cb_video_world_update(cb_frame_time());   /* Video objects: decode this frame's worth, update their textures */
         cb_post_update();
         cb_be_begin_frame();
     }
